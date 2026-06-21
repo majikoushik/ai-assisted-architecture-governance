@@ -6,5 +6,9 @@ RUN dotnet publish src/api/ArchitectureGovernance.Api/ArchitectureGovernance.Api
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
 COPY --from=build /app/publish .
+
+ENV ASPNETCORE_HTTP_PORTS=8080
 EXPOSE 8080
+
+USER app
 ENTRYPOINT ["dotnet", "ArchitectureGovernance.Api.dll"]

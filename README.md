@@ -8,7 +8,8 @@ This is not a chatbot demo. The repository is organized around requirement intak
 
 - [x] Epic 0: Repository Foundation
 - [x] Epic 1: Architecture Project Workspace
-- [ ] Epic 2: Requirement Submission and Parsing.
+- [x] Epic 10: Observability and Production Readiness
+- [x] Epic 11: DevOps and Docker Configuration
 
 ## Responsible AI Notice
 
@@ -20,7 +21,7 @@ AI-generated artifacts are draft content. They must be reviewed by a qualified a
 - Frontend: Angular with strict TypeScript.
 - AI: Mock provider by default, Azure OpenAI target provider through abstraction.
 - Data target: SQL Server locally and Azure SQL for cloud alignment.
-- Azure direction: Azure Static Web Apps, Azure Container Apps, Azure SQL, Azure OpenAI, Key Vault, Application Insights.
+- Azure direction: Azure Static Web Apps / Azure Container Apps, Azure SQL, Azure OpenAI, Key Vault, Application Insights.
 
 ## Repository Structure
 
@@ -42,19 +43,9 @@ infra/
 .github/workflows/
 ```
 
-## Run Locally
+## Running the Application (Local & Docker)
 
-Install the .NET 8 SDK, Node.js 20/22 LTS, and Angular dependencies first.
-
-```powershell
-dotnet run --project src/api/ArchitectureGovernance.Api/ArchitectureGovernance.Api.csproj
-```
-
-```powershell
-cd src/web/architecture-governance-portal
-npm install
-npm start
-```
+For detailed instructions on how to start the platform (either with local tooling or Docker Compose) and configuring the required environment variables, refer to the [DevOps and Local Development Guide](docs/devops-guide.md).
 
 ## Build and Test
 
@@ -74,6 +65,8 @@ npm test
 ## Documentation
 
 - [Architecture overview](architecture/README.md)
+- [Deployment architecture](architecture/deployment-architecture.md)
+- [DevOps Guide](docs/devops-guide.md)
 - [Responsible AI architecture](architecture/responsible-ai-architecture.md)
 - [Prompt engineering strategy](architecture/prompt-engineering-strategy.md)
 - [Setup guide](docs/setup.md)

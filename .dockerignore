@@ -1,0 +1,14 @@
+**/.git
+**/.gitignore
+**/bin/
+**/obj/
+**/.vs/
+**/.vscode/
+**/*.user
+**/*.suo
+**/node_modules/
+**/dist/
+**/npm-debug.log
+**/coverage/
+.env
+.DS_Store
