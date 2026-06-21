@@ -221,14 +221,23 @@ Returns the created review object.
 
 ---
 
-The API is version-ready under `/api/v1`.
+## 4. Platform API
 
-Current foundation endpoint:
+### 4.1 Get Platform Readiness
 
-```http
-GET /api/v1/platform/readiness
+`GET /api/v1/platform/readiness`
+
+**Response (200 OK):**
+
+```json
+{
+  "status": "Healthy",
+  "aiProvider": "Mock"
+}
 ```
 
-Future endpoints will cover projects, requirements, artifacts, prompt templates, reviews, and AI interaction metadata.
+---
+
+The API is version-ready under `/api/v1`.
 
 Errors should use Problem Details and include a correlation ID where possible.

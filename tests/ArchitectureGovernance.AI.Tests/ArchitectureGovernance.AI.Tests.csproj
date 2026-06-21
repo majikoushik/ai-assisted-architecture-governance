@@ -6,4 +6,7 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.1" />
     <ProjectReference Include="..\..\src\ai\ArchitectureGovernance.AI.Mock\ArchitectureGovernance.AI.Mock.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\ai\ArchitectureGovernance.AI.AzureOpenAI\ArchitectureGovernance.AI.AzureOpenAI.csproj" />
+  </ItemGroup>
 </Project>

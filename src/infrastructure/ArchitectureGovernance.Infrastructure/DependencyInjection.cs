@@ -22,8 +22,15 @@ public static class DependencyInjection
         services.AddSingleton<ArchitectureGovernance.Application.Prompts.Services.IPromptRepository, ArchitectureGovernance.Infrastructure.Filesystem.FilePromptRepository>();
 
         var provider = configuration["AiProvider:Provider"] ?? "Mock";
+        
+        services.Configure<ArchitectureGovernance.AI.AzureOpenAI.AzureOpenAiOptions>(
+            configuration.GetSection(ArchitectureGovernance.AI.AzureOpenAI.AzureOpenAiOptions.SectionName));
 
-        if (provider.Equals("Mock", StringComparison.OrdinalIgnoreCase))
+        if (provider.Equals("AzureOpenAI", StringComparison.OrdinalIgnoreCase))
+        {
+            services.AddSingleton<IArchitectureAiProvider, ArchitectureGovernance.AI.AzureOpenAI.AzureOpenAiProvider>();
+        }
+        else
         {
             services.AddSingleton<IArchitectureAiProvider, MockArchitectureAiProvider>();
         }

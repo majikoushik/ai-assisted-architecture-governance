@@ -10,4 +10,5 @@ public sealed record ArchitectureAiRequest(
     string DomainContext,
     string PromptTemplateName,
     string PromptTemplateVersion,
+    string PromptTemplateContent,
     string CorrelationId);

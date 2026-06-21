@@ -14,13 +14,14 @@ public sealed class MockArchitectureAiProviderTests
             ProjectId: Guid.NewGuid(),
             RequirementId: Guid.NewGuid(),
             ArtifactType: "HighLevelDesign",
-            RequirementTitle: "Test Requirement",
-            RequirementText: "Test text",
-            BusinessDomain: "Banking",
-            DomainContext: "Core Systems",
-            PromptTemplateName: "hld-generation",
-            PromptTemplateVersion: "v1.0.0",
-            CorrelationId: "test-correlation-id");
+            RequirementTitle: "Build a new system",
+            RequirementText: "It needs to do everything.",
+            BusinessDomain: "Retail",
+            DomainContext: "Sales",
+            PromptTemplateName: "hld",
+            PromptTemplateVersion: "1.0",
+            PromptTemplateContent: "System prompt",
+            CorrelationId: Guid.NewGuid().ToString());
 
         var response = await provider.GenerateArtifactDraftAsync(request);
 

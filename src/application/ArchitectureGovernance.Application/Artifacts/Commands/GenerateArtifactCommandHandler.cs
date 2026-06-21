@@ -83,6 +83,7 @@ public class GenerateArtifactCommandHandler : IRequestHandler<GenerateArtifactCo
             DomainContext: requirement.DomainContext,
             PromptTemplateName: promptTemplate.Name,
             PromptTemplateVersion: promptTemplate.Version,
+            PromptTemplateContent: promptTemplate.Content,
             CorrelationId: correlationId
         );
 

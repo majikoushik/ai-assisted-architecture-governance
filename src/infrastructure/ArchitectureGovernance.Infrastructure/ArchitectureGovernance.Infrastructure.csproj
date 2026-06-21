@@ -5,6 +5,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\application\ArchitectureGovernance.Application\ArchitectureGovernance.Application.csproj" />
     <ProjectReference Include="..\..\ai\ArchitectureGovernance.AI.Mock\ArchitectureGovernance.AI.Mock.csproj" />
+    <ProjectReference Include="..\..\ai\ArchitectureGovernance.AI.AzureOpenAI\ArchitectureGovernance.AI.AzureOpenAI.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.4" />
