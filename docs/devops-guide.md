@@ -19,7 +19,7 @@ dotnet test ArchitectureGovernance.sln --configuration Release
 ```powershell
 cd src/web/architecture-governance-portal
 npm install
-npm run build -- --configuration production
+npm run build:prod
 npm test
 ```
 

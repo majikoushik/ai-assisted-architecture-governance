@@ -5,7 +5,7 @@ COPY package*.json ./
 RUN npm install
 
 COPY . .
-RUN npm run build -- --configuration production
+RUN npm run build:prod
 
 FROM nginx:alpine AS runtime
 COPY --from=build /app/dist/architecture-governance-portal/browser /usr/share/nginx/html

@@ -18,7 +18,6 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
           <a routerLink="/projects" routerLinkActive="active">Projects</a>
           <a routerLink="/requirements" routerLinkActive="active">Requirements</a>
           <a routerLink="/artifact-generation" routerLinkActive="active">Generate</a>
-          <a routerLink="/artifact-viewer" routerLinkActive="active">Artifacts</a>
           <a routerLink="/prompts" routerLinkActive="active">Prompts</a>
           <a routerLink="/reviews" routerLinkActive="active">Reviews</a>
           <a routerLink="/system-health" routerLinkActive="active">Health</a>
