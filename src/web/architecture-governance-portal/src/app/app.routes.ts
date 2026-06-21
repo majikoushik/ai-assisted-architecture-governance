@@ -4,7 +4,8 @@ import { ProjectsComponent } from './features/projects/projects.component';
 import { RequirementsComponent } from './features/requirements/requirements.component';
 import { ArtifactGenerationComponent } from './features/artifact-generation/artifact-generation.component';
 import { ArtifactViewerComponent } from './features/artifact-viewer/artifact-viewer.component';
-import { PromptCatalogComponent } from './features/prompt-catalog/prompt-catalog.component';
+import { PromptCatalogListComponent } from './features/prompt-catalog/prompt-catalog-list/prompt-catalog-list.component';
+import { PromptCatalogDetailComponent } from './features/prompt-catalog/prompt-catalog-detail/prompt-catalog-detail.component';
 import { ReviewsComponent } from './features/reviews/reviews.component';
 import { ProjectCreateComponent } from './features/projects/project-create.component';
 import { ProjectDetailComponent } from './features/projects/project-detail.component';
@@ -21,7 +22,8 @@ export const routes: Routes = [
   { path: 'requirements', component: RequirementsComponent },
   { path: 'artifact-generation', component: ArtifactGenerationComponent },
   { path: 'artifact-viewer', component: ArtifactViewerComponent },
-  { path: 'prompt-catalog', component: PromptCatalogComponent },
+  { path: 'prompts', component: PromptCatalogListComponent },
+  { path: 'prompts/:id', component: PromptCatalogDetailComponent },
   { path: 'reviews', component: ReviewsComponent },
   { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
   { path: '**', redirectTo: 'dashboard' }

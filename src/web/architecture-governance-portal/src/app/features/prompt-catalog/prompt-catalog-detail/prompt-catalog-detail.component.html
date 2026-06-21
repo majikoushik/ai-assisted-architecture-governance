@@ -1,0 +1,63 @@
+<div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+  <div class="px-4 py-6 sm:px-0">
+    
+    <div class="mb-4">
+      <a routerLink="/prompts" class="text-indigo-600 hover:text-indigo-900 font-medium flex items-center">
+        <svg class="mr-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+        Back to Catalog
+      </a>
+    </div>
+
+    <div *ngIf="isLoading" class="flex justify-center py-10">
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+    </div>
+
+    <div *ngIf="errorMessage" class="rounded-md bg-red-50 p-4 mb-6">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd" />
+          </svg>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-sm font-medium text-red-800">{{ errorMessage }}</h3>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!isLoading && prompt" class="bg-white shadow overflow-hidden sm:rounded-lg">
+      <div class="px-4 py-5 sm:px-6 flex justify-between items-start">
+        <div>
+          <h3 class="text-lg leading-6 font-medium text-gray-900">
+            {{ prompt.name }}
+          </h3>
+          <p class="mt-1 max-w-2xl text-sm text-gray-500">
+            Prompt Template Details
+          </p>
+        </div>
+        <div class="flex flex-col items-end gap-2">
+          <span class="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">Version {{ prompt.version }}</span>
+          <span class="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10">{{ prompt.status }}</span>
+        </div>
+      </div>
+      <div class="border-t border-gray-200">
+        <dl>
+          <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500">Artifact Type</dt>
+            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ prompt.artifactType }}</dd>
+          </div>
+          <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500">Purpose</dt>
+            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ prompt.purpose }}</dd>
+          </div>
+          <div class="bg-gray-50 px-4 py-5 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500 mb-4">Raw Template Content</dt>
+            <dd class="mt-1 text-sm text-gray-900">
+              <pre class="bg-gray-800 text-gray-200 p-4 rounded-md overflow-x-auto text-xs font-mono leading-relaxed">{{ prompt.content }}</pre>
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  </div>
+</div>

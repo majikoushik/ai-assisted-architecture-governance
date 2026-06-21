@@ -1,8 +1,13 @@
 namespace ArchitectureGovernance.AI.Abstractions;
 
 public sealed record ArchitectureAiRequest(
-    string RequirementText,
+    Guid ProjectId,
+    Guid RequirementId,
     string ArtifactType,
+    string RequirementTitle,
+    string RequirementText,
+    string BusinessDomain,
+    string DomainContext,
     string PromptTemplateName,
     string PromptTemplateVersion,
     string CorrelationId);

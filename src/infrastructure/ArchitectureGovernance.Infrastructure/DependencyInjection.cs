@@ -19,6 +19,8 @@ public static class DependencyInjection
 
         services.AddScoped<IAppDbContext>(provider => provider.GetRequiredService<AppDbContext>());
 
+        services.AddSingleton<ArchitectureGovernance.Application.Prompts.Services.IPromptRepository, ArchitectureGovernance.Infrastructure.Filesystem.FilePromptRepository>();
+
         var provider = configuration["AiProvider:Provider"] ?? "Mock";
 
         if (provider.Equals("Mock", StringComparison.OrdinalIgnoreCase))

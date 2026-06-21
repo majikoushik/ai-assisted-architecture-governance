@@ -11,15 +11,20 @@ public sealed class MockArchitectureAiProviderTests
     {
         var provider = new MockArchitectureAiProvider();
         var request = new ArchitectureAiRequest(
-            "Synthetic loan platform requirement",
-            "RequirementAnalysis",
-            "requirement-analysis",
-            "v1.0.0",
-            "test-correlation");
+            ProjectId: Guid.NewGuid(),
+            RequirementId: Guid.NewGuid(),
+            ArtifactType: "HighLevelDesign",
+            RequirementTitle: "Test Requirement",
+            RequirementText: "Test text",
+            BusinessDomain: "Banking",
+            DomainContext: "Core Systems",
+            PromptTemplateName: "hld-generation",
+            PromptTemplateVersion: "v1.0.0",
+            CorrelationId: "test-correlation-id");
 
         var response = await provider.GenerateArtifactDraftAsync(request);
 
-        Assert.Equal("Mock", response.ProviderName);
+        Assert.Equal("MockDeterministicProvider", response.ProviderName);
         Assert.Contains("must be reviewed by a qualified architect", response.Markdown);
     }
 }
