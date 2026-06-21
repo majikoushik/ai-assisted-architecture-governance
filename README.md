@@ -1,5 +1,5 @@
 # AI-Assisted Architecture Governance
-
+[![CI](https://github.com/majikoushik/ai-assisted-architecture-governance/actions/workflows/ci.yml/badge.svg)](https://github.com/majikoushik/ai-assisted-architecture-governance/actions/workflows/ci.yml)
 ![.NET 8](https://img.shields.io/badge/.NET-8.0-512BD4)
 ![Angular 18](https://img.shields.io/badge/Angular-18-DD0031)
 ![Azure Ready](https://img.shields.io/badge/Azure-OpenAI%20ready-0078D4)
