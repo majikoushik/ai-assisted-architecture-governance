@@ -10,7 +10,15 @@ public class GenerateArtifactCommandValidator : AbstractValidator<GenerateArtifa
         RuleFor(x => x.RequirementSubmissionId).NotEmpty();
         RuleFor(x => x.ArtifactType)
             .NotEmpty()
-            .Must(type => type == "RequirementAnalysis" || type == "HighLevelDesign" || type == "LowLevelDesign" || type == "ArchitectureDecisionRecord")
-            .WithMessage("Only 'RequirementAnalysis', 'HighLevelDesign', 'LowLevelDesign', and 'ArchitectureDecisionRecord' are supported.");
+            .Must(type => 
+                type == "RequirementAnalysis" || 
+                type == "HighLevelDesign" || 
+                type == "LowLevelDesign" || 
+                type == "ArchitectureDecisionRecord" ||
+                type == "NonFunctionalRequirementReview" ||
+                type == "ApiContractReview" ||
+                type == "SecurityReview" ||
+                type == "RiskAndAssumptionReview")
+            .WithMessage("Only 'RequirementAnalysis', 'HighLevelDesign', 'LowLevelDesign', 'ArchitectureDecisionRecord', 'NonFunctionalRequirementReview', 'ApiContractReview', 'SecurityReview', and 'RiskAndAssumptionReview' are supported.");
     }
 }

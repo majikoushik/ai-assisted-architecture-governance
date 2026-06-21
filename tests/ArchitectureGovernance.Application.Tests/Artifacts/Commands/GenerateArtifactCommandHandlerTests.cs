@@ -198,6 +198,174 @@ public class GenerateArtifactCommandHandlerTests
     }
 
     [Fact]
+    public async Task Handle_GivenValidRequest_ShouldGenerateAndSaveNFRArtifact()
+    {
+        // Arrange
+        var projectId = Guid.NewGuid();
+        var requirementId = Guid.NewGuid();
+        var project = new ArchitectureProject("Test Project", "Banking", "Desc", "Owner");
+        typeof(ArchitectureProject).GetProperty("Id")!.SetValue(project, projectId);
+        
+        var req = new RequirementSubmission(projectId, "Req Title", "Req Text", "Domain", "Owner", new[] { ArchitectureGovernance.Domain.Requirements.ArtifactType.NonFunctionalRequirementReview }, "Domain Context");
+        typeof(RequirementSubmission).GetProperty("Id")!.SetValue(req, requirementId);
+
+        _context.Projects.Add(project);
+        _context.Requirements.Add(req);
+        await _context.SaveChangesAsync();
+
+        var promptTemplate = new PromptTemplate("nfr-review", "NFR Review", "1.0.0", "Purpose", "Content", "ArtifactType", "Provider");
+        _promptRepoMock.Setup(r => r.GetByIdAsync("nfr-review", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(promptTemplate);
+
+        _aiProviderMock.Setup(a => a.GenerateArtifactDraftAsync(It.IsAny<ArchitectureAiRequest>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new ArchitectureAiResponse("NonFunctionalRequirementReview", "NFR Markdown Output", "MockProvider", "Name", "1.0", DateTimeOffset.UtcNow, "Success", Array.Empty<string>(), "Review Notice"));
+
+        var handler = new GenerateArtifactCommandHandler(
+            _context, _aiProviderMock.Object, _promptRepoMock.Object, NullLogger<GenerateArtifactCommandHandler>.Instance);
+
+        var command = new GenerateArtifactCommand(projectId, requirementId, "NonFunctionalRequirementReview");
+
+        // Act
+        var result = await handler.Handle(command, CancellationToken.None);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal("NonFunctionalRequirementReview", result.ArtifactType);
+        Assert.Equal("NFR Markdown Output", result.MarkdownContent);
+        Assert.Equal("MockProvider", result.ProviderName);
+        Assert.Equal("Test Project - Non-Functional Requirement Review", result.Title);
+        
+        var artifacts = await _context.Artifacts.ToListAsync();
+        Assert.Single(artifacts);
+    }
+
+    [Fact]
+    public async Task Handle_GivenValidRequest_ShouldGenerateAndSaveSecurityReviewArtifact()
+    {
+        // Arrange
+        var projectId = Guid.NewGuid();
+        var requirementId = Guid.NewGuid();
+        var project = new ArchitectureProject("Test Project", "Banking", "Desc", "Owner");
+        typeof(ArchitectureProject).GetProperty("Id")!.SetValue(project, projectId);
+        
+        var req = new RequirementSubmission(projectId, "Req Title", "Req Text", "Domain", "Owner", new[] { ArchitectureGovernance.Domain.Requirements.ArtifactType.SecurityReview }, "Domain Context");
+        typeof(RequirementSubmission).GetProperty("Id")!.SetValue(req, requirementId);
+
+        _context.Projects.Add(project);
+        _context.Requirements.Add(req);
+        await _context.SaveChangesAsync();
+
+        var promptTemplate = new PromptTemplate("security-review", "Security Review", "1.0.0", "Purpose", "Content", "ArtifactType", "Provider");
+        _promptRepoMock.Setup(r => r.GetByIdAsync("security-review", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(promptTemplate);
+
+        _aiProviderMock.Setup(a => a.GenerateArtifactDraftAsync(It.IsAny<ArchitectureAiRequest>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new ArchitectureAiResponse("SecurityReview", "Security Markdown Output", "MockProvider", "Name", "1.0", DateTimeOffset.UtcNow, "Success", Array.Empty<string>(), "Review Notice"));
+
+        var handler = new GenerateArtifactCommandHandler(
+            _context, _aiProviderMock.Object, _promptRepoMock.Object, NullLogger<GenerateArtifactCommandHandler>.Instance);
+
+        var command = new GenerateArtifactCommand(projectId, requirementId, "SecurityReview");
+
+        // Act
+        var result = await handler.Handle(command, CancellationToken.None);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal("SecurityReview", result.ArtifactType);
+        Assert.Equal("Security Markdown Output", result.MarkdownContent);
+        Assert.Equal("MockProvider", result.ProviderName);
+        Assert.Equal("Test Project - Security Review", result.Title);
+        
+        var artifacts = await _context.Artifacts.ToListAsync();
+        Assert.Single(artifacts);
+    }
+
+    [Fact]
+    public async Task Handle_GivenValidRequest_ShouldGenerateAndSaveApiContractReviewArtifact()
+    {
+        // Arrange
+        var projectId = Guid.NewGuid();
+        var requirementId = Guid.NewGuid();
+        var project = new ArchitectureProject("Test Project", "Banking", "Desc", "Owner");
+        typeof(ArchitectureProject).GetProperty("Id")!.SetValue(project, projectId);
+        
+        var req = new RequirementSubmission(projectId, "Req Title", "Req Text", "Domain", "Owner", new[] { ArchitectureGovernance.Domain.Requirements.ArtifactType.ApiContractReview }, "Domain Context");
+        typeof(RequirementSubmission).GetProperty("Id")!.SetValue(req, requirementId);
+
+        _context.Projects.Add(project);
+        _context.Requirements.Add(req);
+        await _context.SaveChangesAsync();
+
+        var promptTemplate = new PromptTemplate("api-contract-review", "API Contract Review", "1.0.0", "Purpose", "Content", "ArtifactType", "Provider");
+        _promptRepoMock.Setup(r => r.GetByIdAsync("api-contract-review", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(promptTemplate);
+
+        _aiProviderMock.Setup(a => a.GenerateArtifactDraftAsync(It.IsAny<ArchitectureAiRequest>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new ArchitectureAiResponse("ApiContractReview", "API Markdown Output", "MockProvider", "Name", "1.0", DateTimeOffset.UtcNow, "Success", Array.Empty<string>(), "Review Notice"));
+
+        var handler = new GenerateArtifactCommandHandler(
+            _context, _aiProviderMock.Object, _promptRepoMock.Object, NullLogger<GenerateArtifactCommandHandler>.Instance);
+
+        var command = new GenerateArtifactCommand(projectId, requirementId, "ApiContractReview");
+
+        // Act
+        var result = await handler.Handle(command, CancellationToken.None);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal("ApiContractReview", result.ArtifactType);
+        Assert.Equal("API Markdown Output", result.MarkdownContent);
+        Assert.Equal("MockProvider", result.ProviderName);
+        Assert.Equal("Test Project - API Contract Review", result.Title);
+        
+        var artifacts = await _context.Artifacts.ToListAsync();
+        Assert.Single(artifacts);
+    }
+
+    [Fact]
+    public async Task Handle_GivenValidRequest_ShouldGenerateAndSaveRiskAndAssumptionReviewArtifact()
+    {
+        // Arrange
+        var projectId = Guid.NewGuid();
+        var requirementId = Guid.NewGuid();
+        var project = new ArchitectureProject("Test Project", "Banking", "Desc", "Owner");
+        typeof(ArchitectureProject).GetProperty("Id")!.SetValue(project, projectId);
+        
+        var req = new RequirementSubmission(projectId, "Req Title", "Req Text", "Domain", "Owner", new[] { ArchitectureGovernance.Domain.Requirements.ArtifactType.RiskAndAssumptionReview }, "Domain Context");
+        typeof(RequirementSubmission).GetProperty("Id")!.SetValue(req, requirementId);
+
+        _context.Projects.Add(project);
+        _context.Requirements.Add(req);
+        await _context.SaveChangesAsync();
+
+        var promptTemplate = new PromptTemplate("risk-assumption-review", "Risk Review", "1.0.0", "Purpose", "Content", "ArtifactType", "Provider");
+        _promptRepoMock.Setup(r => r.GetByIdAsync("risk-assumption-review", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(promptTemplate);
+
+        _aiProviderMock.Setup(a => a.GenerateArtifactDraftAsync(It.IsAny<ArchitectureAiRequest>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new ArchitectureAiResponse("RiskAndAssumptionReview", "Risk Markdown Output", "MockProvider", "Name", "1.0", DateTimeOffset.UtcNow, "Success", Array.Empty<string>(), "Review Notice"));
+
+        var handler = new GenerateArtifactCommandHandler(
+            _context, _aiProviderMock.Object, _promptRepoMock.Object, NullLogger<GenerateArtifactCommandHandler>.Instance);
+
+        var command = new GenerateArtifactCommand(projectId, requirementId, "RiskAndAssumptionReview");
+
+        // Act
+        var result = await handler.Handle(command, CancellationToken.None);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal("RiskAndAssumptionReview", result.ArtifactType);
+        Assert.Equal("Risk Markdown Output", result.MarkdownContent);
+        Assert.Equal("MockProvider", result.ProviderName);
+        Assert.Equal("Test Project - Risk and Assumption Review", result.Title);
+        
+        var artifacts = await _context.Artifacts.ToListAsync();
+        Assert.Single(artifacts);
+    }
+
+    [Fact]
     public async Task Handle_GivenInvalidProject_ShouldThrowNotFound()
     {
         // Arrange

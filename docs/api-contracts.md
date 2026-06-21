@@ -110,7 +110,7 @@ Returns the updated project object.
 {
   "projectId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
   "requirementSubmissionId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "artifactType": "RequirementAnalysis" // or "HighLevelDesign", "LowLevelDesign", "ArchitectureDecisionRecord"
+  "artifactType": "RequirementAnalysis" // or "HighLevelDesign", "LowLevelDesign", "ArchitectureDecisionRecord", "NonFunctionalRequirementReview", "SecurityReview", "ApiContractReview", "RiskAndAssumptionReview"
 }
 ```
 

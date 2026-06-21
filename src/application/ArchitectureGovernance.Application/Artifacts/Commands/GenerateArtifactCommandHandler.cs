@@ -53,6 +53,10 @@ public class GenerateArtifactCommandHandler : IRequestHandler<GenerateArtifactCo
             "HighLevelDesign" => "hld-generation",
             "LowLevelDesign" => "lld-generation",
             "ArchitectureDecisionRecord" => "adr-generation",
+            "NonFunctionalRequirementReview" => "nfr-review",
+            "ApiContractReview" => "api-contract-review",
+            "SecurityReview" => "security-review",
+            "RiskAndAssumptionReview" => "risk-assumption-review",
             _ => throw new ValidationException(new[] { new FluentValidation.Results.ValidationFailure("ArtifactType", "Unsupported artifact type.") })
         };
 
@@ -93,6 +97,10 @@ public class GenerateArtifactCommandHandler : IRequestHandler<GenerateArtifactCo
                 "HighLevelDesign" => $"{project.Name} - High-Level Design",
                 "LowLevelDesign" => $"{project.Name} - Low-Level Design",
                 "ArchitectureDecisionRecord" => $"{project.Name} - Architecture Decision Record",
+                "NonFunctionalRequirementReview" => $"{project.Name} - Non-Functional Requirement Review",
+                "ApiContractReview" => $"{project.Name} - API Contract Review",
+                "SecurityReview" => $"{project.Name} - Security Review",
+                "RiskAndAssumptionReview" => $"{project.Name} - Risk and Assumption Review",
                 _ => $"{project.Name} - Requirement Analysis"
             },
             markdownContent: aiResponse.Markdown,

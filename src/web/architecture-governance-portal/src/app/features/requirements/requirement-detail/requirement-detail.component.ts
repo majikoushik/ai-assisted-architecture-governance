@@ -23,6 +23,10 @@ export class RequirementDetailComponent implements OnInit {
   isGeneratingHLD = false;
   isGeneratingLLD = false;
   isGeneratingADR = false;
+  isGeneratingNFR = false;
+  isGeneratingSecurity = false;
+  isGeneratingApiContract = false;
+  isGeneratingRisk = false;
   error: string | null = null;
 
   RequirementStatus = RequirementStatus;
@@ -183,6 +187,98 @@ export class RequirementDetailComponent implements OnInit {
       error: (err) => {
         this.error = 'Failed to generate ADR draft. ' + (err.error?.detail || err.message || '');
         this.isGeneratingADR = false;
+      }
+    });
+  }
+
+  generateNonFunctionalRequirementReview(): void {
+    if (!this.requirement || !this.projectId) return;
+
+    this.isGeneratingNFR = true;
+    this.error = null;
+
+    this.artifactsService.generateArtifact({
+      projectId: this.projectId,
+      requirementSubmissionId: this.requirement.id,
+      artifactType: 'NonFunctionalRequirementReview'
+    }).subscribe({
+      next: (artifact) => {
+        this.isGeneratingNFR = false;
+        this.artifacts.push(artifact);
+        if (this.requirement) this.loadRequirement(this.requirement.id);
+      },
+      error: (err) => {
+        this.error = 'Failed to generate NFR Review draft. ' + (err.error?.detail || err.message || '');
+        this.isGeneratingNFR = false;
+      }
+    });
+  }
+
+  generateSecurityReview(): void {
+    if (!this.requirement || !this.projectId) return;
+
+    this.isGeneratingSecurity = true;
+    this.error = null;
+
+    this.artifactsService.generateArtifact({
+      projectId: this.projectId,
+      requirementSubmissionId: this.requirement.id,
+      artifactType: 'SecurityReview'
+    }).subscribe({
+      next: (artifact) => {
+        this.isGeneratingSecurity = false;
+        this.artifacts.push(artifact);
+        if (this.requirement) this.loadRequirement(this.requirement.id);
+      },
+      error: (err) => {
+        this.error = 'Failed to generate Security Review draft. ' + (err.error?.detail || err.message || '');
+        this.isGeneratingSecurity = false;
+      }
+    });
+  }
+
+  generateApiContractReview(): void {
+    if (!this.requirement || !this.projectId) return;
+
+    this.isGeneratingApiContract = true;
+    this.error = null;
+
+    this.artifactsService.generateArtifact({
+      projectId: this.projectId,
+      requirementSubmissionId: this.requirement.id,
+      artifactType: 'ApiContractReview'
+    }).subscribe({
+      next: (artifact) => {
+        this.isGeneratingApiContract = false;
+        this.artifacts.push(artifact);
+        if (this.requirement) this.loadRequirement(this.requirement.id);
+      },
+      error: (err) => {
+        this.error = 'Failed to generate API Contract Review draft. ' + (err.error?.detail || err.message || '');
+        this.isGeneratingApiContract = false;
+      }
+    });
+  }
+
+  generateRiskAndAssumptionReview(): void {
+    if (!this.requirement || !this.projectId) return;
+
+    this.isGeneratingRisk = true;
+    this.error = null;
+
+    this.artifactsService.generateArtifact({
+      projectId: this.projectId,
+      requirementSubmissionId: this.requirement.id,
+      artifactType: 'RiskAndAssumptionReview'
+    }).subscribe({
+      next: (artifact) => {
+        this.isGeneratingRisk = false;
+        this.artifacts.push(artifact);
+        if (this.requirement) this.loadRequirement(this.requirement.id);
+      },
+      error: (err) => {
+        this.error = 'Failed to generate Risk and Assumption Review draft. ' + (err.error?.detail || err.message || '');
+        this.isGeneratingRisk = false;
       }
     });
   }
