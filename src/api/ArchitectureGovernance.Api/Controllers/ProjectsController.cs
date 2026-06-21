@@ -1,6 +1,7 @@
 using ArchitectureGovernance.Application.Projects.Commands;
 using ArchitectureGovernance.Application.Projects.DTOs;
 using ArchitectureGovernance.Application.Projects.Queries;
+using ArchitectureGovernance.Application.Requirements.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,6 +16,14 @@ public class ProjectsController : ControllerBase
     public ProjectsController(IMediator mediator)
     {
         _mediator = mediator;
+    }
+
+    [HttpGet("{id}/requirements")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetRequirements(Guid id)
+    {
+        var result = await _mediator.Send(new GetRequirementsByProjectIdQuery(id));
+        return Ok(result);
     }
 
     [HttpPost]

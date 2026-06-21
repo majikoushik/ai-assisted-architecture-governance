@@ -1,0 +1,90 @@
+<div class="container mx-auto px-4 py-8 max-w-5xl">
+  <div class="mb-6 flex items-center justify-between">
+    <a [routerLink]="['/projects', projectId]" class="text-indigo-600 hover:text-indigo-800 font-medium text-sm flex items-center">
+      &larr; Back to Project
+    </a>
+  </div>
+
+  <div *ngIf="isLoading" class="mt-6 flex justify-center">
+    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+  </div>
+
+  <div *ngIf="error" class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+    <div class="flex">
+      <div class="flex-shrink-0">
+        <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+        </svg>
+      </div>
+      <div class="ml-3">
+        <p class="text-sm text-red-700">{{ error }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="requirement && !isLoading" class="bg-white shadow overflow-hidden sm:rounded-lg border border-gray-200">
+    <div class="px-4 py-5 sm:px-6 flex justify-between items-start">
+      <div>
+        <h3 class="text-lg leading-6 font-medium text-gray-900">{{ requirement.title }}</h3>
+        <p class="mt-1 max-w-2xl text-sm text-gray-500">Requirement Submission Details</p>
+      </div>
+      <div>
+        <span class="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium"
+              [ngClass]="{
+                'bg-gray-100 text-gray-800': requirement.status === 'Draft',
+                'bg-blue-100 text-blue-800': requirement.status === 'Submitted',
+                'bg-yellow-100 text-yellow-800': requirement.status === 'InAnalysis',
+                'bg-green-100 text-green-800': requirement.status === 'Analyzed',
+                'bg-red-100 text-red-800': requirement.status === 'Error'
+              }">
+          {{ requirement.status }}
+        </span>
+      </div>
+    </div>
+    
+    <div class="border-t border-gray-200 px-4 py-5 sm:p-0">
+      <dl class="sm:divide-y sm:divide-gray-200">
+        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500">Domain Context</dt>
+          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ requirement.domainContext }}</dd>
+        </div>
+        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500">Submitted By</dt>
+          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ requirement.submittedBy }}</dd>
+        </div>
+        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500">Created At</dt>
+          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ requirement.createdTimestamp | date:'medium' }}</dd>
+        </div>
+        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500">Expected Artifacts</dt>
+          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+            <ul class="list-disc pl-5 space-y-1">
+              <li *ngFor="let artifact of requirement.expectedArtifactTypes">{{ artifact }}</li>
+            </ul>
+          </dd>
+        </div>
+        <div class="py-4 sm:py-5 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500 mb-2">Requirement Details</dt>
+          <dd class="mt-1 text-sm text-gray-900 whitespace-pre-wrap bg-gray-50 p-4 rounded-md border border-gray-200">{{ requirement.requirementText }}</dd>
+        </div>
+      </dl>
+    </div>
+
+    <!-- Actions Footer -->
+    <div class="bg-gray-50 px-4 py-4 sm:px-6 flex justify-end gap-4 border-t border-gray-200">
+      <button 
+        *ngIf="requirement.status === RequirementStatus.Draft"
+        (click)="submitForAnalysis()" 
+        [disabled]="isSubmitting"
+        class="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50">
+        <span *ngIf="isSubmitting">Submitting...</span>
+        <span *ngIf="!isSubmitting">Analyze with AI</span>
+      </button>
+      
+      <div *ngIf="requirement.status !== RequirementStatus.Draft" class="text-sm text-gray-500 flex items-center">
+        This requirement has been submitted. Generation will be available in the next Epic.
+      </div>
+    </div>
+  </div>
+</div>

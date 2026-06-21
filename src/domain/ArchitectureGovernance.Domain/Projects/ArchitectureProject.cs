@@ -10,6 +10,9 @@ public class ArchitectureProject : Entity
     public string Owner { get; private set; }
     public ProjectStatus Status { get; private set; }
 
+    private readonly List<ArchitectureGovernance.Domain.Requirements.RequirementSubmission> _requirements = new();
+    public IReadOnlyCollection<ArchitectureGovernance.Domain.Requirements.RequirementSubmission> Requirements => _requirements.AsReadOnly();
+
 #pragma warning disable CS8618
     private ArchitectureProject()
     {

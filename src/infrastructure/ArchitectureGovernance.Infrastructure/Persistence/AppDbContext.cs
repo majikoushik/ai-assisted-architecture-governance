@@ -1,5 +1,6 @@
 using ArchitectureGovernance.Application.Common.Interfaces;
 using ArchitectureGovernance.Domain.Projects;
+using ArchitectureGovernance.Domain.Requirements;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
@@ -12,6 +13,7 @@ public class AppDbContext : DbContext, IAppDbContext
     }
 
     public DbSet<ArchitectureProject> Projects => Set<ArchitectureProject>();
+    public DbSet<RequirementSubmission> Requirements => Set<RequirementSubmission>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

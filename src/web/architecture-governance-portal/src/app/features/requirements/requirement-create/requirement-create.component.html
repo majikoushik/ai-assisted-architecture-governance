@@ -1,0 +1,98 @@
+<div class="container mx-auto px-4 py-8 max-w-4xl">
+  <div class="mb-6 flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-900">Submit Requirement</h1>
+      <p class="text-gray-600 mt-1">Provide business or technical requirements for AI-assisted architecture analysis.</p>
+    </div>
+    <a [routerLink]="['/projects', projectId]" class="text-indigo-600 hover:text-indigo-800 font-medium text-sm flex items-center">
+      &larr; Back to Project
+    </a>
+  </div>
+
+  <div *ngIf="error" class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+    <div class="flex">
+      <div class="flex-shrink-0">
+        <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+        </svg>
+      </div>
+      <div class="ml-3">
+        <p class="text-sm text-red-700">{{ error }}</p>
+      </div>
+    </div>
+  </div>
+
+  <form *ngIf="requirementForm" [formGroup]="requirementForm" (ngSubmit)="onSubmit()" class="bg-white shadow-md rounded-lg p-6 border border-gray-200">
+    
+    <div class="space-y-6">
+      <!-- Title -->
+      <div>
+        <label for="title" class="block text-sm font-medium text-gray-700">Requirement Title <span class="text-red-500">*</span></label>
+        <div class="mt-1">
+          <input type="text" id="title" formControlName="title" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="e.g., Loan Processing System Modernization">
+        </div>
+        <p *ngIf="requirementForm.get('title')?.invalid && requirementForm.get('title')?.touched" class="mt-2 text-sm text-red-600">
+          Title is required and must be less than 200 characters.
+        </p>
+      </div>
+
+      <!-- Domain Context -->
+      <div>
+        <label for="domainContext" class="block text-sm font-medium text-gray-700">Domain Context <span class="text-red-500">*</span></label>
+        <div class="mt-1">
+          <select id="domainContext" formControlName="domainContext" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
+            <option value="" disabled>Select a domain</option>
+            <option value="Banking">Banking</option>
+            <option value="Healthcare">Healthcare</option>
+            <option value="Retail">Retail</option>
+            <option value="Logistics">Logistics</option>
+            <option value="Education">Education</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Requirement Text -->
+      <div>
+        <label for="requirementText" class="block text-sm font-medium text-gray-700">Requirement Details <span class="text-red-500">*</span></label>
+        <p class="text-xs text-gray-500 mb-2">Describe the business problem, actors, and key workflows. Do not include PII or sensitive secrets.</p>
+        <div class="mt-1">
+          <textarea id="requirementText" formControlName="requirementText" rows="8" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border border-gray-300 rounded-md" placeholder="Enter full requirement details..."></textarea>
+        </div>
+      </div>
+
+      <!-- Expected Artifacts -->
+      <div>
+        <fieldset>
+          <legend class="text-sm font-medium text-gray-700">Expected Architecture Artifacts</legend>
+          <p class="text-xs text-gray-500 mb-3">Select the artifacts you want the AI engine to generate.</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 border border-gray-200 rounded-md p-4 bg-gray-50">
+            <div *ngFor="let artifact of artifactTypes; let i=index" class="relative flex items-start">
+              <div class="flex items-center h-5">
+                <input 
+                  [id]="'artifact-'+i" 
+                  [formControl]="getFormControl(i)"
+                  type="checkbox" 
+                  class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
+              </div>
+              <div class="ml-3 text-sm">
+                <label [for]="'artifact-'+i" class="font-medium text-gray-700">{{ artifact.label }}</label>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+
+      <!-- Submit -->
+      <div class="pt-4 border-t border-gray-200 flex justify-end space-x-3">
+        <a [routerLink]="['/projects', projectId]" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+          Cancel
+        </a>
+        <button type="submit" [disabled]="requirementForm.invalid || isSubmitting" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50">
+          <span *ngIf="isSubmitting">Submitting...</span>
+          <span *ngIf="!isSubmitting">Submit Requirement</span>
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

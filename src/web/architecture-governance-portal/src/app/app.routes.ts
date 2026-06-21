@@ -8,12 +8,16 @@ import { PromptCatalogComponent } from './features/prompt-catalog/prompt-catalog
 import { ReviewsComponent } from './features/reviews/reviews.component';
 import { ProjectCreateComponent } from './features/projects/project-create.component';
 import { ProjectDetailComponent } from './features/projects/project-detail.component';
+import { RequirementCreateComponent } from './features/requirements/requirement-create/requirement-create.component';
+import { RequirementDetailComponent } from './features/requirements/requirement-detail/requirement-detail.component';
 
 export const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent },
   { path: 'projects', component: ProjectsComponent },
   { path: 'projects/new', component: ProjectCreateComponent },
   { path: 'projects/:id', component: ProjectDetailComponent },
+  { path: 'projects/:projectId/requirements/new', component: RequirementCreateComponent },
+  { path: 'projects/:projectId/requirements/:reqId', component: RequirementDetailComponent },
   { path: 'requirements', component: RequirementsComponent },
   { path: 'artifact-generation', component: ArtifactGenerationComponent },
   { path: 'artifact-viewer', component: ArtifactViewerComponent },

@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ProjectService } from '../../core/services/project.service';
 import { Project, ProjectStatus } from '../../core/models/project';
+import { RequirementListComponent } from '../requirements/requirement-list/requirement-list.component';
 
 @Component({
   selector: 'ag-project-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, RequirementListComponent],
   template: `
     <div *ngIf="loading" class="loading-state">Loading project details...</div>
     <div *ngIf="error" class="error-state">{{ error }}</div>
@@ -53,13 +54,21 @@ import { Project, ProjectStatus } from '../../core/models/project';
       </div>
       
       <div class="tabs">
-        <div class="tab active">Requirements</div>
-        <div class="tab">Artifacts</div>
-        <div class="tab">Reviews</div>
+        <div class="tab" [class.active]="activeTab === 'requirements'" (click)="activeTab = 'requirements'">Requirements</div>
+        <div class="tab" [class.active]="activeTab === 'artifacts'" (click)="activeTab = 'artifacts'">Artifacts</div>
+        <div class="tab" [class.active]="activeTab === 'reviews'" (click)="activeTab = 'reviews'">Reviews</div>
       </div>
       
-      <div class="card empty-state">
-        <p>Future Epic: Requirements and artifacts will be displayed here.</p>
+      <div *ngIf="activeTab === 'requirements'">
+        <app-requirement-list [projectId]="project.id"></app-requirement-list>
+      </div>
+
+      <div *ngIf="activeTab === 'artifacts'" class="card empty-state">
+        <p>Future Epic: Artifacts will be displayed here.</p>
+      </div>
+
+      <div *ngIf="activeTab === 'reviews'" class="card empty-state">
+        <p>Future Epic: Reviews will be displayed here.</p>
       </div>
     </div>
   `,
@@ -96,6 +105,7 @@ export class ProjectDetailComponent implements OnInit {
   project: Project | null = null;
   loading = true;
   error: string | null = null;
+  activeTab: 'requirements' | 'artifacts' | 'reviews' = 'requirements';
 
   constructor(
     private route: ActivatedRoute,
