@@ -2,15 +2,15 @@
 
 ## Scalability
 
-Design for horizontal API scaling and stateless compute. Store durable state in SQL Server or Azure SQL.
+Design for horizontal API scaling. The Azure Blueprint leverages **Azure Container Apps** for event-driven, serverless container scaling. Durable state is stored securely in **Azure SQL Database**.
 
 ## Availability
 
-Future Azure deployment should use managed services, health checks, and deployment slots or revision-based rollout where practical.
+The Azure deployment relies on highly available managed services. Azure Container Apps handles container health-probe restarts, and Azure SQL provides automated backups. Future deployments should utilize revision-based rollout for zero-downtime updates.
 
 ## Performance
 
-Prompt execution latency should be monitored separately from API request latency.
+Prompt execution latency is tracked independently from internal API request latency via Application Insights. A configurable timeout (`TimeoutSeconds`) ensures the backend does not hang on slow AI model completions.
 
 ## Security
 

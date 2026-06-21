@@ -10,6 +10,7 @@ This is not a chatbot demo. The repository is organized around requirement intak
 - [x] Epic 1: Architecture Project Workspace
 - [x] Epic 10: Observability and Production Readiness
 - [x] Epic 11: DevOps and Docker Configuration
+- [x] Epic 12: Azure Deployment Blueprint (IaC)
 
 ## Responsible AI Notice
 
@@ -67,6 +68,7 @@ npm test
 - [Architecture overview](architecture/README.md)
 - [Deployment architecture](architecture/deployment-architecture.md)
 - [DevOps Guide](docs/devops-guide.md)
+- [Azure Deployment Guide](docs/azure-deployment-guide.md)
 - [Responsible AI architecture](architecture/responsible-ai-architecture.md)
 - [Prompt engineering strategy](architecture/prompt-engineering-strategy.md)
 - [Setup guide](docs/setup.md)

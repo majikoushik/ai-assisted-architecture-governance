@@ -18,9 +18,17 @@
 - Epic 5: HLD Generation
 - Epic 6: LLD and ADR Generation
 
+- Epic 7: NFR, Security, and API Review
+- Epic 8: Review Workflow and Artifact Versioning
+- Epic 9: Azure OpenAI Provider Readiness
+- Epic 10: Observability and Production Readiness
+- Epic 11: DevOps and Docker
+- Epic 12: Azure Deployment Blueprint (IaC)
+
 ## Next
 
-- Epic 7: NFR, Security, and API Review
+- Epic 13: Feature Completeness & Dashboard Enhancements
+- Epic 14: Automated Azure Infrastructure Deployment (CI/CD Rollout)
 
 ## Guiding Rule
 

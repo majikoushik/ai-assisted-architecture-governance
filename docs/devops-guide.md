@@ -96,11 +96,8 @@ It includes three parallelized/sequential jobs:
 
 ## 5. Path to Azure Deployment (Readiness)
 
-This Docker setup maps directly to our Azure target state:
-1. **Azure Container Registry (ACR)**: Built images (`api`, `web`) will be published here.
-2. **Azure Container Apps (ACA)**: The `api` and `web` containers will be deployed as Container Apps, inheriting environment variables securely from **Azure Key Vault**.
-3. **Azure SQL Database**: Will replace the local `sqlserver` container.
-4. **Azure Application Insights**: Already integrated via the Observability Building Block to capture container telemetry.
+This Docker setup maps directly to our Azure target state, defined in the Infrastructure as Code (Bicep) templates.
+For comprehensive instructions on provisioning the Azure environment, configuring Key Vault, and deploying the application via GitHub Actions, refer to the **[Azure Deployment Guide](azure-deployment-guide.md)**.
 
 ---
 

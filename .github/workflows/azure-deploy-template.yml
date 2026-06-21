@@ -1,0 +1,65 @@
+name: Azure Deployment (Template)
+
+on:
+  workflow_dispatch: # Disabled for automatic triggers in this template
+
+env:
+  RESOURCE_GROUP: rg-architecture-governance-dev
+  API_CONTAINER_APP_NAME: ca-api-archgov-dev
+  ACR_LOGIN_SERVER: ${{ secrets.ACR_LOGIN_SERVER }}
+  IMAGE_NAME: architecture-governance-api
+
+jobs:
+  deploy-infra:
+    name: Deploy Infrastructure (Bicep)
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Deploy Bicep
+      uses: azure/arm-deploy@v1
+      with:
+        resourceGroupName: ${{ env.RESOURCE_GROUP }}
+        template: infra/bicep/main.bicep
+        parameters: infra/bicep/parameters/dev.parameters.json sqlAdminPassword=${{ secrets.SQL_CONNECTION_STRING_PASSWORD }}
+
+  deploy-api:
+    name: Deploy API to Container Apps
+    needs: deploy-infra
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Update Container App
+      run: |
+        az containerapp update \
+          --name ${{ env.API_CONTAINER_APP_NAME }} \
+          --resource-group ${{ env.RESOURCE_GROUP }} \
+          --image ${{ env.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+
+  deploy-frontend:
+    name: Deploy Frontend to Static Web Apps
+    needs: deploy-infra
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Build And Deploy Static Web App
+      uses: Azure/static-web-apps-deploy@v1
+      with:
+        azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        action: "upload"
+        app_location: "src/web/architecture-governance-portal"
+        output_location: "dist/architecture-governance-portal/browser"
+        skip_api_build: true

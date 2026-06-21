@@ -28,4 +28,10 @@ dotnet user-secrets set "AzureOpenAI:ApiKey" "YOUR_API_KEY"
 dotnet user-secrets set "AzureOpenAI:DeploymentName" "gpt-4o"
 ```
 
+## 4. Azure & Production Deployment
+
+For instructions on deploying the application to Azure using Bicep Infrastructure as Code, setting up Key Vault, and configuring GitHub Actions, see the **[Azure Deployment Guide](azure-deployment-guide.md)**.
+
+For full Docker containerization and local cluster setup, refer to the **[DevOps and Local Development Guide](devops-guide.md)**.
+
 For more details on the provider configuration and responsible AI considerations, see the [Azure OpenAI Provider Documentation](azure-openai-provider.md).

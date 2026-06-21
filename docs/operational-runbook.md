@@ -64,5 +64,31 @@ When an artifact is generated, a specific log event is emitted containing:
 2. Ensure the connection string `DefaultConnection` is valid.
 3. Verify firewall rules allow access to the database from the API host.
 
-## 5. Deployment Procedures
-*See `azure-deployment-guide.md` for specific infrastructure deployment commands using Bicep or Azure CLI.*
+## 5. Cost Monitoring and Awareness
+When hosted in Azure, regularly monitor the following resources:
+- **Azure OpenAI**: Token consumption metrics. Ensure demo environments use smaller models like `gpt-4o-mini`. 
+- **Application Insights**: Data ingestion volumes. Lowering the data retention from 90 days to 30 days reduces cost.
+- **Azure SQL Database**: DTU or vCore usage. A Basic SKU is sufficient for development.
+- **Azure Container Apps**: Configure minimum replicas to `0` or `1` depending on the environment to prevent idle billing.
+
+## 6. Useful KQL Queries (Log Analytics)
+
+**Find failed AI Generations:**
+```kql
+AppTraces
+| where Message contains "AI Provider generated artifact"
+| where Properties.Status == "Failed"
+| project TimeGenerated, Properties.CorrelationId, Properties.ProviderName, Properties.ArtifactType
+| order by TimeGenerated desc
+```
+
+**Find slow API requests:**
+```kql
+AppRequests
+| where DurationMs > 2000
+| project TimeGenerated, Name, DurationMs, ResultCode, Operation_Id
+| order by DurationMs desc
+```
+
+## 7. Deployment Procedures
+*See [azure-deployment-guide.md](azure-deployment-guide.md) for specific infrastructure deployment commands using Bicep or Azure CLI.*

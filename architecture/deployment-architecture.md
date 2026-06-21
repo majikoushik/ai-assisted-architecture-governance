@@ -11,21 +11,29 @@ The application is containerized natively for ease of developer setup and operat
 
 ## Azure Target Direction
 
-The local Docker setup maps precisely to future Azure deployments:
+The local Docker setup maps precisely to the deployed Azure environment.
 
-- **Azure Container Registry (ACR)**: Target registry for pushing the `api` and `web` container images.
-- **Azure Container Apps (ACA)**: Target compute environment for hosting the backend `api` and optionally the `web` container, offering managed scalability and direct VNet integration.
-- **Azure Static Web Apps**: Alternative hosting option for the Angular portal if decoupled from Nginx.
-- **Azure SQL Database**: Managed, highly-available replacement for the local SQL Server container.
-- **Azure OpenAI**: Target AI provider, configured dynamically via environment variables safely injected from **Azure Key Vault**.
-- **Azure Application Insights**: Integrated monitoring platform collecting standard ASP.NET Core instrumentation and custom AI telemetry metadata.
+1. **Angular Frontend**: Deployed to **Azure Static Web Apps**.
+2. **Backend API**: Deployed to **Azure Container Apps** for managed, scalable serverless container execution.
+3. **Container Registry**: **Azure Container Registry** stores the `.NET` backend image.
+4. **Database**: **Azure SQL Database**.
+5. **AI Provider**: **Azure OpenAI**, providing enterprise-grade, compliant AI access.
+6. **Secrets**: **Azure Key Vault** stores connection strings and OpenAI API Keys. Container Apps retrieve these securely via **Managed Identity**.
+7. **Monitoring**: **Azure Application Insights** and **Log Analytics** capture standard telemetry and our Safe AI Telemetry metadata.
 
-## Infrastructure as Code
+### Environment Separation
+The architecture supports discrete environments (e.g., `dev`, `test`, `prod`) using Bicep parameters.
 
-Bicep is the preferred IaC approach and will live under `infra/bicep/`. Future epics will automate the provisioning of the Azure resources using standard Bicep templates.
+## Infrastructure as Code (IaC)
+
+Bicep is used for all Azure Infrastructure. The templates reside under `infra/bicep/`:
+- `main.bicep`: Orchestrates the deployment.
+- `modules/`: Contains modular templates for SQL, ACA, ACR, SWA, Key Vault, and Log Analytics.
+- `parameters/`: Contains environment-specific configurations (e.g., `dev.parameters.json`).
 
 ## CI/CD Pipeline
 
-The current GitHub Actions workflow (`.github/workflows/ci.yml`) establishes the foundational quality gates:
-- Unit test validation.
-- Docker image build validation (`docker compose build`) to prevent broken containers from merging to `main`.
+The GitHub Actions workflows under `.github/workflows/` establish the deployment flow:
+1. **CI Validation (`ci.yml`)**: Unit test validation and Docker image build verification.
+2. **Container Build (`container-build-template.yml`)**: Builds the backend API image and securely pushes it to Azure Container Registry using Managed Identity.
+3. **Azure Deployment (`azure-deploy-template.yml`)**: Deploys the Bicep IaC, deploys the backend image to Azure Container Apps, and deploys the Angular app to Azure Static Web Apps.

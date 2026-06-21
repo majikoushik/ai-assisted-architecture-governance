@@ -1,27 +1,19 @@
-# Deployment
+# Deployment Strategy
 
-## Local
+This repository provides two deployment modalities:
 
-Docker Compose is prepared for API, web, and SQL Server services.
+## Local & Docker Development
 
-## Azure Target
+For local development and execution with Docker, please refer to the **[DevOps and Local Development Guide](devops-guide.md)**.
 
-- Angular portal: Azure Static Web Apps.
-- API: Azure Container Apps.
-- Container registry: Azure Container Registry.
-- Database: Azure SQL Database.
-- AI provider: Azure OpenAI.
-- Secrets: Azure Key Vault with Managed Identity.
-- Monitoring: Application Insights and Log Analytics.
+## Azure Cloud Deployment
 
-Infrastructure as Code should use Bicep under `infra/bicep/`.
+For deploying the platform to Azure, the repository includes a complete **Bicep Infrastructure as Code (IaC)** foundation and GitHub Actions deployment templates.
 
-## Environment Variables
-
-When deploying to Azure Container Apps, ensure the following environment variables are securely mapped (preferably from Key Vault references):
-
-- `AiProvider__Provider` = `AzureOpenAI`
-- `AzureOpenAI__Endpoint` = `<your-endpoint-url>`
-- `AzureOpenAI__ApiKey` = `<your-api-key>`
-- `AzureOpenAI__DeploymentName` = `<your-deployment-name>`
-- `AzureOpenAI__TimeoutSeconds` = `60`
+Please refer to the **[Azure Deployment Guide](azure-deployment-guide.md)** for comprehensive details on:
+- Bicep Architecture
+- Azure Container Apps and Azure Static Web Apps deployment
+- Secure Configuration with Azure Key Vault
+- Azure OpenAI integration readiness
+- Application Insights telemetry
+- Cost management and Resource cleanup

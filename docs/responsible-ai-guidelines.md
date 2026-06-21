@@ -21,3 +21,12 @@ To prevent accidental data leakage during local testing and to allow offline dev
 - Prompt templates are specifically engineered to instruct the model to separate **Facts** from **Assumptions**.
 - If context is missing, the model is instructed to list items under **Open Questions** rather than inventing a system design.
 - The UI surfaces these sections prominently so human reviewers can easily spot and validate the AI's assumptions.
+
+## 5. Enterprise Data Governance for Production
+Before deploying the Azure OpenAI provider to a production environment:
+- Verify that your Azure OpenAI resource configuration aligns with your organization's compliance boundaries (e.g., opting out of abuse monitoring data logging if handling highly confidential IP).
+- Public demos should use synthetic requirements, not real proprietary architectures.
+
+## 6. Generated Assessments are not Formal Audits
+- **Security Reviews:** Generated security review output is a heuristic baseline and is *not* a substitute for a formal security assessment or penetration test.
+- **API Reviews:** Generated API contract review output is *not* a substitute for formal API governance board approval.

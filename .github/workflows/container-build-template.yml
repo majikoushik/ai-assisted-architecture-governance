@@ -1,0 +1,34 @@
+name: Build and Push Docker Image (Template)
+
+on:
+  workflow_dispatch: # Disabled for automatic triggers in this template
+
+env:
+  ACR_LOGIN_SERVER: ${{ secrets.ACR_LOGIN_SERVER }} # e.g. acrarchgov.azurecr.io
+  IMAGE_NAME: architecture-governance-api
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    # Azure authentication using Service Principal or OIDC Managed Identity
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: ACR Login
+      run: az acr login --name ${{ env.ACR_LOGIN_SERVER }}
+
+    - name: Build and push API image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: src/api/ArchitectureGovernance.Api/Dockerfile
+        push: true
+        tags: ${{ env.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
