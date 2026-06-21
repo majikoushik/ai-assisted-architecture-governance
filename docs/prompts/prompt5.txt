@@ -1,0 +1,250 @@
+Implement Epic 4: Requirement Analysis Artifact based on AGENTS.md and the existing repository.
+
+Build the next core capability for the `ai-assisted-architecture-governance` repository: AI-assisted Requirement Analysis Artifact Generation.
+
+Before implementation:
+
+1. Read `AGENTS.md`.
+2. Review the current repository structure.
+3. Review the implementation from Epic 0, Epic 1, Epic 2, and Epic 3.
+4. Review existing Architecture Project, Requirement Submission, Prompt Catalog, and Mock AI Provider implementations.
+5. Review existing Angular screens, services, tests, documentation, prompt templates, Docker setup, and CI workflow.
+6. Preserve the architecture direction, responsible AI guidance, testing standards, API response pattern, error handling approach, prompt engineering strategy, and Azure-readiness defined in `AGENTS.md`.
+
+Epic 4 Goal:
+
+Allow the system to generate a Requirement Analysis artifact from a submitted requirement using the existing prompt catalog and deterministic mock AI provider.
+
+This is the first end-to-end AI-assisted artifact generation workflow.
+
+The generated output must be treated as draft architecture content requiring human architect review.
+
+Backend scope:
+
+1. Implement Requirement Analysis artifact generation.
+2. Use the existing AI provider abstraction.
+3. Use the mock AI provider as the default local provider.
+4. Use the `requirement-analysis.md` prompt template.
+5. Create or complete the `GeneratedArtifact` domain model.
+6. Persist generated artifacts using Entity Framework Core.
+7. Associate generated artifacts with:
+
+   * Architecture Project
+   * Requirement Submission
+   * Artifact Type
+   * Prompt Template
+   * Prompt Template Version
+   * AI Provider
+8. Add database migration support.
+9. Add AI interaction metadata capture if already supported or cleanly possible.
+10. Add request and response DTOs.
+11. Add validation for artifact generation request.
+12. Add Swagger/OpenAPI documentation readiness.
+13. Add structured logging without logging full sensitive requirement text.
+14. Use correlation ID support if available.
+15. Add proper error handling using the existing Problem Details or global error-handling pattern.
+16. Add unit tests and API/integration tests where practical.
+
+Requirement Analysis artifact output should include:
+
+* Executive summary
+* Requirement summary
+* Business capabilities
+* Key actors
+* Major workflows
+* Candidate bounded contexts or service areas
+* Suggested high-level components
+* Data considerations
+* Integration considerations
+* Security considerations
+* Observability considerations
+* Assumptions
+* Risks
+* Open questions
+* Human review notice
+
+Generated artifact fields:
+
+* Artifact ID
+* Project ID
+* Requirement submission ID
+* Artifact type: `RequirementAnalysis`
+* Title
+* Markdown content
+* Version
+* Status
+* Provider name
+* Prompt template name
+* Prompt template version
+* Created timestamp
+* Updated timestamp
+* Correlation ID
+
+Supported artifact statuses:
+
+* Draft
+* NeedsReview
+* Reviewed
+* Approved
+* Rejected
+
+Suggested API endpoints:
+
+* `POST /api/v1/artifacts/generate`
+* `GET /api/v1/artifacts/{artifactId}`
+* `GET /api/v1/projects/{projectId}/artifacts`
+* `GET /api/v1/requirements/{requirementId}/artifacts`
+* `GET /api/v1/artifacts/{artifactId}/export/markdown`
+
+For this epic, `POST /api/v1/artifacts/generate` should support only:
+
+* `RequirementAnalysis`
+
+Other artifact types may return a clear validation or not-supported response until future epics.
+
+Suggested generation request:
+
+```json
+{
+  "projectId": "project-id",
+  "requirementSubmissionId": "requirement-id",
+  "artifactType": "RequirementAnalysis"
+}
+```
+
+Use consistent API response and error response patterns according to `AGENTS.md`.
+
+Frontend scope:
+
+1. Implement Requirement Analysis generation UI in Angular.
+2. Use the existing feature-based frontend structure.
+3. Add an artifact generation action from the requirement details screen.
+4. Add a dedicated artifact generation screen if useful.
+5. Add an artifact viewer screen.
+6. Render generated Markdown safely.
+7. Display artifact metadata:
+
+   * Artifact type
+   * Status
+   * Provider name
+   * Prompt template version
+   * Created timestamp
+   * Human review notice
+8. Add export/download as Markdown if practical.
+9. Show loading state during generation.
+10. Show user-friendly error message when generation fails.
+11. Show empty state when no artifacts exist.
+12. Use typed Angular models and services.
+13. Do not call APIs directly from components; use a dedicated artifact API service.
+14. Keep the UI professional, clean, and suitable for an architecture governance platform.
+
+Frontend route expectations:
+
+* `/artifacts/:id`
+* `/requirements/:requirementId/artifacts`
+* Optional: `/requirements/:requirementId/generate`
+* Optional: integrate “Generate Requirement Analysis” button into `/requirements/:id`
+* Optional: show recent artifacts on `/dashboard`
+
+Documentation scope:
+
+Update or create relevant documentation:
+
+* `README.md`
+* `docs/api-contracts.md`
+* `docs/local-development.md`
+* `docs/testing-strategy.md`
+* `docs/prompt-catalog.md`
+* `docs/responsible-ai-guidelines.md`
+* `docs/roadmap.md`
+* `architecture/lld.md`
+* `architecture/data-model.md`
+* `architecture/prompt-engineering-strategy.md`
+* `architecture/responsible-ai-architecture.md`
+* `architecture/api-governance.md`
+* `architecture/security-architecture.md`
+* `architecture/observability-architecture.md`
+
+Architecture expectations:
+
+1. Keep controllers thin.
+2. Keep artifact generation orchestration in the application layer.
+3. Keep AI provider usage behind the abstraction.
+4. Use the mock provider by default for local development.
+5. Do not require Azure OpenAI credentials.
+6. Do not call real Azure OpenAI in this epic.
+7. Keep generated artifact persistence separate from prompt template loading.
+8. Store prompt template name and version with generated artifacts.
+9. Store provider name with generated artifacts.
+10. Keep design ready for future HLD, LLD, ADR, NFR, Security Review, and API Contract Review artifacts.
+11. Keep the implementation portfolio-grade and Solution Architect quality.
+
+Responsible AI expectations:
+
+This epic generates AI-assisted architecture content, so responsible AI handling is mandatory.
+
+Ensure implementation and documentation state:
+
+1. Generated artifacts are AI-assisted drafts.
+2. Human architect review is mandatory before use.
+3. Mock provider output is deterministic demo content.
+4. No external AI provider is called in this epic.
+5. Sensitive requirement text should not be logged in full.
+6. Generated artifacts should include assumptions, risks, and open questions.
+7. The system should not claim generated output is production-approved.
+8. The UI should visibly show a human review notice.
+
+Testing expectations:
+
+Add tests for:
+
+* Successful Requirement Analysis artifact generation
+* Generation request with missing project ID
+* Generation request with missing requirement submission ID
+* Generation request with unsupported artifact type
+* Generation request for non-existing project
+* Generation request for non-existing requirement
+* Generated artifact persisted successfully
+* Generated artifact linked to project and requirement
+* Prompt template name and version stored
+* Provider name stored as mock provider
+* Generated content includes human review notice
+* Generated content includes assumptions, risks, and open questions
+* Fetching artifact by ID
+* Fetching artifacts by project ID
+* Fetching artifacts by requirement ID
+* Exporting artifact as Markdown
+* Artifact not found scenario
+* Full sensitive requirement text is not logged where practical
+
+CI/CD expectation:
+
+Update GitHub Actions if required so the build and tests include the new backend and frontend changes.
+
+Important rules:
+
+* Do not hardcode secrets.
+* Do not use real confidential business data.
+* Do not log full sensitive requirement text.
+* Do not implement real Azure OpenAI calls yet.
+* Do not require Azure OpenAI credentials for local development.
+* Do not overbuild beyond Epic 4.
+* Do not implement HLD, LLD, ADR, NFR, Security Review, or API Contract Review generation yet.
+* Keep the project Azure-ready.
+* Keep the implementation portfolio-grade and Solution Architect quality.
+
+After implementation, provide:
+
+1. What was implemented.
+2. Backend files created or modified.
+3. AI provider or prompt files created or modified.
+4. Frontend files created or modified.
+5. Database/migration changes.
+6. API endpoints added.
+7. Tests added.
+8. Documentation updated.
+9. Responsible AI notes.
+10. Commands to run locally.
+11. Commands to test.
+12. Any assumptions made.
+13. Recommended next epic.

@@ -1,0 +1,310 @@
+Implement Epic 6: LLD and ADR Generation based on AGENTS.md and the existing repository.
+
+Build the next core capability for the `ai-assisted-architecture-governance` repository: AI-assisted Low-Level Design and Architecture Decision Record generation.
+
+Before implementation:
+
+1. Read `AGENTS.md`.
+2. Review the current repository structure.
+3. Review the implementation from Epic 0 through Epic 5.
+4. Review existing Architecture Project, Requirement Submission, Prompt Catalog, Mock AI Provider, Requirement Analysis generation, and HLD generation implementations.
+5. Review existing Angular artifact generation and artifact viewer screens.
+6. Review existing tests, documentation, prompt templates, Docker setup, and CI workflow.
+7. Preserve the architecture direction, responsible AI guidance, testing standards, API response pattern, error handling approach, prompt engineering strategy, AI provider abstraction, and Azure-readiness defined in `AGENTS.md`.
+
+Epic 6 Goal:
+
+Allow the system to generate:
+
+1. Low-Level Design artifact
+2. Architecture Decision Record artifact
+
+Both artifacts should be generated from a submitted requirement using the existing prompt catalog and deterministic mock AI provider.
+
+The generated outputs must look like professional Solution Architect draft artifacts and must be clearly treated as AI-assisted draft content requiring human architect review.
+
+Backend scope:
+
+1. Implement Low-Level Design artifact generation.
+2. Implement Architecture Decision Record artifact generation.
+3. Reuse the existing artifact generation flow from previous epics.
+4. Use the existing AI provider abstraction.
+5. Use the mock AI provider as the default local provider.
+6. Use the `lld-generation.md` prompt template for LLD generation.
+7. Use the `adr-generation.md` prompt template for ADR generation.
+8. Persist generated LLD and ADR artifacts using the existing `GeneratedArtifact` model.
+9. Associate generated artifacts with:
+
+   * Architecture Project
+   * Requirement Submission
+   * Artifact Type
+   * Prompt Template
+   * Prompt Template Version
+   * AI Provider
+10. Add or update AI interaction metadata capture if already supported or cleanly possible.
+11. Add request and response DTO changes if needed.
+12. Add validation for LLD and ADR artifact generation requests.
+13. Add Swagger/OpenAPI documentation readiness.
+14. Add structured logging without logging full sensitive requirement text.
+15. Use correlation ID support if available.
+16. Add proper error handling using the existing Problem Details or global error-handling pattern.
+17. Add unit tests and API/integration tests where practical.
+
+Artifact types to support in this epic:
+
+* `LowLevelDesign`
+* `ArchitectureDecisionRecord`
+
+After this epic, the existing artifact generation endpoint should support:
+
+* `RequirementAnalysis`
+* `HighLevelDesign`
+* `LowLevelDesign`
+* `ArchitectureDecisionRecord`
+
+Unsupported artifact types should continue to return clear validation or not-supported responses until future epics.
+
+Suggested API endpoint:
+
+* `POST /api/v1/artifacts/generate`
+
+Suggested LLD generation request:
+
+```json
+{
+  "projectId": "project-id",
+  "requirementSubmissionId": "requirement-id",
+  "artifactType": "LowLevelDesign"
+}
+```
+
+Suggested ADR generation request:
+
+```json
+{
+  "projectId": "project-id",
+  "requirementSubmissionId": "requirement-id",
+  "artifactType": "ArchitectureDecisionRecord"
+}
+```
+
+Existing artifact query/export endpoints should continue to work:
+
+* `GET /api/v1/artifacts/{artifactId}`
+* `GET /api/v1/projects/{projectId}/artifacts`
+* `GET /api/v1/requirements/{requirementId}/artifacts`
+* `GET /api/v1/artifacts/{artifactId}/export/markdown`
+
+Use consistent API response and error response patterns according to `AGENTS.md`.
+
+LLD artifact output should include:
+
+* Executive summary
+* Requirement traceability
+* Component-level design
+* Module responsibilities
+* API boundaries
+* Request and response DTO recommendations
+* Data model recommendations
+* Validation rules
+* Error handling strategy
+* Logging and telemetry requirements
+* Security implementation considerations
+* Integration details
+* Sequence flow
+* Testing considerations
+* Assumptions
+* Risks
+* Open questions
+* Human review notice
+
+ADR artifact output should include one or more ADR drafts.
+
+Each ADR should include:
+
+* ADR title
+* Status
+* Context
+* Decision
+* Consequences
+* Alternatives considered
+* Risks
+* Follow-up actions
+* Human review notice
+
+Prompt template scope:
+
+Review and improve:
+
+* `prompts/lld-generation.md`
+* `prompts/adr-generation.md`
+
+Ensure each prompt template includes:
+
+* Version
+* Purpose
+* Expected input
+* Output format
+* Constraints
+* Assumptions section
+* Risks section
+* Open questions section
+* Human review notice
+* Instruction not to invent unavailable facts
+* Instruction to distinguish assumptions from confirmed inputs
+* Instruction to keep generated content architecture-review ready
+
+Mock AI provider scope:
+
+Update the mock AI provider so that:
+
+1. `LowLevelDesign` returns deterministic, realistic, architecture-quality Markdown.
+2. `ArchitectureDecisionRecord` returns deterministic, realistic, architecture-quality Markdown.
+3. Each output includes assumptions, risks, open questions, and human review notice.
+4. The mock provider remains fully local and requires no external API.
+5. The mock output clearly identifies itself as generated by the mock provider.
+
+Frontend scope:
+
+1. Extend the existing artifact generation UI to support LLD and ADR generation.
+2. Add `LowLevelDesign` and `ArchitectureDecisionRecord` as selectable artifact types where appropriate.
+3. Add clear “Generate LLD” and “Generate ADR” actions from the requirement details screen if suitable.
+4. Reuse the existing artifact viewer screen.
+5. Render generated Markdown safely.
+6. Display artifact metadata:
+
+   * Artifact type
+   * Status
+   * Provider name
+   * Prompt template version
+   * Created timestamp
+   * Human review notice
+7. Ensure export/download as Markdown works for LLD and ADR artifacts if already implemented.
+8. Show loading state during generation.
+9. Show user-friendly error message when generation fails.
+10. Use typed Angular models and services.
+11. Do not call APIs directly from components; use the existing artifact API service.
+12. Keep the UI professional, clean, and suitable for an architecture governance platform.
+
+Frontend route expectations:
+
+* Reuse `/artifacts/:id`
+* Reuse `/requirements/:requirementId/artifacts`
+* Optional: enhance `/requirements/:requirementId/generate`
+* Optional: add “Generate LLD” and “Generate ADR” actions into `/requirements/:id`
+
+Documentation scope:
+
+Update or create relevant documentation:
+
+* `README.md`
+* `docs/api-contracts.md`
+* `docs/local-development.md`
+* `docs/testing-strategy.md`
+* `docs/prompt-catalog.md`
+* `docs/responsible-ai-guidelines.md`
+* `docs/roadmap.md`
+* `architecture/lld.md`
+* `architecture/data-model.md`
+* `architecture/prompt-engineering-strategy.md`
+* `architecture/responsible-ai-architecture.md`
+* `architecture/api-governance.md`
+* `architecture/security-architecture.md`
+* `architecture/observability-architecture.md`
+
+Architecture expectations:
+
+1. Keep controllers thin.
+2. Keep artifact generation orchestration in the application layer.
+3. Keep AI provider usage behind the abstraction.
+4. Use the mock provider by default for local development.
+5. Do not require Azure OpenAI credentials.
+6. Do not call real Azure OpenAI in this epic.
+7. Reuse the existing GeneratedArtifact persistence model.
+8. Store prompt template name and version with generated artifacts.
+9. Store provider name with generated artifacts.
+10. Keep generated LLD and ADR artifacts version-ready.
+11. Keep the design ready for future NFR, Security Review, API Contract Review, Review Workflow, and Azure OpenAI provider epics.
+12. Keep the implementation portfolio-grade and Solution Architect quality.
+
+Responsible AI expectations:
+
+This epic generates AI-assisted architecture content, so responsible AI handling is mandatory.
+
+Ensure implementation and documentation state:
+
+1. Generated LLD and ADR artifacts are AI-assisted drafts.
+2. Human architect review is mandatory before use.
+3. Mock provider output is deterministic demo content.
+4. No external AI provider is called in this epic.
+5. Sensitive requirement text should not be logged in full.
+6. Generated artifacts must include assumptions, risks, and open questions.
+7. The system should not claim generated output is production-approved.
+8. The UI should visibly show a human review notice.
+
+Testing expectations:
+
+Add tests for:
+
+* Successful Low-Level Design artifact generation
+* Successful Architecture Decision Record artifact generation
+* LLD generation request with missing project ID
+* ADR generation request with missing project ID
+* LLD generation request with missing requirement submission ID
+* ADR generation request with missing requirement submission ID
+* LLD generation request for non-existing project
+* ADR generation request for non-existing project
+* LLD generation request for non-existing requirement
+* ADR generation request for non-existing requirement
+* LLD artifact persisted successfully
+* ADR artifact persisted successfully
+* LLD artifact linked to project and requirement
+* ADR artifact linked to project and requirement
+* Prompt template name and version stored for LLD
+* Prompt template name and version stored for ADR
+* Provider name stored as mock provider
+* Generated LLD content includes human review notice
+* Generated ADR content includes human review notice
+* Generated LLD content includes assumptions, risks, and open questions
+* Generated ADR content includes context, decision, consequences, and alternatives considered
+* Fetching LLD artifact by ID
+* Fetching ADR artifact by ID
+* Fetching artifacts by project ID
+* Fetching artifacts by requirement ID
+* Exporting LLD artifact as Markdown
+* Exporting ADR artifact as Markdown
+* Unsupported artifact types still return clear validation or not-supported response
+* Full sensitive requirement text is not logged where practical
+
+CI/CD expectation:
+
+Update GitHub Actions if required so the build and tests include the new backend and frontend changes.
+
+Important rules:
+
+* Do not hardcode secrets.
+* Do not use real confidential business data.
+* Do not log full sensitive requirement text.
+* Do not implement real Azure OpenAI calls yet.
+* Do not require Azure OpenAI credentials for local development.
+* Do not overbuild beyond Epic 6.
+* Do not implement NFR, Security Review, or API Contract Review generation yet.
+* Do not implement artifact review workflow yet.
+* Keep the project Azure-ready.
+* Keep the implementation portfolio-grade and Solution Architect quality.
+
+After implementation, provide:
+
+1. What was implemented.
+2. Backend files created or modified.
+3. AI provider or prompt files created or modified.
+4. Frontend files created or modified.
+5. Database/migration changes if any.
+6. API behavior added or updated.
+7. Tests added.
+8. Documentation updated.
+9. Responsible AI notes.
+10. Commands to run locally.
+11. Commands to test.
+12. Any assumptions made.
+13. Recommended next epic.

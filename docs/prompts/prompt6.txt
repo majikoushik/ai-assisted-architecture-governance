@@ -1,0 +1,268 @@
+Implement Epic 5: HLD Generation based on AGENTS.md and the existing repository.
+
+Build the next core capability for the `ai-assisted-architecture-governance` repository: AI-assisted High-Level Design artifact generation.
+
+Before implementation:
+
+1. Read `AGENTS.md`.
+2. Review the current repository structure.
+3. Review the implementation from Epic 0, Epic 1, Epic 2, Epic 3, and Epic 4.
+4. Review existing Architecture Project, Requirement Submission, Prompt Catalog, Mock AI Provider, and Requirement Analysis artifact generation implementation.
+5. Review existing Angular artifact generation and artifact viewer screens.
+6. Review existing tests, documentation, prompt templates, Docker setup, and CI workflow.
+7. Preserve the architecture direction, responsible AI guidance, testing standards, API response pattern, error handling approach, prompt engineering strategy, AI provider abstraction, and Azure-readiness defined in `AGENTS.md`.
+
+Epic 5 Goal:
+
+Allow the system to generate a High-Level Design artifact from a submitted requirement using the existing prompt catalog and deterministic mock AI provider.
+
+The generated HLD must look like a professional Solution Architect draft and must be treated as AI-assisted draft content requiring human architect review.
+
+Backend scope:
+
+1. Implement High-Level Design artifact generation.
+2. Reuse the existing artifact generation flow from Epic 4.
+3. Use the existing AI provider abstraction.
+4. Use the mock AI provider as the default local provider.
+5. Use the `hld-generation.md` prompt template.
+6. Persist generated HLD artifacts using the existing `GeneratedArtifact` model.
+7. Associate generated HLD artifacts with:
+
+   * Architecture Project
+   * Requirement Submission
+   * Artifact Type
+   * Prompt Template
+   * Prompt Template Version
+   * AI Provider
+8. Add or update AI interaction metadata capture if already supported or cleanly possible.
+9. Add request and response DTO changes if needed.
+10. Add validation for HLD artifact generation request.
+11. Add Swagger/OpenAPI documentation readiness.
+12. Add structured logging without logging full sensitive requirement text.
+13. Use correlation ID support if available.
+14. Add proper error handling using the existing Problem Details or global error-handling pattern.
+15. Add unit tests and API/integration tests where practical.
+
+HLD artifact output should include:
+
+* Executive summary
+* Business context
+* Architecture goals
+* Scope and assumptions
+* System context
+* Major components
+* Suggested service boundaries
+* Integration points
+* Data flow overview
+* Security considerations
+* Observability considerations
+* Deployment considerations
+* Scalability considerations
+* Availability and resilience considerations
+* Key risks
+* Open questions
+* Human review notice
+
+Artifact type to support in this epic:
+
+* `HighLevelDesign`
+
+The existing artifact generation endpoint should support:
+
+* `RequirementAnalysis`
+* `HighLevelDesign`
+
+Unsupported artifact types should continue to return clear validation or not-supported responses until future epics.
+
+Suggested API endpoint:
+
+* `POST /api/v1/artifacts/generate`
+
+Suggested generation request:
+
+```json
+{
+  "projectId": "project-id",
+  "requirementSubmissionId": "requirement-id",
+  "artifactType": "HighLevelDesign"
+}
+```
+
+Existing artifact query/export endpoints should continue to work:
+
+* `GET /api/v1/artifacts/{artifactId}`
+* `GET /api/v1/projects/{projectId}/artifacts`
+* `GET /api/v1/requirements/{requirementId}/artifacts`
+* `GET /api/v1/artifacts/{artifactId}/export/markdown`
+
+Use consistent API response and error response patterns according to `AGENTS.md`.
+
+Frontend scope:
+
+1. Extend the existing artifact generation UI to support High-Level Design generation.
+2. Add `HighLevelDesign` as a selectable artifact type where appropriate.
+3. Add a clear “Generate HLD” action from the requirement details screen if suitable.
+4. Reuse the existing artifact viewer screen.
+5. Render generated HLD Markdown safely.
+6. Display artifact metadata:
+
+   * Artifact type
+   * Status
+   * Provider name
+   * Prompt template version
+   * Created timestamp
+   * Human review notice
+7. Ensure export/download as Markdown works for HLD artifacts if already implemented.
+8. Show loading state during HLD generation.
+9. Show user-friendly error message when generation fails.
+10. Use typed Angular models and services.
+11. Do not call APIs directly from components; use the existing artifact API service.
+12. Keep the UI professional, clean, and suitable for an architecture governance platform.
+
+Frontend route expectations:
+
+* Reuse `/artifacts/:id`
+* Reuse `/requirements/:requirementId/artifacts`
+* Optional: add or enhance `/requirements/:requirementId/generate`
+* Optional: add “Generate HLD” action into `/requirements/:id`
+
+Prompt template scope:
+
+Review and improve:
+
+* `prompts/hld-generation.md`
+
+Ensure it includes:
+
+* Version
+* Purpose
+* Expected input
+* Output format
+* Constraints
+* Assumptions section
+* Risks section
+* Open questions section
+* Human review notice
+* Instruction not to invent unavailable facts
+* Instruction to distinguish assumptions from confirmed inputs
+
+Mock AI provider scope:
+
+Update the mock AI provider so that `HighLevelDesign` returns deterministic, realistic, architecture-quality Markdown.
+
+The mock HLD output must include:
+
+* Professional HLD structure
+* System context
+* Major components
+* Integration points
+* Deployment considerations
+* Security considerations
+* Observability considerations
+* Risks
+* Assumptions
+* Open questions
+* Human review notice
+
+Documentation scope:
+
+Update or create relevant documentation:
+
+* `README.md`
+* `docs/api-contracts.md`
+* `docs/local-development.md`
+* `docs/testing-strategy.md`
+* `docs/prompt-catalog.md`
+* `docs/responsible-ai-guidelines.md`
+* `docs/roadmap.md`
+* `architecture/lld.md`
+* `architecture/data-model.md`
+* `architecture/prompt-engineering-strategy.md`
+* `architecture/responsible-ai-architecture.md`
+* `architecture/api-governance.md`
+* `architecture/security-architecture.md`
+* `architecture/observability-architecture.md`
+
+Architecture expectations:
+
+1. Keep controllers thin.
+2. Keep artifact generation orchestration in the application layer.
+3. Keep AI provider usage behind the abstraction.
+4. Use the mock provider by default for local development.
+5. Do not require Azure OpenAI credentials.
+6. Do not call real Azure OpenAI in this epic.
+7. Reuse the existing GeneratedArtifact persistence model.
+8. Store prompt template name and version with generated HLD artifacts.
+9. Store provider name with generated HLD artifacts.
+10. Keep design ready for future LLD, ADR, NFR, Security Review, and API Contract Review artifacts.
+11. Keep the implementation portfolio-grade and Solution Architect quality.
+
+Responsible AI expectations:
+
+This epic generates AI-assisted architecture content, so responsible AI handling is mandatory.
+
+Ensure implementation and documentation state:
+
+1. Generated HLD artifacts are AI-assisted drafts.
+2. Human architect review is mandatory before use.
+3. Mock provider output is deterministic demo content.
+4. No external AI provider is called in this epic.
+5. Sensitive requirement text should not be logged in full.
+6. Generated HLD must include assumptions, risks, and open questions.
+7. The system should not claim generated output is production-approved.
+8. The UI should visibly show a human review notice.
+
+Testing expectations:
+
+Add tests for:
+
+* Successful High-Level Design artifact generation
+* HLD generation request with missing project ID
+* HLD generation request with missing requirement submission ID
+* HLD generation request for non-existing project
+* HLD generation request for non-existing requirement
+* HLD artifact persisted successfully
+* HLD artifact linked to project and requirement
+* Prompt template name and version stored
+* Provider name stored as mock provider
+* Generated HLD content includes human review notice
+* Generated HLD content includes assumptions, risks, and open questions
+* Generated HLD content includes major components and integration points
+* Fetching HLD artifact by ID
+* Fetching HLD artifact by project ID
+* Fetching HLD artifact by requirement ID
+* Exporting HLD artifact as Markdown
+* Unsupported artifact types still return clear validation or not-supported response
+* Full sensitive requirement text is not logged where practical
+
+CI/CD expectation:
+
+Update GitHub Actions if required so the build and tests include the new backend and frontend changes.
+
+Important rules:
+
+* Do not hardcode secrets.
+* Do not use real confidential business data.
+* Do not log full sensitive requirement text.
+* Do not implement real Azure OpenAI calls yet.
+* Do not require Azure OpenAI credentials for local development.
+* Do not overbuild beyond Epic 5.
+* Do not implement LLD, ADR, NFR, Security Review, or API Contract Review generation yet.
+* Keep the project Azure-ready.
+* Keep the implementation portfolio-grade and Solution Architect quality.
+
+After implementation, provide:
+
+1. What was implemented.
+2. Backend files created or modified.
+3. AI provider or prompt files created or modified.
+4. Frontend files created or modified.
+5. Database/migration changes if any.
+6. API behavior added or updated.
+7. Tests added.
+8. Documentation updated.
+9. Responsible AI notes.
+10. Commands to run locally.
+11. Commands to test.
+12. Any assumptions made.
+13. Recommended next epic.

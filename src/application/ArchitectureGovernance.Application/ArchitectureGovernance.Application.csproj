@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\domain\ArchitectureGovernance.Domain\ArchitectureGovernance.Domain.csproj" />
+    <ProjectReference Include="..\..\ai\ArchitectureGovernance.AI.Abstractions\ArchitectureGovernance.AI.Abstractions.csproj" />
+    <ProjectReference Include="..\..\building-blocks\SharedKernel\SharedKernel.csproj" />
+  </ItemGroup>
+</Project>

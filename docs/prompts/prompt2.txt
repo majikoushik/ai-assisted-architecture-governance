@@ -1,0 +1,181 @@
+Implement Epic 1: Architecture Project Workspace based on AGENTS.md and the existing repository foundation.
+
+Build the first business capability for the `ai-assisted-architecture-governance` repository: Architecture Project Workspace Management.
+
+Before implementation:
+
+1. Read `AGENTS.md`.
+2. Review the repository structure created in Epic 0.
+3. Review existing backend solution, Angular frontend structure, prompt catalog, architecture docs, ADRs, tests, Docker setup, and CI workflow.
+4. Preserve the architecture direction, responsible AI guidance, testing standards, documentation expectations, and Azure-readiness defined in `AGENTS.md`.
+
+Epic 1 Goal:
+
+Allow users to create, view, and manage architecture project workspaces.
+
+An Architecture Project represents one solution, initiative, modernization program, or architecture review workspace. Future epics will attach requirement submissions, generated artifacts, prompt outputs, reviews, and AI interaction metadata to this project.
+
+Backend scope:
+
+1. Implement Architecture Project management in the backend.
+2. Create a clean domain model for `ArchitectureProject`.
+3. Add request and response DTOs.
+4. Add validation for all required fields.
+5. Add persistence using Entity Framework Core.
+6. Add database migration support.
+7. Add synthetic seed data if appropriate.
+8. Add Swagger/OpenAPI documentation readiness.
+9. Add structured logging.
+10. Use correlation ID support if already available from Epic 0.
+11. Add proper error handling using Problem Details or the existing error-handling pattern.
+12. Add health check readiness if not already present.
+13. Add unit tests and API/integration tests where practical.
+
+Architecture Project fields:
+
+* Project ID
+* Project name
+* Business domain
+* Description
+* Owner
+* Status
+* Created timestamp
+* Updated timestamp
+
+Supported project statuses:
+
+* Draft
+* Active
+* UnderReview
+* Archived
+
+Validation rules:
+
+* Project name is required.
+* Project name should have a reasonable length limit.
+* Business domain is required.
+* Description is required.
+* Owner is required.
+* Status must be a supported value.
+* Created timestamp should be system generated.
+* Updated timestamp should be system generated or updated automatically.
+
+Suggested API endpoints:
+
+* `POST /api/v1/projects`
+* `GET /api/v1/projects`
+* `GET /api/v1/projects/{projectId}`
+* `PUT /api/v1/projects/{projectId}`
+* `PATCH /api/v1/projects/{projectId}/status`
+
+Use consistent API response and error response patterns according to `AGENTS.md`.
+
+Frontend scope:
+
+1. Implement Architecture Project Workspace UI in Angular.
+2. Use the existing feature-based frontend structure.
+3. Add a project list screen.
+4. Add a project creation form.
+5. Add a project details screen.
+6. Add project status display using professional badges.
+7. Use reactive forms.
+8. Add field-level and form-level validation.
+9. Show user-friendly validation messages.
+10. Show loading state during API calls.
+11. Show success message after project creation.
+12. Show API error message when project creation or fetch fails.
+13. Use typed Angular models and services.
+14. Do not call APIs directly from components; use a dedicated project API service.
+15. Keep the UI professional, clean, and suitable for an architecture governance platform.
+
+Frontend route expectations:
+
+* `/projects`
+* `/projects/new`
+* `/projects/:id`
+* Optional: link project summary cards from `/dashboard`
+
+Documentation scope:
+
+Update or create relevant documentation:
+
+* `README.md`
+* `docs/api-contracts.md`
+* `docs/local-development.md`
+* `docs/testing-strategy.md`
+* `docs/roadmap.md`
+* `architecture/lld.md`
+* `architecture/data-model.md`
+* `architecture/api-governance.md`
+* `architecture/security-architecture.md`
+* `architecture/responsible-ai-architecture.md`
+
+Architecture expectations:
+
+1. Keep controllers thin.
+2. Keep business validation out of controllers.
+3. Use clear application/domain/infrastructure boundaries.
+4. Use architecture-governance-friendly naming.
+5. Document the Architecture Project responsibility clearly.
+6. Do not implement requirement submission yet.
+7. Do not implement AI artifact generation yet.
+8. Do not implement real Azure OpenAI integration yet.
+9. Keep the design ready for future Requirement Submission and Artifact Generation epics.
+
+Testing expectations:
+
+Add tests for:
+
+* Successful project creation
+* Missing project name
+* Missing business domain
+* Missing description
+* Missing owner
+* Invalid status
+* Fetching all projects
+* Fetching project by ID
+* Project not found scenario
+* Updating project details
+* Updating project status
+* Invalid status update
+
+Responsible AI expectations:
+
+This epic does not generate AI content yet, but it must preserve responsible AI architecture direction.
+
+Ensure documentation continues to state:
+
+* AI-generated artifacts in future epics will be drafts.
+* Human architect review will be mandatory.
+* No real confidential business requirements should be used in sample data.
+* No sensitive data should be logged.
+
+CI/CD expectation:
+
+Update GitHub Actions if required so the build and tests include the new backend and frontend changes.
+
+Important rules:
+
+* Do not hardcode secrets.
+* Do not use real confidential business data.
+* Do not implement requirement submission yet.
+* Do not implement prompt execution yet.
+* Do not implement real Azure OpenAI calls yet.
+* Do not overbuild beyond Epic 1.
+* Keep the project Azure-ready.
+* Keep the implementation portfolio-grade and Solution Architect quality.
+
+After implementation, provide:
+
+1. What was implemented.
+2. Backend files created or modified.
+3. Frontend files created or modified.
+4. Database/migration changes.
+5. API endpoints added.
+6. Tests added.
+7. Documentation updated.
+8. Responsible AI notes.
+9. Commands to run locally.
+10. Commands to test.
+11. Any assumptions made.
+12. Recommended next epic.

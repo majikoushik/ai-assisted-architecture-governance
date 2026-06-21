@@ -1,0 +1,500 @@
+Implement Epic 13: Portfolio Polish based on AGENTS.md and the existing repository.
+
+Build the final portfolio-quality polish for the `ai-assisted-architecture-governance` repository.
+
+Before implementation:
+
+1. Read `AGENTS.md`.
+2. Review the current repository structure.
+3. Review the implementation from Epic 0 through Epic 12.
+4. Review all backend services, Angular frontend, prompt catalog, mock AI provider, Azure OpenAI provider readiness, artifact generation workflows, review workflow, Docker setup, GitHub Actions workflows, Azure deployment blueprint, architecture documents, ADRs, tests, and README.
+5. Preserve the existing architecture direction, responsible AI guidance, AI provider abstraction, safe AI telemetry rules, security standards, observability standards, testing standards, Docker standards, Azure deployment direction, and Solution Architect quality bar.
+
+Epic 13 Goal:
+
+Make the repository complete, professional, recruiter-friendly, and suitable for a Solution Architect GitHub portfolio.
+
+The final repository should clearly demonstrate:
+
+* AI-assisted Solution Architecture
+* Azure OpenAI readiness
+* Responsible AI governance
+* Prompt engineering maturity
+* HLD, LLD, ADR, NFR, Security, and API review artifact generation
+* Human-in-the-loop review workflow
+* Artifact versioning
+* .NET backend architecture
+* Angular frontend architecture
+* Azure cloud-readiness
+* DevOps maturity
+* Observability and safe AI telemetry
+* Security and secrets-management awareness
+* Architecture documentation quality
+* Professional engineering discipline
+
+This epic is not mainly about adding new business features. It is about improving presentation, documentation, diagrams, consistency, usability, and portfolio impact.
+
+Repository Presentation Scope:
+
+1. Rewrite or polish the root `README.md`.
+2. Make the README visually professional and easy to scan.
+3. Add useful project badges where appropriate.
+4. Add a clear executive summary.
+5. Add architecture highlights.
+6. Add AI-assisted governance workflow summary.
+7. Add responsible AI section.
+8. Add prompt catalog section.
+9. Add artifact generation capability section.
+10. Add human review and artifact versioning section.
+11. Add technology stack section.
+12. Add local setup section.
+13. Add Docker setup section.
+14. Add API documentation section.
+15. Add Azure deployment blueprint section.
+16. Add observability and safe telemetry section.
+17. Add security and secrets-management section.
+18. Add roadmap section.
+19. Add screenshots section or placeholders if screenshots are not available.
+20. Add architecture diagram links.
+21. Add recruiter/interviewer-focused portfolio value summary.
+
+README should make the visitor quickly understand:
+
+* What the project is
+* Why it exists
+* What architecture skills it demonstrates
+* How AI is used responsibly
+* How prompts are managed
+* How generated artifacts are reviewed
+* How the project maps to Azure
+* How to run it locally
+* How to test it
+
+Suggested README sections:
+
+```markdown
+# AI-Assisted Architecture Governance
+
+## Executive Summary
+## What This Project Demonstrates
+## Architecture Governance Workflow
+## Responsible AI Positioning
+## Core Capabilities
+## Technology Stack
+## Repository Structure
+## System Architecture
+## Prompt Catalog
+## Generated Architecture Artifacts
+## Human Review and Versioning
+## Application Screens
+## API Overview
+## Local Development
+## Docker-Based Development
+## Testing
+## Observability and Safe AI Telemetry
+## Security and Secrets Management
+## Azure Deployment Blueprint
+## Architecture Decision Records
+## Roadmap
+## Portfolio Value
+```
+
+Architecture Diagram Scope:
+
+Create or improve architecture diagrams using Mermaid markdown where possible.
+
+Add diagrams under:
+
+```text
+architecture/diagrams/
+```
+
+Required diagrams:
+
+1. System context diagram
+2. Container diagram
+3. Requirement-to-artifact generation flow
+4. AI provider abstraction sequence
+5. Prompt template loading flow
+6. Human review and artifact versioning flow
+7. Safe AI telemetry flow
+8. Azure deployment diagram
+9. CI/CD pipeline diagram
+
+Suggested files:
+
+```text
+architecture/diagrams/system-context.md
+architecture/diagrams/container-diagram.md
+architecture/diagrams/requirement-to-artifact-flow.md
+architecture/diagrams/ai-provider-sequence.md
+architecture/diagrams/prompt-template-flow.md
+architecture/diagrams/review-versioning-flow.md
+architecture/diagrams/safe-ai-telemetry-flow.md
+architecture/diagrams/azure-deployment.md
+architecture/diagrams/cicd-pipeline.md
+```
+
+Use Mermaid diagrams unless the repository already has a better diagram approach.
+
+Documentation Polish Scope:
+
+Review and polish all major documentation files.
+
+Update or improve:
+
+* `README.md`
+* `architecture/README.md`
+* `architecture/hld.md`
+* `architecture/lld.md`
+* `architecture/nfrs.md`
+* `architecture/responsible-ai-architecture.md`
+* `architecture/prompt-engineering-strategy.md`
+* `architecture/api-governance.md`
+* `architecture/security-architecture.md`
+* `architecture/observability-architecture.md`
+* `architecture/deployment-architecture.md`
+* `architecture/data-model.md`
+* `docs/setup.md`
+* `docs/local-development.md`
+* `docs/api-contracts.md`
+* `docs/testing-strategy.md`
+* `docs/prompt-catalog.md`
+* `docs/responsible-ai-guidelines.md`
+* `docs/azure-openai-provider.md`
+* `docs/deployment.md`
+* `docs/azure-deployment-guide.md`
+* `docs/devops-guide.md`
+* `docs/operational-runbook.md`
+* `docs/roadmap.md`
+
+Documentation should be:
+
+* Clear
+* Consistent
+* Professional
+* Free from obvious placeholders unless intentionally marked as placeholders
+* Aligned with actual code
+* Useful to a recruiter, architect, or interviewer
+* Honest about limitations
+* Clear that Azure OpenAI is optional/configuration-driven
+* Clear that AI-generated artifacts require human review
+
+Prompt Catalog Polish Scope:
+
+Review and polish all prompt templates under:
+
+```text
+prompts/
+```
+
+Ensure every prompt template has:
+
+* Clear title
+* Version
+* Purpose
+* Expected input
+* Output format
+* Constraints
+* Assumptions section
+* Risks section
+* Open questions section
+* Human review notice
+* Anti-hallucination guidance
+* Instruction to separate known facts from assumptions
+* Instruction to avoid production-approval claims
+
+Prompt templates to review:
+
+* `prompts/requirement-analysis.md`
+* `prompts/hld-generation.md`
+* `prompts/lld-generation.md`
+* `prompts/adr-generation.md`
+* `prompts/nfr-review.md`
+* `prompts/api-contract-review.md`
+* `prompts/security-review.md`
+* `prompts/risk-assumption-review.md`
+
+Sample Content Scope:
+
+Review sample requirements under:
+
+```text
+samples/
+```
+
+Ensure samples are:
+
+* Synthetic
+* Safe for public GitHub
+* Professional
+* Useful for demos
+* Representative of enterprise architecture scenarios
+
+Add or improve sample output files if useful:
+
+```text
+samples/outputs/
+  requirement-analysis-sample.md
+  hld-sample.md
+  lld-sample.md
+  adr-sample.md
+  nfr-review-sample.md
+  security-review-sample.md
+  api-contract-review-sample.md
+  risk-assumption-review-sample.md
+```
+
+If sample outputs are added, clearly mark them as mock/demo outputs.
+
+ADR Polish Scope:
+
+Review all ADRs under:
+
+```text
+architecture/adr/
+```
+
+Ensure each ADR has:
+
+* Clear title
+* Status
+* Context
+* Decision
+* Consequences
+* Alternatives considered
+
+Add missing ADRs if important decisions are not yet captured.
+
+Possible additional ADRs:
+
+```text
+0007-artifact-generation-workflow.md
+0008-human-review-and-versioning.md
+0009-safe-ai-telemetry.md
+0010-azure-deployment-blueprint.md
+0011-angular-frontend-architecture.md
+0012-docker-and-devops-strategy.md
+```
+
+Frontend Polish Scope:
+
+Improve Angular frontend presentation where practical.
+
+Focus on:
+
+1. Professional dashboard layout.
+2. Clean navigation.
+3. Project workspace clarity.
+4. Requirement submission usability.
+5. Artifact generation workflow clarity.
+6. Markdown artifact viewer readability.
+7. Prompt catalog screen clarity.
+8. Review workflow usability.
+9. Artifact status badges.
+10. Artifact version display.
+11. AI provider indicator if already implemented.
+12. Responsible AI notice visibility.
+13. Better empty states.
+14. Better loading states.
+15. Better API error messages.
+16. Consistent spacing and typography.
+17. Responsive layout.
+18. Screens that look like an enterprise architecture governance platform.
+
+Do not introduce a heavy UI framework unless already used.
+
+Do not overbuild.
+
+If screenshots are practical to generate or document, add a screenshots section in README and place screenshots under:
+
+```text
+docs/screenshots/
+```
+
+If screenshots cannot be generated, add clear placeholders and instructions for adding them later.
+
+Backend Polish Scope:
+
+Review backend implementation for consistency.
+
+Improve where practical:
+
+1. API route consistency.
+2. Response envelope consistency.
+3. Problem Details consistency.
+4. Swagger metadata.
+5. Validation messages.
+6. Logging messages.
+7. Correlation ID usage.
+8. Safe AI telemetry consistency.
+9. Health check consistency.
+10. AI provider abstraction consistency.
+11. Prompt template version usage.
+12. Artifact generation metadata.
+13. Review workflow naming.
+14. Removal of dead code or unnecessary placeholders.
+
+Do not introduce major architectural rewrites unless there is a clear issue.
+
+Testing Polish Scope:
+
+Review test coverage and test organization.
+
+Improve where practical:
+
+1. Ensure important domain rules have tests.
+2. Ensure artifact generation flows have tests.
+3. Ensure mock provider behavior has tests.
+4. Ensure Azure OpenAI provider readiness has tests without real credentials.
+5. Ensure prompt loading has tests.
+6. Ensure review workflow has tests.
+7. Ensure validation scenarios have tests.
+8. Ensure frontend tests do not block CI unnecessarily.
+9. Ensure CI commands match documentation.
+10. Add a testing summary in `docs/testing-strategy.md`.
+
+Do not create fake tests that do not validate meaningful behavior.
+
+DevOps and Azure Polish Scope:
+
+Review Docker, CI, and Azure deployment documentation.
+
+Ensure:
+
+1. Docker Compose instructions are correct.
+2. CI workflow names are professional.
+3. Azure deployment templates are clearly marked as blueprint-ready.
+4. GitHub secrets are documented.
+5. Azure resources are documented.
+6. Azure OpenAI configuration strategy is documented.
+7. Bicep validation commands are documented.
+8. Cost-awareness notes are included.
+9. Cleanup steps are included for demo resources.
+10. No real credentials or sensitive values are present.
+11. `AI_PROVIDER=Mock` remains the local and CI default.
+12. Azure OpenAI secrets are never exposed to Angular frontend.
+
+Responsible AI Polish Scope:
+
+Review the full repository for responsible AI clarity.
+
+Ensure the repository clearly states:
+
+1. Generated artifacts are AI-assisted drafts.
+2. Human architect review is mandatory.
+3. Mock provider is used for local and demo workflows.
+4. Azure OpenAI is optional and configuration-driven.
+5. Public demo should use synthetic requirements only.
+6. Full prompts, full requirement text, and full AI responses should not be logged by default.
+7. Security review output is not a substitute for formal security assessment.
+8. API contract review output is not a substitute for formal API governance.
+9. Generated architecture content should not be treated as production-approved.
+10. Enterprise production usage requires data governance, privacy, security, and compliance review.
+
+Portfolio Quality Scope:
+
+Add a section explaining what this project demonstrates for a Solution Architect role.
+
+Suggested points:
+
+* AI-assisted SDLC and architecture workflow design
+* Architecture governance platform thinking
+* Prompt engineering for structured architecture artifacts
+* Azure OpenAI provider abstraction
+* Mock-provider-first local development
+* Responsible AI and human-in-the-loop review
+* Artifact versioning and traceability
+* API-first design
+* .NET backend architecture
+* Angular frontend architecture
+* Azure cloud-native deployment planning
+* Observability and safe AI telemetry
+* Secure configuration and secret management readiness
+* CI/CD and containerization
+* Documentation and architecture governance
+
+Code Cleanup Scope:
+
+Perform safe cleanup only.
+
+Allowed cleanup:
+
+* Remove unused imports.
+* Remove obsolete comments.
+* Improve naming clarity.
+* Improve folder organization only if low-risk.
+* Fix obvious inconsistencies.
+* Align documentation with actual commands.
+* Ensure `.gitignore` is complete.
+* Ensure `.dockerignore` is present where needed.
+* Ensure `.env.example` contains only safe placeholders.
+
+Avoid risky cleanup:
+
+* Do not rewrite major architecture.
+* Do not break working features.
+* Do not remove tests.
+* Do not remove documentation.
+* Do not remove prompt templates.
+* Do not remove mock provider.
+* Do not introduce unrelated features.
+* Do not add real authentication unless already implemented.
+* Do not deploy to Azure.
+
+Final Validation Scope:
+
+Run or provide commands for:
+
+```bash
+dotnet restore
+dotnet build
+dotnet test
+npm install
+npm run build
+npm test
+docker compose build
+docker compose up
+az bicep build --file infra/bicep/main.bicep
+```
+
+Use only commands that match the actual repository structure.
+
+If some commands cannot be run, explain the reason clearly and document the expected validation command.
+
+Important Rules:
+
+* Do not hardcode secrets.
+* Do not add real confidential business data.
+* Do not log full prompts.
+* Do not log full requirement text.
+* Do not log full AI responses by default.
+* Do not require Azure OpenAI credentials.
+* Do not make Azure OpenAI the default local provider.
+* Do not overbuild beyond portfolio polish.
+* Do not deploy to Azure.
+* Do not introduce breaking changes.
+* Do not hide known limitations.
+* Keep the repository honest and professional.
+* Make the final output look like it was prepared by a senior Azure Solution Architect.
+
+After implementation, provide:
+
+1. What was polished.
+2. README improvements.
+3. Architecture diagram files created or modified.
+4. Documentation files updated.
+5. Prompt templates improved.
+6. Sample files added or improved.
+7. ADRs created or updated.
+8. Frontend polish completed.
+9. Backend consistency improvements completed.
+10. DevOps/Azure documentation improvements completed.
+11. Responsible AI improvements completed.
+12. Tests or validation performed.
+13. Commands to run locally.
+14. Commands to test.
+15. Commands to validate Docker.
+16. Commands to validate Azure Bicep.
+17. Any known limitations.
+18. Recommended final manual checks before publishing the repo.

@@ -1,0 +1,235 @@
+Implement Epic 2: Requirement Submission based on AGENTS.md and the existing repository.
+
+Build the next business capability for the `ai-assisted-architecture-governance` repository: Requirement Submission.
+
+Before implementation:
+
+1. Read `AGENTS.md`.
+2. Review the current repository structure.
+3. Review the implementation from Epic 0 and Epic 1.
+4. Review existing Architecture Project APIs, Angular project workspace screens, tests, documentation, prompt catalog, Docker setup, and CI workflow.
+5. Preserve the architecture direction, responsible AI guidance, testing standards, documentation expectations, API response pattern, error handling approach, and Azure-readiness defined in `AGENTS.md`.
+
+Epic 2 Goal:
+
+Allow users to submit business or technical requirements under an Architecture Project.
+
+A Requirement Submission represents the raw business need, technical initiative, modernization request, or solution idea that will later be analyzed by the AI-assisted architecture engine.
+
+Backend scope:
+
+1. Implement Requirement Submission management in the backend.
+2. Create a clean domain model for `RequirementSubmission`.
+3. Associate each requirement submission with an existing `ArchitectureProject`.
+4. Add request and response DTOs.
+5. Add validation for all required fields.
+6. Add persistence using Entity Framework Core.
+7. Add database migration support.
+8. Add synthetic seed data if appropriate.
+9. Add Swagger/OpenAPI documentation readiness.
+10. Add structured logging.
+11. Use correlation ID support if already available.
+12. Add proper error handling using Problem Details or the existing error-handling pattern.
+13. Add unit tests and API/integration tests where practical.
+
+Requirement Submission fields:
+
+* Requirement submission ID
+* Project ID
+* Requirement title
+* Requirement text
+* Business domain
+* Domain context
+* Expected artifact types
+* Submitted by
+* Status
+* Created timestamp
+* Updated timestamp
+
+Supported requirement statuses:
+
+* Draft
+* Submitted
+* AnalysisPending
+* AnalysisCompleted
+* Archived
+
+Supported expected artifact types:
+
+* RequirementAnalysis
+* HighLevelDesign
+* LowLevelDesign
+* ArchitectureDecisionRecord
+* NonFunctionalRequirementReview
+* ApiContractReview
+* SecurityReview
+* RiskAndAssumptionReview
+
+Validation rules:
+
+* Project ID is required.
+* Project ID must refer to an existing Architecture Project if project lookup is available.
+* Requirement title is required.
+* Requirement title should have a reasonable length limit.
+* Requirement text is required.
+* Requirement text should have a minimum useful length.
+* Requirement text should have a maximum length limit to avoid unsafe or excessive payloads.
+* Business domain is required.
+* Submitted by is required.
+* At least one expected artifact type is required.
+* Expected artifact types must be supported values.
+* Status must be a supported value.
+* Created timestamp should be system generated.
+* Updated timestamp should be system generated or updated automatically.
+
+Suggested API endpoints:
+
+* `POST /api/v1/requirements`
+* `GET /api/v1/requirements/{requirementId}`
+* `GET /api/v1/projects/{projectId}/requirements`
+* `GET /api/v1/requirements`
+* `PUT /api/v1/requirements/{requirementId}`
+* `PATCH /api/v1/requirements/{requirementId}/status`
+
+Use consistent API response and error response patterns according to `AGENTS.md`.
+
+Frontend scope:
+
+1. Implement Requirement Submission UI in Angular.
+2. Use the existing feature-based frontend structure.
+3. Add a requirement submission form.
+4. Add requirement list screen.
+5. Add requirement details screen.
+6. Allow selecting an Architecture Project for the requirement.
+7. Allow selecting expected artifact types.
+8. Display requirement status using professional badges.
+9. Use reactive forms.
+10. Add field-level and form-level validation.
+11. Show helpful guidance text explaining what a good requirement should contain.
+12. Show user-friendly validation messages.
+13. Show loading state during API calls.
+14. Show success message after requirement submission.
+15. Show API error message when submission or fetch fails.
+16. Use typed Angular models and services.
+17. Do not call APIs directly from components; use a dedicated requirement API service.
+18. Keep the UI professional, clean, and suitable for an architecture governance platform.
+
+Frontend route expectations:
+
+* `/requirements`
+* `/requirements/new`
+* `/requirements/:id`
+* `/projects/:projectId/requirements`
+* Optional: link requirement summary cards from `/dashboard`
+* Optional: add “Submit Requirement” action on `/projects/:id`
+
+Sample data expectations:
+
+Update or use safe synthetic requirement examples from:
+
+* `samples/banking-loan-platform-requirement.md`
+* `samples/healthcare-care-coordination-requirement.md`
+* `samples/ecommerce-order-management-requirement.md`
+
+Do not use real confidential business requirements.
+
+Do not use client-specific proprietary content.
+
+Documentation scope:
+
+Update or create relevant documentation:
+
+* `README.md`
+* `docs/api-contracts.md`
+* `docs/local-development.md`
+* `docs/testing-strategy.md`
+* `docs/roadmap.md`
+* `docs/responsible-ai-guidelines.md`
+* `architecture/lld.md`
+* `architecture/data-model.md`
+* `architecture/api-governance.md`
+* `architecture/security-architecture.md`
+* `architecture/responsible-ai-architecture.md`
+* `architecture/prompt-engineering-strategy.md`
+
+Architecture expectations:
+
+1. Keep controllers thin.
+2. Keep validation and business rules out of controllers.
+3. Use clear application/domain/infrastructure boundaries.
+4. Use architecture-governance-friendly naming.
+5. Document the Requirement Submission responsibility clearly.
+6. Do not implement AI artifact generation yet.
+7. Do not call real Azure OpenAI.
+8. Do not implement prompt execution yet.
+9. Keep requirement data model ready for future artifact generation.
+10. Preserve project-to-requirement traceability.
+11. Keep the design ready for future Prompt Catalog, Mock AI Provider, and Artifact Generation epics.
+
+Responsible AI expectations:
+
+This epic captures user-submitted requirement text, so responsible AI and privacy concerns must be addressed.
+
+Ensure the implementation and documentation state:
+
+1. Requirement submissions may contain sensitive business information in real enterprise use.
+2. The demo must use synthetic sample data only.
+3. Requirement text should not be logged in full.
+4. Requirement text should not be sent to any real AI provider in this epic.
+5. Future AI-generated artifacts will be drafts requiring human architect review.
+6. Users should avoid submitting confidential data in public demos.
+7. Logging should capture metadata, not full sensitive requirement content.
+
+Testing expectations:
+
+Add tests for:
+
+* Successful requirement submission
+* Missing project ID
+* Invalid project ID if project lookup exists
+* Missing requirement title
+* Missing requirement text
+* Requirement text too short
+* Requirement text too long
+* Missing business domain
+* Missing submitted by
+* Missing expected artifact types
+* Unsupported artifact type
+* Invalid status
+* Fetching requirement by ID
+* Fetching requirements by project ID
+* Requirement not found scenario
+* Updating requirement details
+* Updating requirement status
+* Responsible logging does not log full requirement text where practical
+
+CI/CD expectation:
+
+Update GitHub Actions if required so the build and tests include the new backend and frontend changes.
+
+Important rules:
+
+* Do not hardcode secrets.
+* Do not use real confidential business data.
+* Do not log full sensitive requirement text.
+* Do not implement AI artifact generation yet.
+* Do not implement prompt execution yet.
+* Do not implement real Azure OpenAI calls yet.
+* Do not overbuild beyond Epic 2.
+* Keep the project Azure-ready.
+* Keep the implementation portfolio-grade and Solution Architect quality.
+
+After implementation, provide:
+
+1. What was implemented.
+2. Backend files created or modified.
+3. Frontend files created or modified.
+4. Database/migration changes.
+5. API endpoints added.
+6. Tests added.
+7. Documentation updated.
+8. Responsible AI and privacy notes.
+9. Commands to run locally.
+10. Commands to test.
+11. Any assumptions made.
+12. Recommended next epic.

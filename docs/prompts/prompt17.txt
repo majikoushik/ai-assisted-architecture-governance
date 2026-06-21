@@ -1,0 +1,64 @@
+Perform a GitHub Portfolio Publishing Pass for the `ai-assisted-architecture-governance` repository.
+
+Read `AGENTS.md` first.
+
+Goal:
+
+Make the repository impressive and easy to understand for recruiters, solution architects, engineering managers, Azure architects, and interviewers.
+
+Focus on presentation, clarity, professional impact, and honest portfolio positioning.
+
+Scope:
+
+1. Polish the root `README.md`.
+2. Make the first 30 seconds of the README highly impressive.
+3. Add a strong executive summary.
+4. Highlight what this project demonstrates for a Solution Architect role.
+5. Highlight AI-assisted architecture governance capabilities.
+6. Highlight Azure OpenAI readiness.
+7. Highlight responsible AI and human-in-the-loop review.
+8. Highlight prompt engineering maturity.
+9. Highlight artifact generation capabilities:
+
+   * Requirement Analysis
+   * HLD
+   * LLD
+   * ADR
+   * NFR Review
+   * Security Review
+   * API Contract Review
+   * Risk and Assumption Review
+10. Highlight .NET, Angular, Azure, Docker, GitHub Actions, observability, and security capabilities.
+11. Ensure architecture diagrams are linked from the README.
+12. Ensure setup instructions are clear.
+13. Ensure screenshots section exists.
+14. Add screenshot placeholders if real screenshots are not available.
+15. Add a clear “Portfolio Value” section.
+16. Add a clear “What This Project Demonstrates” section.
+17. Add a final roadmap section.
+18. Ensure documentation links work.
+19. Ensure badges are useful and not excessive.
+20. Ensure the repo does not look like a toy AI chatbot project.
+
+Do not add new business features.
+
+Do not exaggerate capabilities that are not implemented.
+
+Be honest about:
+
+* What is implemented
+* What is simulated through the mock provider
+* What is Azure OpenAI-ready but optional
+* What is Azure deployment blueprint only
+* What requires human architect review
+
+After completion, provide:
+
+1. README improvements made.
+2. Portfolio positioning improvements.
+3. Documentation links verified.
+4. Screenshots or placeholders added.
+5. Final publishing checklist.
+6. Suggested GitHub repo description.
+7. Suggested GitHub topics/tags.
+8. Final manual checks before making the repo public.

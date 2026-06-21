@@ -1,0 +1,250 @@
+Implement Epic 8: Review Workflow and Artifact Versioning based on AGENTS.md and the existing repository.
+
+Build the next core capability for the `ai-assisted-architecture-governance` repository: Human Review Workflow and Artifact Versioning.
+
+Before implementation:
+
+1. Read `AGENTS.md`.
+2. Review the current repository structure.
+3. Review the implementation from Epic 0 through Epic 7.
+4. Review existing Architecture Project, Requirement Submission, Prompt Catalog, Mock AI Provider, Artifact Generation, Artifact Viewer, and Governance Review implementations.
+5. Review existing Angular screens, services, tests, documentation, prompt templates, Docker setup, and CI workflow.
+6. Preserve the architecture direction, responsible AI guidance, testing standards, API response pattern, error handling approach, prompt engineering strategy, AI provider abstraction, and Azure-readiness defined in `AGENTS.md`.
+
+Epic 8 Goal:
+
+Add a human review workflow and artifact versioning capability so AI-assisted architecture artifacts can be reviewed, commented on, approved, rejected, and versioned.
+
+This epic is very important because the platform must not behave like an AI output generator only. It must demonstrate architecture governance maturity by making human architect review a formal part of the workflow.
+
+Backend scope:
+
+1. Implement review workflow for generated artifacts.
+2. Implement artifact status transitions.
+3. Implement artifact versioning.
+4. Create or complete the `ReviewRecord` domain model.
+5. Add request and response DTOs for review actions.
+6. Add persistence using Entity Framework Core.
+7. Add database migration support if needed.
+8. Add APIs to create and fetch reviews.
+9. Add APIs to update artifact review status.
+10. Add support for creating a new artifact version when regeneration or revision occurs, if practical.
+11. Add structured logging without logging full sensitive requirement text.
+12. Use correlation ID support if available.
+13. Add proper error handling using the existing Problem Details or global error-handling pattern.
+14. Add Swagger/OpenAPI documentation readiness.
+15. Add unit tests and API/integration tests where practical.
+
+Review workflow statuses:
+
+* Draft
+* NeedsReview
+* Reviewed
+* Approved
+* Rejected
+
+Artifact versioning expectations:
+
+1. Each generated artifact should have a version number.
+2. First generated artifact version should start with version `1`.
+3. Regenerated or revised artifact should create a new version instead of overwriting the previous one, if practical.
+4. Artifact history should be queryable by project and requirement.
+5. Previous versions should remain viewable.
+6. Artifact status should apply to a specific artifact version.
+7. Documentation should clearly explain the versioning model.
+
+Review record fields:
+
+* Review ID
+* Artifact ID
+* Project ID
+* Requirement submission ID
+* Reviewer name
+* Review status
+* Review comments
+* Created timestamp
+* Updated timestamp
+* Correlation ID
+
+Optional review fields if useful:
+
+* Review decision reason
+* Review category
+* Follow-up actions
+* Risk severity
+* Approval notes
+
+Suggested API endpoints:
+
+* `POST /api/v1/artifacts/{artifactId}/reviews`
+* `GET /api/v1/artifacts/{artifactId}/reviews`
+* `GET /api/v1/reviews/{reviewId}`
+* `PATCH /api/v1/artifacts/{artifactId}/status`
+* `GET /api/v1/artifacts/{artifactId}/versions`
+* `GET /api/v1/requirements/{requirementId}/artifacts/versions`
+
+Suggested review request:
+
+```json
+{
+  "reviewerName": "Architecture Reviewer",
+  "reviewStatus": "Reviewed",
+  "comments": "The generated architecture is a good draft. Add more detail on authentication, API versioning, and failure handling."
+}
+```
+
+Suggested artifact status update request:
+
+```json
+{
+  "status": "Approved",
+  "reason": "Reviewed and accepted for portfolio demo use.",
+  "updatedBy": "Architecture Reviewer"
+}
+```
+
+Use consistent API response and error response patterns according to `AGENTS.md`.
+
+Status transition expectations:
+
+Recommended valid transitions:
+
+* Draft → NeedsReview
+* Draft → Rejected
+* NeedsReview → Reviewed
+* NeedsReview → Rejected
+* Reviewed → Approved
+* Reviewed → Rejected
+* Rejected → NeedsReview
+* Approved → no further transition unless a new version is created
+
+If the existing implementation already has a clean status model, align with it only if it is documented and consistent.
+
+Frontend scope:
+
+1. Implement Review Workflow UI in Angular.
+2. Use the existing feature-based frontend structure.
+3. Add review section to the artifact details screen.
+4. Add review submission form.
+5. Add review history list.
+6. Add artifact status badge.
+7. Add artifact version display.
+8. Add artifact version history view if practical.
+9. Allow selecting previous artifact versions if practical.
+10. Add clear human review notice on generated artifact screens.
+11. Show loading state during review submission.
+12. Show user-friendly error message when review submission or status update fails.
+13. Use typed Angular models and services.
+14. Do not call APIs directly from components; use dedicated review/artifact API services.
+15. Keep the UI professional, clean, and suitable for an architecture governance platform.
+
+Frontend route expectations:
+
+* Reuse `/artifacts/:id`
+* Optional: `/artifacts/:id/reviews`
+* Optional: `/artifacts/:id/versions`
+* Optional: show review status summary on `/requirements/:requirementId/artifacts`
+* Optional: show pending reviews on `/dashboard`
+
+Documentation scope:
+
+Update or create relevant documentation:
+
+* `README.md`
+* `docs/api-contracts.md`
+* `docs/local-development.md`
+* `docs/testing-strategy.md`
+* `docs/responsible-ai-guidelines.md`
+* `docs/roadmap.md`
+* `architecture/lld.md`
+* `architecture/data-model.md`
+* `architecture/responsible-ai-architecture.md`
+* `architecture/api-governance.md`
+* `architecture/security-architecture.md`
+* `architecture/observability-architecture.md`
+
+Architecture expectations:
+
+1. Keep controllers thin.
+2. Keep review workflow logic out of controllers.
+3. Put review status transition rules in domain or application layer.
+4. Keep artifact versioning explicit and traceable.
+5. Preserve previous artifact versions.
+6. Do not overwrite reviewed or approved artifacts without version history.
+7. Keep AI-generated content clearly marked as draft until reviewed.
+8. Keep review records immutable where practical.
+9. Keep the implementation ready for future Azure OpenAI Provider, Observability, DevOps, and Azure deployment epics.
+10. Keep the implementation portfolio-grade and Solution Architect quality.
+
+Responsible AI expectations:
+
+This epic formalizes the human-in-the-loop process.
+
+Ensure implementation and documentation state:
+
+1. AI-generated artifacts are drafts until reviewed.
+2. Human architect review is mandatory before artifacts are used for real delivery.
+3. Review status must be visible in the UI.
+4. Approved status means approved only within this demo workflow, not production or enterprise approval.
+5. Rejected artifacts should remain traceable.
+6. Artifact versions should preserve historical AI outputs.
+7. Sensitive requirement text should not be logged in full.
+8. Review comments should not contain secrets or confidential data in public demo use.
+
+Testing expectations:
+
+Add tests for:
+
+* Creating a review record
+* Fetching reviews by artifact ID
+* Fetching review by review ID
+* Updating artifact status from Draft to NeedsReview
+* Updating artifact status from NeedsReview to Reviewed
+* Updating artifact status from Reviewed to Approved
+* Updating artifact status from Reviewed to Rejected
+* Preventing invalid transition from Approved to Rejected
+* Preventing invalid transition from Approved to Draft
+* Rejected artifact can move back to NeedsReview if supported
+* Review creation for non-existing artifact returns not found
+* Missing reviewer name returns validation error
+* Missing review comments returns validation error if comments are required
+* Invalid review status returns validation error
+* Artifact version number is stored
+* New version does not overwrite previous version if regeneration/versioning is implemented
+* Previous artifact versions can be fetched
+* Review record includes correlation ID where practical
+* Sensitive full requirement text is not logged where practical
+
+CI/CD expectation:
+
+Update GitHub Actions if required so the build and tests include the new backend and frontend changes.
+
+Important rules:
+
+* Do not hardcode secrets.
+* Do not use real confidential business data.
+* Do not log full sensitive requirement text.
+* Do not implement real Azure OpenAI calls yet.
+* Do not require Azure OpenAI credentials for local development.
+* Do not overbuild beyond Epic 8.
+* Do not implement Azure deployment yet.
+* Do not remove existing generated artifact capabilities.
+* Keep the project Azure-ready.
+* Keep the implementation portfolio-grade and Solution Architect quality.
+
+After implementation, provide:
+
+1. What was implemented.
+2. Backend files created or modified.
+3. Frontend files created or modified.
+4. Database/migration changes if any.
+5. API behavior added or updated.
+6. Artifact versioning behavior added.
+7. Review workflow behavior added.
+8. Tests added.
+9. Documentation updated.
+10. Responsible AI notes.
+11. Commands to run locally.
+12. Commands to test.
+13. Any assumptions made.
+14. Recommended next epic.

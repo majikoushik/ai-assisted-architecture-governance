@@ -1,0 +1,235 @@
+Implement Epic 0: Repository Foundation based on AGENTS.md.
+
+Create the initial enterprise-grade foundation for the `ai-assisted-architecture-governance` repository.
+
+Follow the architecture, quality standards, responsible AI guidance, folder structure, Azure-readiness direction, documentation expectations, testing expectations, prompt engineering expectations, and agent workflow rules defined in `AGENTS.md`.
+
+Epic 0 Goal:
+
+Create a clean, professional, Solution Architect-grade repository foundation for an AI-assisted architecture governance platform.
+
+This project must not look like a generic chatbot or toy AI demo. It should look like an enterprise architecture governance accelerator built by a senior Solution Architect.
+
+Scope for Epic 0:
+
+1. Create the recommended repository structure.
+2. Create the initial .NET backend solution skeleton.
+3. Create the Angular frontend skeleton.
+4. Create the prompt catalog skeleton.
+5. Create architecture documentation.
+6. Create responsible AI documentation.
+7. Create initial ADR files.
+8. Create developer setup documentation.
+9. Create Docker Compose foundation.
+10. Create GitHub Actions CI foundation.
+11. Add `.gitignore` and `.editorconfig`.
+12. Add a professional root `README.md`.
+
+Backend expectations:
+
+* Use ASP.NET Core Web API.
+* Use a clean architecture or clearly separated layered structure.
+* Create the initial backend projects for:
+
+  * `ArchitectureGovernance.Api`
+  * `ArchitectureGovernance.Application`
+  * `ArchitectureGovernance.Domain`
+  * `ArchitectureGovernance.Infrastructure`
+  * `ArchitectureGovernance.AI.Abstractions`
+  * `ArchitectureGovernance.AI.Mock`
+  * `ArchitectureGovernance.AI.AzureOpenAI`
+* Add building block folders or projects for:
+
+  * SharedKernel
+  * Observability
+  * Security
+  * Exporting
+* Keep implementation minimal but clean.
+* Add health check readiness.
+* Add Swagger/OpenAPI readiness.
+* Add global error-handling readiness.
+* Add correlation ID readiness.
+* Add placeholder test projects where appropriate.
+* Do not require real Azure OpenAI credentials for local development.
+
+Frontend expectations:
+
+* Use Angular.
+* Create the Angular app under:
+  `src/web/architecture-governance-portal`
+* Use a professional feature-based structure.
+* Add initial routes or placeholders for:
+
+  * Dashboard
+  * Projects
+  * Requirement Submission
+  * Artifact Generation
+  * Artifact Viewer
+  * Prompt Catalog
+  * Review Workflow
+* Keep the UI foundation clean, modern, and enterprise-ready.
+* Prepare for Markdown artifact rendering, but do not overbuild it in Epic 0.
+
+Prompt catalog expectations:
+
+Create the `prompts/` folder with initial prompt template files:
+
+* `prompts/README.md`
+* `prompts/requirement-analysis.md`
+* `prompts/hld-generation.md`
+* `prompts/lld-generation.md`
+* `prompts/adr-generation.md`
+* `prompts/nfr-review.md`
+* `prompts/api-contract-review.md`
+* `prompts/security-review.md`
+* `prompts/risk-assumption-review.md`
+
+Each prompt template should include:
+
+* Purpose
+* Expected input
+* Expected output format
+* Constraints
+* Human review notice
+* Assumptions section
+* Risks section
+* Open questions section
+* Version placeholder such as `v1.0.0`
+
+Sample data expectations:
+
+Create the `samples/` folder with safe synthetic requirement examples:
+
+* `samples/banking-loan-platform-requirement.md`
+* `samples/healthcare-care-coordination-requirement.md`
+* `samples/ecommerce-order-management-requirement.md`
+
+Do not use real confidential business requirements.
+
+Documentation expectations:
+
+Create or update these files:
+
+* `README.md`
+* `architecture/README.md`
+* `architecture/hld.md`
+* `architecture/lld.md`
+* `architecture/nfrs.md`
+* `architecture/responsible-ai-architecture.md`
+* `architecture/prompt-engineering-strategy.md`
+* `architecture/api-governance.md`
+* `architecture/security-architecture.md`
+* `architecture/observability-architecture.md`
+* `architecture/deployment-architecture.md`
+* `architecture/data-model.md`
+* `docs/setup.md`
+* `docs/local-development.md`
+* `docs/api-contracts.md`
+* `docs/testing-strategy.md`
+* `docs/prompt-catalog.md`
+* `docs/responsible-ai-guidelines.md`
+* `docs/deployment.md`
+* `docs/roadmap.md`
+
+Architecture diagram placeholders:
+
+Create Mermaid-ready diagram files under:
+
+* `architecture/diagrams/system-context.md`
+* `architecture/diagrams/container-diagram.md`
+* `architecture/diagrams/requirement-to-artifact-flow.md`
+* `architecture/diagrams/ai-provider-sequence.md`
+* `architecture/diagrams/azure-deployment.md`
+
+ADR expectations:
+
+Create these initial ADRs:
+
+* `architecture/adr/0001-architecture-style.md`
+* `architecture/adr/0002-ai-provider-abstraction.md`
+* `architecture/adr/0003-mock-provider-first.md`
+* `architecture/adr/0004-azure-openai-target-provider.md`
+* `architecture/adr/0005-prompt-template-versioning.md`
+* `architecture/adr/0006-observability-strategy.md`
+
+Each ADR must include:
+
+* Status
+* Context
+* Decision
+* Consequences
+* Alternatives considered
+
+CI/CD expectations:
+
+Create GitHub Actions workflow foundation under:
+
+* `.github/workflows/ci.yml`
+
+The CI should be prepared to:
+
+* Restore backend dependencies
+* Build backend
+* Run backend tests
+* Install frontend dependencies
+* Build Angular frontend
+* Run frontend tests where practical
+
+Docker expectations:
+
+Create Docker Compose foundation for future local development.
+
+Prepare for:
+
+* Backend API container
+* Angular frontend container
+* SQL Server container
+* Future Azure OpenAI configuration through environment variables
+
+Do not include real secrets.
+
+Environment/configuration expectations:
+
+* Add safe placeholder configuration only.
+* Add `.env.example` if useful.
+* Do not commit real `.env` files.
+* Do not hardcode Azure OpenAI endpoint, API key, deployment name, tenant ID, subscription ID, or client secret.
+* Keep local development runnable with mock AI provider.
+
+Responsible AI expectations:
+
+Epic 0 must clearly document that:
+
+* AI-generated artifacts are drafts.
+* Human architect review is mandatory.
+* The system must not claim AI output is production-approved.
+* Prompt templates must reduce hallucination.
+* Assumptions, risks, and open questions must be clearly separated.
+* Sensitive or confidential prompts should not be logged.
+
+Important quality rules:
+
+* Do not build business features yet.
+* Do not implement real Azure OpenAI calls yet.
+* Do not hardcode secrets.
+* Do not use real confidential data.
+* Do not overbuild beyond Epic 0.
+* Keep the project Azure-ready.
+* Keep documentation professional.
+* Make the repository look like it was created by a senior Solution Architect.
+* Ensure the structure supports future MVP epics.
+
+After implementation, provide:
+
+1. Summary of what was created.
+2. Final repository structure.
+3. Backend projects created.
+4. Frontend foundation created.
+5. Prompt templates created.
+6. Architecture documents created.
+7. ADRs created.
+8. Responsible AI documents created.
+9. Commands to run locally.
+10. Commands to build and test.
+11. Any assumptions made.
+12. Recommended next epic.

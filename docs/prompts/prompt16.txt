@@ -1,0 +1,59 @@
+Perform a Security, Secrets, Safe Data, and Responsible AI Review for the entire `ai-assisted-architecture-governance` repository.
+
+Read `AGENTS.md` first.
+
+Goal:
+
+Ensure the repository is safe to publish publicly on GitHub.
+
+Scope:
+
+1. Search for hardcoded secrets.
+2. Search for connection strings.
+3. Search for passwords, API keys, tokens, subscription IDs, tenant IDs, client secrets, and Azure OpenAI credentials.
+4. Review `.env`, `.env.example`, `appsettings`, Docker Compose, GitHub Actions, Bicep files, frontend environment files, and documentation.
+5. Confirm that only safe placeholder values are committed.
+6. Confirm that no real confidential business requirements are used.
+7. Confirm that no sensitive data is stored in seed data, logs, screenshots, sample files, prompt outputs, or docs.
+8. Review logging to ensure full prompts, full requirement text, and full AI responses are not logged by default.
+9. Review frontend environment files to ensure no backend-only secrets are exposed.
+10. Review Azure OpenAI configuration documentation for safe secret handling.
+11. Review responsible AI notices across README, docs, UI text, and generated artifacts.
+12. Confirm that generated artifacts are clearly marked as AI-assisted drafts requiring human architect review.
+
+Fix issues where appropriate.
+
+Use safe placeholder values such as:
+
+* `<your-subscription-id>`
+* `<your-tenant-id>`
+* `<your-client-id>`
+* `<your-key-vault-name>`
+* `<azure-openai-endpoint>`
+* `<azure-openai-deployment-name>`
+* `<azure-openai-api-key-from-key-vault>`
+* `<connection-string-from-key-vault>`
+* `<application-insights-connection-string>`
+
+Do not remove useful documentation. Replace unsafe examples with safe placeholders.
+
+Important responsible AI checks:
+
+1. AI-generated artifacts must not be described as production-approved.
+2. Human architect review must remain mandatory.
+3. Security review output must not be described as a replacement for formal security assessment.
+4. API contract review output must not be described as a replacement for formal API governance approval.
+5. Public demo data must remain synthetic.
+6. Azure OpenAI must remain optional and configuration-driven.
+7. Mock provider must remain the local and CI default.
+
+After completion, provide:
+
+1. Security risks found.
+2. Secrets or unsafe values removed.
+3. Responsible AI gaps found.
+4. Responsible AI improvements made.
+5. Files changed.
+6. Safe configuration strategy.
+7. GitHub secrets required for future deployment.
+8. Final confirmation whether the repo is safe to publish publicly.

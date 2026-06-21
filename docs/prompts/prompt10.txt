@@ -1,0 +1,289 @@
+Implement Epic 9: Azure OpenAI Provider Readiness based on AGENTS.md and the existing repository.
+
+Build the next core capability for the `ai-assisted-architecture-governance` repository: Azure OpenAI Provider Readiness.
+
+Before implementation:
+
+1. Read `AGENTS.md`.
+2. Review the current repository structure.
+3. Review the implementation from Epic 0 through Epic 8.
+4. Review existing Architecture Project, Requirement Submission, Prompt Catalog, Mock AI Provider, Artifact Generation, Review Workflow, and Artifact Versioning implementations.
+5. Review existing Angular screens, services, tests, documentation, prompt templates, Docker setup, and CI workflow.
+6. Preserve the architecture direction, responsible AI guidance, testing standards, API response pattern, error handling approach, prompt engineering strategy, AI provider abstraction, review workflow, artifact versioning model, and Azure-readiness defined in `AGENTS.md`.
+
+Epic 9 Goal:
+
+Add Azure OpenAI provider readiness through the existing AI provider abstraction.
+
+The application must continue to work locally using the mock provider by default. Azure OpenAI integration must be configuration-driven, secure, optional, and safe for public GitHub publishing.
+
+This epic should demonstrate enterprise-grade Azure OpenAI architecture, secure configuration, provider abstraction, responsible AI controls, and production-readiness without requiring real Azure credentials in the repository.
+
+Backend scope:
+
+1. Implement or complete `ArchitectureGovernance.AI.AzureOpenAI`.
+2. Ensure Azure OpenAI usage goes through the existing AI provider abstraction.
+3. Keep the mock AI provider as the default local provider.
+4. Add configuration-based provider selection.
+5. Add environment variable support for Azure OpenAI settings.
+6. Add safe configuration placeholders only.
+7. Do not hardcode Azure OpenAI endpoint, API key, deployment name, model name, tenant ID, subscription ID, or client secret.
+8. Add provider health/readiness checks if practical.
+9. Add safe AI interaction metadata capture.
+10. Add safe error handling for Azure OpenAI failures.
+11. Add retry-readiness documentation or lightweight retry policy if appropriate.
+12. Add timeout handling where practical.
+13. Add structured logging without logging full sensitive prompts, requirement text, or AI responses.
+14. Use correlation ID support if available.
+15. Add unit tests using mocked Azure OpenAI dependencies.
+16. Add integration-style tests only if they do not require real Azure credentials.
+
+Azure OpenAI configuration expectations:
+
+Use environment-driven configuration such as:
+
+```text
+AI_PROVIDER=Mock
+AZURE_OPENAI_ENDPOINT=<your-azure-openai-endpoint>
+AZURE_OPENAI_API_KEY=<from-key-vault-or-user-secrets>
+AZURE_OPENAI_DEPLOYMENT_NAME=<your-deployment-name>
+AZURE_OPENAI_API_VERSION=<api-version>
+AZURE_OPENAI_TIMEOUT_SECONDS=60
+```
+
+For local development:
+
+```text
+AI_PROVIDER=Mock
+```
+
+For future Azure deployment:
+
+```text
+AI_PROVIDER=AzureOpenAI
+```
+
+Use safe placeholder values only.
+
+Do not commit real values.
+
+Provider selection expectations:
+
+1. `Mock` should be the default provider.
+2. `AzureOpenAI` should be enabled only when explicitly configured.
+3. If Azure OpenAI is selected but required configuration is missing, return a clear safe configuration error.
+4. The application should not crash unexpectedly due to missing Azure OpenAI configuration.
+5. The error response should not expose secrets or internal stack traces.
+
+AI provider abstraction expectations:
+
+Ensure the abstraction supports:
+
+* Provider name
+* Artifact generation request
+* Artifact generation response
+* Prompt template name
+* Prompt template version
+* Correlation ID
+* Safe error handling
+* Timeout readiness
+* Provider metadata
+
+Azure OpenAI provider should support all existing artifact types:
+
+* RequirementAnalysis
+* HighLevelDesign
+* LowLevelDesign
+* ArchitectureDecisionRecord
+* NonFunctionalRequirementReview
+* SecurityReview
+* ApiContractReview
+* RiskAndAssumptionReview
+
+Prompt and content safety expectations:
+
+1. Do not log full prompts.
+2. Do not log full requirement text.
+3. Do not log full AI responses.
+4. Log only safe metadata:
+
+   * Provider name
+   * Artifact type
+   * Prompt template version
+   * Request timestamp
+   * Response timestamp
+   * Status
+   * Correlation ID
+   * Error summary if failed
+5. Ensure generated artifacts still include human review notice.
+6. Ensure generated artifacts preserve assumptions, risks, and open questions.
+
+Frontend scope:
+
+1. Add or enhance AI provider status display if appropriate.
+2. Add a simple provider indicator in the dashboard or settings area if the current UI supports it.
+3. Do not expose secrets in frontend.
+4. Do not allow users to enter API keys in frontend for this epic.
+5. Show clear user-friendly error messages when artifact generation fails due to missing Azure OpenAI configuration.
+6. Keep the UI professional and suitable for an architecture governance platform.
+
+Frontend route expectations:
+
+* Optional: `/settings/ai-provider`
+* Optional: provider status card on `/dashboard`
+* Optional: provider metadata display on generated artifact details
+
+Only add these screens if they fit the existing frontend structure cleanly.
+
+Documentation scope:
+
+Update or create relevant documentation:
+
+* `README.md`
+* `docs/local-development.md`
+* `docs/responsible-ai-guidelines.md`
+* `docs/prompt-catalog.md`
+* `docs/api-contracts.md`
+* `docs/testing-strategy.md`
+* `docs/deployment.md`
+* `docs/azure-deployment-guide.md`
+* `docs/roadmap.md`
+* `architecture/responsible-ai-architecture.md`
+* `architecture/prompt-engineering-strategy.md`
+* `architecture/security-architecture.md`
+* `architecture/observability-architecture.md`
+* `architecture/deployment-architecture.md`
+* `architecture/lld.md`
+
+Create or update Azure OpenAI-specific documentation if useful:
+
+* `docs/azure-openai-provider.md`
+
+The Azure OpenAI provider documentation should include:
+
+1. Provider architecture overview.
+2. Mock provider versus Azure OpenAI provider.
+3. Required environment variables.
+4. Local development with mock provider.
+5. Local testing with Azure OpenAI if user provides credentials outside Git.
+6. Secure configuration strategy.
+7. Key Vault readiness.
+8. Managed Identity readiness.
+9. Safe logging policy.
+10. Responsible AI limitations.
+11. Troubleshooting missing configuration.
+12. Cost-awareness notes.
+13. Rate-limit and timeout considerations.
+14. No-secrets-in-repository policy.
+
+Security expectations:
+
+1. Do not commit API keys.
+2. Do not commit endpoints if they are real/private.
+3. Do not commit deployment names if they are sensitive.
+4. Do not expose secrets in logs.
+5. Do not expose secrets in API responses.
+6. Do not expose secrets in frontend.
+7. Use environment variables or user secrets for local development.
+8. Document Key Vault usage for Azure deployment.
+9. Keep `.env.example` safe with placeholders only.
+
+Responsible AI expectations:
+
+This epic connects the system to a real AI provider option, so responsible AI handling is mandatory.
+
+Ensure implementation and documentation state:
+
+1. Azure OpenAI output is still AI-assisted draft content.
+2. Human architect review remains mandatory.
+3. Real enterprise requirements may contain confidential information and must be handled under proper data governance.
+4. Public demos should use synthetic requirements only.
+5. Full prompts and full responses should not be logged by default.
+6. Users should review Azure OpenAI data privacy, logging, retention, and compliance configuration before production use.
+7. The application does not provide production-approved architecture decisions automatically.
+8. Security review outputs are not substitutes for formal security assessment.
+9. API review outputs are not substitutes for formal API governance approval.
+
+Testing expectations:
+
+Add tests for:
+
+* Mock provider remains default when no provider is configured.
+* Azure OpenAI provider is selected when configuration requests it.
+* Missing Azure OpenAI endpoint returns safe configuration error.
+* Missing Azure OpenAI API key returns safe configuration error.
+* Missing deployment name returns safe configuration error.
+* Azure OpenAI provider implements the same abstraction as mock provider.
+* Azure OpenAI provider request construction does not log full requirement text.
+* Azure OpenAI provider error handling does not expose secrets.
+* Artifact generation still works with mock provider.
+* Generated artifacts still include human review notice.
+* Provider metadata is captured safely.
+* Unsupported provider configuration returns safe error.
+* Existing artifact generation tests remain passing.
+
+Do not write tests that require real Azure OpenAI credentials.
+
+CI/CD expectation:
+
+Update GitHub Actions if required so the build and tests include the Azure OpenAI provider project.
+
+CI must not require Azure OpenAI credentials.
+
+Docker expectation:
+
+Update Docker or Docker Compose configuration if needed to support provider selection.
+
+Docker Compose should default to:
+
+```text
+AI_PROVIDER=Mock
+```
+
+Add safe environment placeholders only.
+
+Azure-readiness expectation:
+
+Document how this provider maps to future Azure deployment:
+
+* Azure OpenAI resource
+* Azure Key Vault for API key or provider secrets
+* Managed Identity readiness where applicable
+* Azure Container Apps environment variables
+* Application Insights telemetry
+* Log Analytics
+* Azure Monitor alerts
+* Rate-limit handling
+* Cost monitoring
+
+Important rules:
+
+* Do not hardcode secrets.
+* Do not commit real Azure OpenAI values.
+* Do not require Azure OpenAI credentials for local development.
+* Do not require Azure OpenAI credentials for CI.
+* Do not log full sensitive prompts.
+* Do not log full requirement text.
+* Do not log full AI responses by default.
+* Do not remove the mock provider.
+* Do not make Azure OpenAI the default provider.
+* Do not overbuild beyond Epic 9.
+* Keep the implementation portfolio-grade and Solution Architect quality.
+
+After implementation, provide:
+
+1. What was implemented.
+2. Azure OpenAI provider files created or modified.
+3. AI abstraction changes.
+4. Backend files created or modified.
+5. Frontend files created or modified, if any.
+6. Configuration changes.
+7. Documentation updated.
+8. Responsible AI and security notes.
+9. Tests added.
+10. Commands to run locally with mock provider.
+11. Commands to test.
+12. How to enable Azure OpenAI using environment variables.
+13. Any assumptions made.
+14. Known limitations.
+15. Recommended next epic.

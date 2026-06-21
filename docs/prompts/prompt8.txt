@@ -1,0 +1,359 @@
+Implement Epic 7: NFR, Security, and API Review based on AGENTS.md and the existing repository.
+
+Build the next core capability for the `ai-assisted-architecture-governance` repository: AI-assisted Non-Functional Requirement Review, Security Review, API Contract Review, and Risk/Assumption Review.
+
+Before implementation:
+
+1. Read `AGENTS.md`.
+2. Review the current repository structure.
+3. Review the implementation from Epic 0 through Epic 6.
+4. Review existing Architecture Project, Requirement Submission, Prompt Catalog, Mock AI Provider, Requirement Analysis, HLD, LLD, and ADR generation implementations.
+5. Review existing Angular artifact generation and artifact viewer screens.
+6. Review existing tests, documentation, prompt templates, Docker setup, and CI workflow.
+7. Preserve the architecture direction, responsible AI guidance, testing standards, API response pattern, error handling approach, prompt engineering strategy, AI provider abstraction, and Azure-readiness defined in `AGENTS.md`.
+
+Epic 7 Goal:
+
+Allow the system to generate architecture governance review artifacts for:
+
+1. Non-Functional Requirement Review
+2. Security Review
+3. API Contract Review
+4. Risk and Assumption Review
+
+These artifacts should help architects identify architecture gaps, operational risks, security concerns, API design issues, and unresolved assumptions before solution delivery begins.
+
+All generated outputs must be treated as AI-assisted draft content requiring human architect review.
+
+Backend scope:
+
+1. Implement Non-Functional Requirement Review artifact generation.
+2. Implement Security Review artifact generation.
+3. Implement API Contract Review artifact generation.
+4. Implement Risk and Assumption Review artifact generation.
+5. Reuse the existing artifact generation flow from previous epics.
+6. Use the existing AI provider abstraction.
+7. Use the mock AI provider as the default local provider.
+8. Use the correct prompt template for each artifact type:
+
+   * `nfr-review.md`
+   * `security-review.md`
+   * `api-contract-review.md`
+   * `risk-assumption-review.md`
+9. Persist generated artifacts using the existing `GeneratedArtifact` model.
+10. Associate generated artifacts with:
+
+* Architecture Project
+* Requirement Submission
+* Artifact Type
+* Prompt Template
+* Prompt Template Version
+* AI Provider
+
+11. Add or update AI interaction metadata capture if already supported or cleanly possible.
+12. Add request and response DTO changes if needed.
+13. Add validation for each governance review artifact generation request.
+14. Add Swagger/OpenAPI documentation readiness.
+15. Add structured logging without logging full sensitive requirement text.
+16. Use correlation ID support if available.
+17. Add proper error handling using the existing Problem Details or global error-handling pattern.
+18. Add unit tests and API/integration tests where practical.
+
+Artifact types to support in this epic:
+
+* `NonFunctionalRequirementReview`
+* `SecurityReview`
+* `ApiContractReview`
+* `RiskAndAssumptionReview`
+
+After this epic, the artifact generation endpoint should support:
+
+* `RequirementAnalysis`
+* `HighLevelDesign`
+* `LowLevelDesign`
+* `ArchitectureDecisionRecord`
+* `NonFunctionalRequirementReview`
+* `SecurityReview`
+* `ApiContractReview`
+* `RiskAndAssumptionReview`
+
+Suggested API endpoint:
+
+* `POST /api/v1/artifacts/generate`
+
+Suggested generation request:
+
+```json
+{
+  "projectId": "project-id",
+  "requirementSubmissionId": "requirement-id",
+  "artifactType": "SecurityReview"
+}
+```
+
+Existing artifact query/export endpoints should continue to work:
+
+* `GET /api/v1/artifacts/{artifactId}`
+* `GET /api/v1/projects/{projectId}/artifacts`
+* `GET /api/v1/requirements/{requirementId}/artifacts`
+* `GET /api/v1/artifacts/{artifactId}/export/markdown`
+
+Use consistent API response and error response patterns according to `AGENTS.md`.
+
+NFR Review artifact output should include:
+
+* Executive summary
+* Performance considerations
+* Scalability considerations
+* Availability considerations
+* Reliability considerations
+* Security considerations
+* Observability considerations
+* Maintainability considerations
+* Cost considerations
+* Compliance-readiness considerations
+* AI provider dependency considerations where relevant
+* NFR checklist
+* Priority ranking
+* Assumptions
+* Risks
+* Open questions
+* Human review notice
+
+Security Review artifact output should include:
+
+* Executive summary
+* Authentication considerations
+* Authorization considerations
+* Sensitive data handling
+* Secret management
+* Input validation risks
+* API security concerns
+* Logging and telemetry safety
+* OWASP considerations
+* Threat-modeling readiness
+* Cloud security considerations
+* Responsible AI security considerations
+* Assumptions
+* Risks
+* Open questions
+* Human review notice
+
+API Contract Review artifact output should include:
+
+* Executive summary
+* API boundary recommendations
+* Endpoint naming review
+* Request DTO guidance
+* Response DTO guidance
+* Error response standards
+* Versioning readiness
+* Idempotency considerations
+* Pagination and filtering considerations
+* Authentication and authorization readiness
+* OpenAPI/Swagger readiness
+* Backward compatibility concerns
+* Assumptions
+* Risks
+* Open questions
+* Human review notice
+
+Risk and Assumption Review artifact output should include:
+
+* Executive summary
+* Key assumptions
+* Business risks
+* Technical risks
+* Security risks
+* Operational risks
+* Data risks
+* AI-related risks
+* Cloud deployment risks
+* Dependency risks
+* Open questions
+* Mitigation recommendations
+* Human review notice
+
+Prompt template scope:
+
+Review and improve:
+
+* `prompts/nfr-review.md`
+* `prompts/security-review.md`
+* `prompts/api-contract-review.md`
+* `prompts/risk-assumption-review.md`
+
+Ensure each prompt template includes:
+
+* Version
+* Purpose
+* Expected input
+* Output format
+* Constraints
+* Assumptions section
+* Risks section
+* Open questions section
+* Human review notice
+* Instruction not to invent unavailable facts
+* Instruction to distinguish assumptions from confirmed inputs
+* Instruction to keep generated content architecture-review ready
+* Instruction to avoid claiming production approval
+
+Mock AI provider scope:
+
+Update the mock AI provider so that:
+
+1. `NonFunctionalRequirementReview` returns deterministic, realistic, architecture-quality Markdown.
+2. `SecurityReview` returns deterministic, realistic, architecture-quality Markdown.
+3. `ApiContractReview` returns deterministic, realistic, architecture-quality Markdown.
+4. `RiskAndAssumptionReview` returns deterministic, realistic, architecture-quality Markdown.
+5. Each output includes assumptions, risks, open questions, and human review notice.
+6. The mock provider remains fully local and requires no external API.
+7. The mock output clearly identifies itself as generated by the mock provider.
+
+Frontend scope:
+
+1. Extend the existing artifact generation UI to support all governance review artifact types.
+2. Add these artifact types as selectable options:
+
+   * Non-Functional Requirement Review
+   * Security Review
+   * API Contract Review
+   * Risk and Assumption Review
+3. Add clear generation actions from the requirement details screen if suitable.
+4. Reuse the existing artifact viewer screen.
+5. Render generated Markdown safely.
+6. Display artifact metadata:
+
+   * Artifact type
+   * Status
+   * Provider name
+   * Prompt template version
+   * Created timestamp
+   * Human review notice
+7. Ensure export/download as Markdown works for these artifact types if already implemented.
+8. Show loading state during generation.
+9. Show user-friendly error message when generation fails.
+10. Use typed Angular models and services.
+11. Do not call APIs directly from components; use the existing artifact API service.
+12. Keep the UI professional, clean, and suitable for an architecture governance platform.
+
+Frontend route expectations:
+
+* Reuse `/artifacts/:id`
+* Reuse `/requirements/:requirementId/artifacts`
+* Optional: enhance `/requirements/:requirementId/generate`
+* Optional: add generation shortcuts into `/requirements/:id`
+
+Documentation scope:
+
+Update or create relevant documentation:
+
+* `README.md`
+* `docs/api-contracts.md`
+* `docs/local-development.md`
+* `docs/testing-strategy.md`
+* `docs/prompt-catalog.md`
+* `docs/responsible-ai-guidelines.md`
+* `docs/roadmap.md`
+* `architecture/lld.md`
+* `architecture/data-model.md`
+* `architecture/prompt-engineering-strategy.md`
+* `architecture/responsible-ai-architecture.md`
+* `architecture/api-governance.md`
+* `architecture/security-architecture.md`
+* `architecture/observability-architecture.md`
+* `architecture/nfrs.md`
+
+Architecture expectations:
+
+1. Keep controllers thin.
+2. Keep artifact generation orchestration in the application layer.
+3. Keep AI provider usage behind the abstraction.
+4. Use the mock provider by default for local development.
+5. Do not require Azure OpenAI credentials.
+6. Do not call real Azure OpenAI in this epic.
+7. Reuse the existing GeneratedArtifact persistence model.
+8. Store prompt template name and version with generated artifacts.
+9. Store provider name with generated artifacts.
+10. Keep generated governance review artifacts version-ready.
+11. Keep the design ready for future Review Workflow, Artifact Versioning, Azure OpenAI Provider, Observability, DevOps, and Azure deployment epics.
+12. Keep the implementation portfolio-grade and Solution Architect quality.
+
+Responsible AI expectations:
+
+This epic generates AI-assisted governance review content, so responsible AI handling is mandatory.
+
+Ensure implementation and documentation state:
+
+1. Generated NFR, Security, API, and Risk Review artifacts are AI-assisted drafts.
+2. Human architect review is mandatory before use.
+3. Security output is not a substitute for formal security assessment or penetration testing.
+4. API review output is not a substitute for formal API governance approval.
+5. Mock provider output is deterministic demo content.
+6. No external AI provider is called in this epic.
+7. Sensitive requirement text should not be logged in full.
+8. Generated artifacts must include assumptions, risks, and open questions.
+9. The system should not claim generated output is production-approved.
+10. The UI should visibly show a human review notice.
+
+Testing expectations:
+
+Add tests for:
+
+* Successful NFR Review artifact generation
+* Successful Security Review artifact generation
+* Successful API Contract Review artifact generation
+* Successful Risk and Assumption Review artifact generation
+* Generation request with missing project ID
+* Generation request with missing requirement submission ID
+* Generation request for non-existing project
+* Generation request for non-existing requirement
+* Each artifact persisted successfully
+* Each artifact linked to project and requirement
+* Prompt template name and version stored for each artifact type
+* Provider name stored as mock provider
+* Generated NFR content includes human review notice
+* Generated Security Review content includes human review notice
+* Generated API Contract Review content includes human review notice
+* Generated Risk and Assumption Review content includes human review notice
+* Generated outputs include assumptions, risks, and open questions
+* Fetching generated artifacts by ID
+* Fetching generated artifacts by project ID
+* Fetching generated artifacts by requirement ID
+* Exporting each artifact type as Markdown
+* Unsupported artifact types return clear validation or not-supported response
+* Full sensitive requirement text is not logged where practical
+
+CI/CD expectation:
+
+Update GitHub Actions if required so the build and tests include the new backend and frontend changes.
+
+Important rules:
+
+* Do not hardcode secrets.
+* Do not use real confidential business data.
+* Do not log full sensitive requirement text.
+* Do not implement real Azure OpenAI calls yet.
+* Do not require Azure OpenAI credentials for local development.
+* Do not overbuild beyond Epic 7.
+* Do not implement artifact review workflow yet.
+* Do not implement Azure deployment yet.
+* Keep the project Azure-ready.
+* Keep the implementation portfolio-grade and Solution Architect quality.
+
+After implementation, provide:
+
+1. What was implemented.
+2. Backend files created or modified.
+3. AI provider or prompt files created or modified.
+4. Frontend files created or modified.
+5. Database/migration changes if any.
+6. API behavior added or updated.
+7. Tests added.
+8. Documentation updated.
+9. Responsible AI notes.
+10. Commands to run locally.
+11. Commands to test.
+12. Any assumptions made.
+13. Recommended next epic.

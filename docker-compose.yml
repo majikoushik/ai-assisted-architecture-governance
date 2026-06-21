@@ -1,0 +1,35 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: src/api/ArchitectureGovernance.Api/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      AiProvider__Provider: Mock
+      ConnectionStrings__ArchitectureGovernance: Server=sqlserver;Database=ArchitectureGovernance;User Id=sa;Password=${SQLSERVER_SA_PASSWORD:-Change_this_local_password_only_123!};TrustServerCertificate=True;
+    ports:
+      - "5080:8080"
+    depends_on:
+      - sqlserver
+
+  web:
+    build:
+      context: src/web/architecture-governance-portal
+      dockerfile: Dockerfile
+    ports:
+      - "4200:4200"
+    depends_on:
+      - api
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: ${SQLSERVER_SA_PASSWORD:-Change_this_local_password_only_123!}
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+
+volumes:
+  sqlserver-data:

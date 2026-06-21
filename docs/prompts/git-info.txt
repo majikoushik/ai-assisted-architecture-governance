@@ -1,0 +1,25 @@
+Repository name:
+ai-assisted-architecture-governance
+
+Description:
+AI-assisted architecture governance platform demonstrating .NET, Angular, Azure OpenAI readiness, prompt engineering, HLD/LLD/ADR generation, responsible AI, and Solution Architecture practices.
+
+Topics:
+dotnet
+angular
+azure
+azure-openai
+solution-architecture
+enterprise-architecture
+ai-assisted-development
+prompt-engineering
+architecture-governance
+hld
+lld
+adr
+responsible-ai
+clean-architecture
+docker
+github-actions
+observability
+bicep

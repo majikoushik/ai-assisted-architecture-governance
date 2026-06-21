@@ -1,0 +1,286 @@
+Implement Epic 10: Observability and Production Readiness based on AGENTS.md and the existing repository.
+
+Build the next architecture capability for the `ai-assisted-architecture-governance` repository: Observability, Error Handling, Correlation ID, Health Checks, Safe AI Telemetry, and Production Readiness.
+
+Before implementation:
+
+1. Read `AGENTS.md`.
+2. Review the current repository structure.
+3. Review the implementation from Epic 0 through Epic 9.
+4. Review existing Architecture Project, Requirement Submission, Prompt Catalog, Mock AI Provider, Azure OpenAI Provider Readiness, Artifact Generation, Review Workflow, and Artifact Versioning implementations.
+5. Review existing Angular screens, services, tests, documentation, prompt templates, Docker setup, CI workflow, and Azure-readiness notes.
+6. Preserve the existing architecture direction, responsible AI guidance, testing standards, API response pattern, error handling approach, prompt engineering strategy, AI provider abstraction, review workflow, artifact versioning model, and Azure-readiness defined in `AGENTS.md`.
+
+Epic 10 Goal:
+
+Make the application more production-ready by adding consistent observability, safe AI telemetry, global error handling, correlation ID propagation, health checks, operational documentation, and Application Insights readiness.
+
+This epic should demonstrate enterprise-grade supportability, traceability, diagnosability, responsible AI telemetry, and Azure cloud-readiness.
+
+Backend scope:
+
+1. Implement or standardize correlation ID middleware across backend APIs.
+2. Ensure every incoming request has a correlation ID.
+3. Return correlation ID in API responses and error responses.
+4. Propagate correlation ID into:
+
+   * Logs
+   * Generated artifacts
+   * AI interaction metadata
+   * Review records
+   * Error responses
+5. Implement or standardize global exception handling.
+6. Use Problem Details style error responses consistently.
+7. Ensure validation errors follow a consistent response format.
+8. Add structured request logging across services.
+9. Add structured AI operation logging with safe metadata only.
+10. Add service name, environment, correlation ID, request path, HTTP method, status code, elapsed time, and exception details where appropriate.
+11. Add health check endpoints.
+12. Add readiness and liveness style health check structure where practical.
+13. Add Application Insights readiness without requiring real Azure secrets.
+14. Add safe logging practices to prevent sensitive data leakage.
+15. Add operational logging for important business events.
+16. Add timeout/retry-readiness notes for AI provider calls.
+17. Add tests for middleware, error handling, health checks, and safe telemetry where practical.
+
+Required observability capabilities:
+
+* Correlation ID middleware
+* Structured request logging
+* Global exception handling
+* Problem Details response model
+* Validation error response model
+* Health check endpoints
+* Application Insights configuration placeholder
+* Safe AI telemetry policy
+* Safe prompt logging policy
+* Operational support notes
+* Azure Monitor and Log Analytics readiness documentation
+
+Suggested backend endpoints:
+
+* `GET /health`
+* `GET /health/live`
+* `GET /health/ready`
+
+If the existing service structure uses different health check conventions, align with it only if it is clean and documented.
+
+Correlation ID expectations:
+
+1. Accept incoming correlation ID from request header:
+
+   * `X-Correlation-ID`
+2. Generate a new correlation ID if not provided.
+3. Add correlation ID to response headers.
+4. Include correlation ID in structured logs.
+5. Include correlation ID in API response envelopes if the current pattern supports it.
+6. Include correlation ID in Problem Details error responses.
+7. Include correlation ID in AI interaction metadata and generated artifact metadata where practical.
+
+Error handling expectations:
+
+Use consistent error categories:
+
+* Validation error
+* Not found
+* Conflict
+* Unauthorized readiness
+* Forbidden readiness
+* Business rule violation
+* Unsupported artifact type
+* Unsupported AI provider
+* Missing AI provider configuration
+* AI provider timeout
+* AI provider failure
+* External dependency failure readiness
+* Unexpected server error
+
+Do not expose stack traces to the frontend.
+
+Do not leak secrets, connection strings, Azure OpenAI keys, prompts, full requirement text, full AI responses, or internal provider details in error responses.
+
+Safe AI telemetry expectations:
+
+Log only safe AI metadata by default:
+
+* Provider name
+* Artifact type
+* Prompt template name
+* Prompt template version
+* Project ID
+* Requirement ID
+* Artifact ID where available
+* Request timestamp
+* Response timestamp
+* Duration
+* Status
+* Correlation ID
+* Safe error summary
+
+Do not log:
+
+* Full prompt text
+* Full requirement text
+* Full AI response
+* API keys
+* Azure OpenAI endpoint if considered sensitive
+* Deployment secrets
+* Tokens
+* Connection strings
+
+Frontend scope:
+
+1. Improve Angular error handling consistency.
+2. Add or enhance HTTP interceptor for correlation ID.
+3. Add or enhance HTTP interceptor for API error handling.
+4. Show user-friendly error messages.
+5. Avoid exposing raw backend stack traces or technical internals in the UI.
+6. Add loading and empty-state consistency where practical.
+7. Add a simple system health/status page if appropriate.
+8. Add AI provider status display if already supported cleanly.
+9. Use typed error models where practical.
+10. Keep UI professional and suitable for an architecture governance platform.
+
+Frontend route expectation:
+
+* Optional: `/system-health`
+* Optional: `/settings/ai-provider`
+* Optional: show health/status indicators on `/dashboard`
+
+Only add routes that fit the existing structure cleanly.
+
+Documentation scope:
+
+Update or create relevant documentation:
+
+* `README.md`
+* `docs/local-development.md`
+* `docs/testing-strategy.md`
+* `docs/responsible-ai-guidelines.md`
+* `docs/azure-openai-provider.md`
+* `docs/operational-runbook.md`
+* `docs/roadmap.md`
+* `architecture/observability-architecture.md`
+* `architecture/responsible-ai-architecture.md`
+* `architecture/security-architecture.md`
+* `architecture/deployment-architecture.md`
+* `architecture/nfrs.md`
+* `architecture/lld.md`
+
+Create `docs/operational-runbook.md` if it does not exist.
+
+Operational runbook should include:
+
+1. How to check service health.
+2. How to use correlation ID for troubleshooting.
+3. How to troubleshoot artifact generation failure.
+4. How to troubleshoot missing Azure OpenAI configuration.
+5. How to troubleshoot AI provider timeout or failure.
+6. Where logs would go in Azure.
+7. How Application Insights would be used.
+8. How Log Analytics would be used.
+9. How safe AI telemetry should be interpreted.
+10. Basic incident triage flow.
+11. Safe logging guidelines.
+12. Known operational limitations.
+
+Architecture expectations:
+
+1. Observability should be implemented as shared infrastructure or reusable building blocks where practical.
+2. Do not duplicate middleware logic unnecessarily.
+3. Keep implementation simple but enterprise-ready.
+4. Keep Application Insights configuration optional and environment-driven.
+5. Do not require actual Azure resources for local development.
+6. Document how local observability maps to Azure production observability.
+7. Preserve service boundaries.
+8. Preserve AI provider abstraction.
+9. Preserve responsible AI rules.
+10. Do not implement unrelated business features in this epic.
+
+Responsible AI expectations:
+
+Ensure implementation and documentation state:
+
+1. AI telemetry must use safe metadata only by default.
+2. Full prompts should not be logged.
+3. Full requirement text should not be logged.
+4. Full AI responses should not be logged.
+5. Generated artifacts remain AI-assisted drafts.
+6. Human architect review remains mandatory.
+7. Observability should help diagnose system behavior without exposing confidential content.
+8. Azure Application Insights and Log Analytics configuration must be reviewed before production use.
+
+Testing expectations:
+
+Add tests for:
+
+* Correlation ID generated when missing.
+* Incoming correlation ID preserved when provided.
+* Correlation ID returned in response header.
+* Correlation ID included in error response.
+* Global exception handling returns safe Problem Details response.
+* Validation error returns consistent response.
+* Not found scenario returns consistent response.
+* Unsupported artifact type returns consistent response.
+* Missing AI provider configuration returns safe error.
+* AI provider failure returns safe error.
+* Health endpoint returns healthy response.
+* Safe AI telemetry does not log full requirement text where practical.
+* Safe AI telemetry does not log full prompt text where practical.
+* Angular interceptor adds or propagates correlation ID if practical.
+* Angular error handling maps API error to user-friendly message if practical.
+
+CI/CD expectation:
+
+Update GitHub Actions if required so the build and tests include the new observability and frontend changes.
+
+Docker expectation:
+
+Update Docker Compose if required so health checks can be used locally.
+
+Azure-readiness expectation:
+
+Document how this observability implementation maps to future Azure resources:
+
+* Azure Application Insights
+* Azure Log Analytics
+* Azure Monitor
+* Azure Container Apps health probes
+* Azure OpenAI diagnostics
+* Azure SQL monitoring
+* Distributed tracing
+* Safe AI telemetry
+* Dashboard and alerting readiness
+
+Important rules:
+
+* Do not hardcode secrets.
+* Do not require real Azure credentials.
+* Do not log sensitive data.
+* Do not log full prompts.
+* Do not log full requirement text.
+* Do not log full AI responses by default.
+* Do not expose stack traces to frontend.
+* Do not overbuild beyond Epic 10.
+* Do not implement Azure deployment yet.
+* Keep the project Azure-ready.
+* Keep the implementation portfolio-grade and Solution Architect quality.
+
+After implementation, provide:
+
+1. What was implemented.
+2. Backend files created or modified.
+3. Frontend files created or modified.
+4. Shared building blocks added or changed.
+5. Middleware added.
+6. Health check endpoints added.
+7. Error handling improvements.
+8. Logging, safe AI telemetry, and correlation ID improvements.
+9. Tests added.
+10. Documentation updated.
+11. Docker Compose changes if any.
+12. Commands to run locally.
+13. Commands to test.
+14. Responsible AI and safe telemetry notes.
+15. Any assumptions made.
+16. Recommended next epic.

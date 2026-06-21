@@ -1,0 +1,405 @@
+Implement Epic 12: Azure Deployment Blueprint based on AGENTS.md and the existing repository.
+
+Build the next architecture capability for the `ai-assisted-architecture-governance` repository: Azure Deployment Blueprint, Infrastructure as Code, Secure Configuration, Azure OpenAI Deployment Readiness, and Cloud-Native Architecture Documentation.
+
+Before implementation:
+
+1. Read `AGENTS.md`.
+2. Review the current repository structure.
+3. Review the implementation from Epic 0 through Epic 11.
+4. Review existing backend API, Angular frontend, Docker setup, GitHub Actions CI, mock AI provider, Azure OpenAI provider readiness, artifact generation, review workflow, observability implementation, documentation, and architecture decisions.
+5. Preserve the existing architecture direction, responsible AI guidance, AI provider abstraction, safe AI telemetry rules, security standards, testing standards, observability standards, Docker standards, and Solution Architect quality bar.
+
+Epic 12 Goal:
+
+Prepare the project for Azure deployment using a professional, cloud-native architecture blueprint.
+
+This epic should demonstrate Azure solution architecture thinking, secure configuration, Infrastructure as Code, Azure OpenAI integration readiness, environment separation, observability, cost awareness, and enterprise deployment planning.
+
+Do not require actual Azure deployment to be completed unless the repository is already configured for it. The main goal is a complete, professional Azure deployment foundation.
+
+Target Azure Architecture:
+
+Use the following Azure-aligned deployment model unless the existing repository has a cleaner documented approach:
+
+1. Angular frontend:
+
+   * Azure Static Web Apps
+     or
+   * Azure Storage Static Website with CDN readiness
+
+2. Backend API:
+
+   * Azure Container Apps
+
+3. Container registry:
+
+   * Azure Container Registry
+
+4. Database:
+
+   * Azure SQL Database
+
+5. AI provider:
+
+   * Azure OpenAI
+   * Azure AI Foundry readiness
+
+6. Secrets and configuration:
+
+   * Azure Key Vault
+   * Managed Identity readiness
+
+7. Monitoring:
+
+   * Azure Application Insights
+   * Azure Log Analytics
+   * Azure Monitor readiness
+
+8. Optional future enterprise layer:
+
+   * Azure API Management
+   * Azure Front Door
+
+Infrastructure as Code Scope:
+
+1. Create or update the `infra/bicep/` folder.
+2. Use Bicep as the preferred Azure Infrastructure as Code approach.
+3. Create modular and readable Bicep templates.
+4. Add parameters for environment-specific values.
+5. Add safe placeholder configuration only.
+6. Do not include real Azure subscription IDs, tenant IDs, secrets, passwords, Azure OpenAI keys, or production values.
+7. Add deployment scripts or command examples using Azure CLI.
+8. Add documentation explaining deployment order and assumptions.
+
+Suggested Bicep structure:
+
+```text
+infra/
+  bicep/
+    main.bicep
+    parameters/
+      dev.parameters.json
+      prod.parameters.example.json
+    modules/
+      container-registry.bicep
+      container-apps-environment.bicep
+      container-app.bicep
+      sql-database.bicep
+      key-vault.bicep
+      application-insights.bicep
+      log-analytics.bicep
+      static-web-app.bicep
+      azure-openai.bicep
+    README.md
+```
+
+If the existing repository already has a different IaC structure, improve it without unnecessarily breaking it.
+
+Azure Resource Scope:
+
+Create IaC foundation for:
+
+1. Resource group assumptions
+2. Log Analytics workspace
+3. Application Insights
+4. Azure Container Registry
+5. Azure Container Apps environment
+6. Container App for backend API
+7. Azure SQL Server and Azure SQL Database
+8. Azure Key Vault
+9. Azure Static Web Apps or frontend hosting placeholder
+10. Azure OpenAI resource placeholder or module
+11. Managed Identity readiness
+12. RBAC/key access pattern documentation
+
+Backend Deployment Readiness:
+
+For the backend API, document or configure:
+
+* Container image name
+* Environment variables
+* Port
+* Health probe path
+* Required secrets
+* Required connection strings
+* Application Insights configuration
+* Azure SQL dependency
+* Azure OpenAI dependency
+* Mock provider fallback for non-production
+* Scaling assumptions
+* CPU and memory assumptions
+* Health probes
+* Safe telemetry expectations
+
+Angular Frontend Deployment Readiness:
+
+1. Add or update frontend deployment documentation.
+2. Explain how Angular environment configuration should point to backend API endpoints.
+3. Avoid hardcoded production backend URLs.
+4. Add placeholder production environment configuration if appropriate.
+5. Document deployment option:
+
+   * Azure Static Web Apps preferred
+     or
+   * Static website hosting with Azure Storage and CDN readiness
+
+Azure OpenAI Deployment Readiness:
+
+Document and configure readiness for:
+
+1. Azure OpenAI endpoint.
+2. Azure OpenAI deployment name.
+3. Azure OpenAI API version.
+4. Provider selection using environment variable.
+5. Key Vault-based secret storage.
+6. Managed Identity readiness where applicable.
+7. Safe error handling for missing provider configuration.
+8. Cost and rate-limit awareness.
+9. Timeout and retry readiness.
+10. Safe AI telemetry policy.
+11. No full prompt logging.
+12. No full requirement text logging.
+13. No full AI response logging by default.
+
+Suggested environment variables:
+
+```text
+AI_PROVIDER=AzureOpenAI
+AZURE_OPENAI_ENDPOINT=<from-key-vault-or-environment>
+AZURE_OPENAI_API_KEY=<from-key-vault-or-managed-identity-pattern>
+AZURE_OPENAI_DEPLOYMENT_NAME=<your-deployment-name>
+AZURE_OPENAI_API_VERSION=<api-version>
+AZURE_OPENAI_TIMEOUT_SECONDS=60
+APPLICATIONINSIGHTS_CONNECTION_STRING=<from-application-insights>
+ConnectionStrings__DefaultConnection=<from-key-vault>
+```
+
+For local and CI, default remains:
+
+```text
+AI_PROVIDER=Mock
+```
+
+GitHub Actions Deployment Readiness:
+
+Create or update deployment workflow templates under:
+
+```text
+.github/workflows/
+```
+
+Suggested files:
+
+```text
+.github/workflows/azure-deploy-template.yml
+.github/workflows/container-build-template.yml
+```
+
+The workflow templates should be safe and non-destructive.
+
+They should show readiness for:
+
+1. Building backend Docker image.
+2. Pushing image to Azure Container Registry.
+3. Deploying backend container to Azure Container Apps.
+4. Building Angular frontend.
+5. Deploying frontend to Azure Static Web Apps or documented hosting target.
+6. Using GitHub repository secrets.
+7. Avoiding hardcoded Azure credentials.
+8. Avoiding Azure OpenAI secrets in workflow YAML.
+9. Keeping deployment workflows disabled or clearly marked as templates if not production-ready.
+
+Do not include real secrets.
+
+Use placeholder secret names such as:
+
+* `AZURE_CLIENT_ID`
+* `AZURE_TENANT_ID`
+* `AZURE_SUBSCRIPTION_ID`
+* `AZURE_CREDENTIALS`
+* `ACR_LOGIN_SERVER`
+* `AZURE_STATIC_WEB_APPS_API_TOKEN`
+* `AZURE_OPENAI_ENDPOINT`
+* `AZURE_OPENAI_DEPLOYMENT_NAME`
+* `AZURE_OPENAI_API_KEY`
+* `APPLICATIONINSIGHTS_CONNECTION_STRING`
+* `SQL_CONNECTION_STRING`
+
+Security and Configuration Scope:
+
+1. Document secure configuration strategy.
+2. Document Key Vault usage.
+3. Document Managed Identity readiness.
+4. Document how SQL connection strings should be handled.
+5. Document how Azure OpenAI configuration should be handled.
+6. Document how Application Insights connection string should be handled.
+7. Ensure no secrets are committed.
+8. Add or update `.env.example` if needed with safe placeholders only.
+9. Ensure frontend does not receive backend-only secrets.
+10. Ensure Azure OpenAI API keys are never exposed to Angular frontend.
+
+Observability Scope:
+
+Update deployment and observability documentation to explain:
+
+* Application Insights integration
+* Log Analytics workspace
+* Correlation ID usage in Azure
+* Container Apps logs
+* Health probe monitoring
+* Azure Monitor alerts readiness
+* Safe AI telemetry
+* Azure OpenAI failure diagnostics
+* Dashboard readiness
+* Troubleshooting with correlation ID
+
+Responsible AI Deployment Scope:
+
+Update responsible AI documentation to explain:
+
+1. Azure OpenAI output remains AI-assisted draft content.
+2. Human architect review remains mandatory.
+3. Production use requires enterprise data governance.
+4. Public demos should use synthetic requirements.
+5. Full prompts should not be logged by default.
+6. Full requirement text should not be logged by default.
+7. Full AI responses should not be logged by default.
+8. Azure OpenAI configuration, retention, monitoring, and compliance settings must be reviewed before production use.
+9. Generated security review output is not a substitute for formal security assessment.
+10. Generated API review output is not a substitute for formal API governance approval.
+
+Documentation Scope:
+
+Update or create these files:
+
+* `infra/bicep/README.md`
+* `docs/deployment.md`
+* `docs/azure-deployment-guide.md`
+* `docs/devops-guide.md`
+* `docs/azure-openai-provider.md`
+* `docs/local-development.md`
+* `docs/roadmap.md`
+* `docs/operational-runbook.md`
+* `docs/responsible-ai-guidelines.md`
+* `architecture/deployment-architecture.md`
+* `architecture/observability-architecture.md`
+* `architecture/security-architecture.md`
+* `architecture/responsible-ai-architecture.md`
+* `architecture/nfrs.md`
+* `README.md`
+
+Create `docs/azure-deployment-guide.md` if it does not exist.
+
+The Azure deployment guide should include:
+
+1. Target Azure architecture overview.
+2. Azure resource list.
+3. Prerequisites.
+4. Required Azure CLI tools.
+5. Required GitHub secrets.
+6. Environment variable strategy.
+7. Key Vault and Managed Identity strategy.
+8. Azure OpenAI configuration strategy.
+9. Bicep deployment commands.
+10. Container image build and push flow.
+11. Container Apps deployment flow.
+12. Angular frontend deployment flow.
+13. Database migration strategy.
+14. Application Insights and Log Analytics setup.
+15. Health check validation.
+16. Safe AI telemetry validation.
+17. Cost-awareness notes.
+18. Cleanup commands for demo environments.
+19. Known limitations.
+
+Architecture Documentation Expectations:
+
+Update architecture documentation to show:
+
+* Azure container architecture
+* Frontend-to-backend communication
+* Backend-to-database communication
+* Backend-to-Azure-OpenAI communication
+* Key Vault usage
+* Managed Identity usage
+* Monitoring and logging flow
+* Safe AI telemetry flow
+* Future API Management option
+* Future Front Door option
+* Environment separation: dev, test, prod
+
+Cost-Awareness Expectations:
+
+Add a cost-awareness section.
+
+Include notes for:
+
+* Using small SKUs for demo environments
+* Avoiding unnecessary always-on resources
+* Cleaning up demo resource groups
+* Monitoring Azure SQL cost
+* Monitoring Azure Container Apps cost
+* Monitoring Azure OpenAI token usage and cost
+* Keeping Application Insights retention reasonable
+* Using dev/test resources carefully
+
+Testing and Validation Scope:
+
+Add or document validation steps for:
+
+1. Bicep syntax validation.
+2. Azure CLI what-if deployment.
+3. Docker image build.
+4. Container App health endpoint validation.
+5. Angular production build.
+6. API health checks after deployment.
+7. Application Insights telemetry validation.
+8. Azure OpenAI configuration validation.
+9. Safe AI telemetry validation.
+
+Suggested commands may include:
+
+```bash
+az bicep build --file infra/bicep/main.bicep
+az deployment group what-if --resource-group <resource-group-name> --template-file infra/bicep/main.bicep --parameters infra/bicep/parameters/dev.parameters.json
+docker compose build
+dotnet test
+npm run build
+```
+
+Use commands that match the actual repository structure.
+
+Important Rules:
+
+* Do not commit real Azure credentials.
+* Do not commit real connection strings.
+* Do not commit real Azure OpenAI keys.
+* Do not hardcode subscription IDs.
+* Do not hardcode tenant IDs.
+* Do not create destructive deployment scripts.
+* Do not require actual Azure deployment to complete the epic.
+* Do not require Azure OpenAI credentials to complete the epic.
+* Do not implement unrelated business features.
+* Do not break local Docker development.
+* Keep `AI_PROVIDER=Mock` as local and CI default.
+* Keep the project Azure-ready and portfolio-grade.
+* Make the output look like it was prepared by a senior Azure Solution Architect.
+
+After implementation, provide:
+
+1. What was implemented.
+2. Azure architecture files created or modified.
+3. Bicep files created or modified.
+4. GitHub Actions deployment templates created or modified.
+5. Documentation updated.
+6. Environment variables and GitHub secrets required.
+7. Azure resources included in the blueprint.
+8. Azure OpenAI deployment readiness notes.
+9. Responsible AI deployment notes.
+10. Commands to validate Bicep.
+11. Commands to build and test locally.
+12. Commands or outline for future Azure deployment.
+13. Any assumptions made.
+14. Any known limitations.
+15. Recommended next epic.

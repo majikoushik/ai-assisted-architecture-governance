@@ -1,0 +1,62 @@
+Perform a Final QA and Stabilization Pass for the entire `ai-assisted-architecture-governance` repository.
+
+Read `AGENTS.md` first.
+
+Review the complete implementation from Epic 0 through Epic 13.
+
+Goal:
+
+Make sure the repository is stable, consistent, buildable, testable, documented, Docker-ready, and ready for GitHub publishing.
+
+Scope:
+
+1. Review backend solution structure.
+2. Review Angular frontend structure.
+3. Review prompt catalog.
+4. Review mock AI provider.
+5. Review Azure OpenAI provider readiness.
+6. Review artifact generation workflows.
+7. Review review workflow and artifact versioning.
+8. Review Docker and Docker Compose setup.
+9. Review GitHub Actions workflows.
+10. Review architecture documentation.
+11. Review ADRs.
+12. Review Azure deployment blueprint.
+13. Review README.
+14. Review tests.
+15. Review local run commands.
+
+Check and fix:
+
+* Broken build issues
+* Broken test issues
+* Incorrect commands in documentation
+* Inconsistent naming
+* Inconsistent API response format
+* Missing or outdated documentation
+* Dead files
+* Placeholder text that should be replaced
+* Broken links in README or docs
+* Docker Compose issues
+* CI workflow issues
+* Prompt template inconsistencies
+* Artifact generation inconsistencies
+* Review workflow inconsistencies
+* Formatting inconsistencies
+
+Do not add new business features.
+
+Do not make major architecture changes unless required to fix a real issue.
+
+After completion, provide:
+
+1. Issues found.
+2. Issues fixed.
+3. Files changed.
+4. Backend build validation result.
+5. Frontend build validation result.
+6. Test validation result.
+7. Docker validation result.
+8. Bicep validation result if applicable.
+9. Remaining known limitations.
+10. Final recommended manual checks.
