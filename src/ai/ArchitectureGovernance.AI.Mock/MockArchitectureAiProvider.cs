@@ -1,13 +1,16 @@
+using System.Diagnostics;
 using ArchitectureGovernance.AI.Abstractions;
+using Microsoft.Extensions.Logging;
 
 namespace ArchitectureGovernance.AI.Mock;
 
-public sealed class MockArchitectureAiProvider : IArchitectureAiProvider
+public sealed class MockArchitectureAiProvider(ILogger<MockArchitectureAiProvider> logger) : IArchitectureAiProvider
 {
-    public Task<ArchitectureAiResponse> GenerateArtifactDraftAsync(
+    public async Task<ArchitectureAiResponse> GenerateArtifactDraftAsync(
         ArchitectureAiRequest request,
         CancellationToken cancellationToken = default)
     {
+        var sw = Stopwatch.StartNew();
         var humanReviewNotice = "This artifact is AI-assisted draft content and must be reviewed by a qualified architect before use in production decisions.";
         
         var markdown = request.ArtifactType switch
@@ -391,6 +394,17 @@ public sealed class MockArchitectureAiProvider : IArchitectureAiProvider
             HumanReviewNotice: humanReviewNotice
         );
 
-        return Task.FromResult(response);
+        sw.Stop();
+        logger.LogInformation(
+            "AI Telemetry - Provider: {ProviderName}, Type: {ArtifactType}, Template: {PromptTemplateName} v{PromptTemplateVersion}, DurationMs: {DurationMs}, Status: {Status}, CorrelationId: {CorrelationId}",
+            "MockDeterministicProvider",
+            request.ArtifactType,
+            request.PromptTemplateName,
+            request.PromptTemplateVersion,
+            sw.ElapsedMilliseconds,
+            "Success",
+            request.CorrelationId);
+
+        return response;
     }
 }

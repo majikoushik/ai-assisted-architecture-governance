@@ -1,6 +1,7 @@
 using ArchitectureGovernance.AI.Abstractions;
 using ArchitectureGovernance.AI.Mock;
 using Xunit;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace ArchitectureGovernance.AI.Tests;
 
@@ -9,7 +10,7 @@ public sealed class MockArchitectureAiProviderTests
     [Fact]
     public async Task GenerateArtifactDraftAsync_ReturnsHumanReviewNotice()
     {
-        var provider = new MockArchitectureAiProvider();
+        var provider = new MockArchitectureAiProvider(NullLogger<MockArchitectureAiProvider>.Instance);
         var request = new ArchitectureAiRequest(
             ProjectId: Guid.NewGuid(),
             RequirementId: Guid.NewGuid(),

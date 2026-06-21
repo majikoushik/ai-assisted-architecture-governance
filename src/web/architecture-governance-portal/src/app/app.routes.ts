@@ -12,6 +12,8 @@ import { ProjectDetailComponent } from './features/projects/project-detail.compo
 import { RequirementCreateComponent } from './features/requirements/requirement-create/requirement-create.component';
 import { RequirementDetailComponent } from './features/requirements/requirement-detail/requirement-detail.component';
 
+import { SystemHealthComponent } from './features/system-health/system-health.component';
+
 export const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent },
   { path: 'projects', component: ProjectsComponent },
@@ -25,6 +27,7 @@ export const routes: Routes = [
   { path: 'prompts', component: PromptCatalogListComponent },
   { path: 'prompts/:id', component: PromptCatalogDetailComponent },
   { path: 'reviews', component: ReviewsComponent },
+  { path: 'system-health', component: SystemHealthComponent },
   { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
   { path: '**', redirectTo: 'dashboard' }
 ];

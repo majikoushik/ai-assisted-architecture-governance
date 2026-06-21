@@ -6,4 +6,7 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.1" />
     <ProjectReference Include="..\..\src\infrastructure\ArchitectureGovernance.Infrastructure\ArchitectureGovernance.Infrastructure.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\building-blocks\Observability\Observability.csproj" />
+  </ItemGroup>
 </Project>

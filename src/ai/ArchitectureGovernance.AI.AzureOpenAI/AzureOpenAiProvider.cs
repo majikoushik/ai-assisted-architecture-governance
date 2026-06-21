@@ -72,7 +72,9 @@ Requirement Text:
 
             _logger.LogInformation("Calling Azure OpenAI. CorrelationId: {CorrelationId}, Deployment: {DeploymentName}", request.CorrelationId, _options.DeploymentName);
 
+            var sw = System.Diagnostics.Stopwatch.StartNew();
             var completionResult = await chatClient.CompleteChatAsync(messages, chatOptions, cts.Token);
+            sw.Stop();
 
             var markdown = completionResult.Value.Content[0].Text;
 
@@ -81,6 +83,16 @@ Requirement Text:
             {
                 markdown = $"> {humanReviewNotice}\n\n" + markdown;
             }
+
+            _logger.LogInformation(
+                "AI Telemetry - Provider: {ProviderName}, Type: {ArtifactType}, Template: {PromptTemplateName} v{PromptTemplateVersion}, DurationMs: {DurationMs}, Status: {Status}, CorrelationId: {CorrelationId}",
+                "AzureOpenAI",
+                request.ArtifactType,
+                request.PromptTemplateName,
+                request.PromptTemplateVersion,
+                sw.ElapsedMilliseconds,
+                "Success",
+                request.CorrelationId);
 
             return new ArchitectureAiResponse(
                 ArtifactType: request.ArtifactType,
@@ -97,6 +109,16 @@ Requirement Text:
         {
             _logger.LogError(ex, "Failed to call Azure OpenAI provider. CorrelationId: {CorrelationId}", request.CorrelationId);
             
+            _logger.LogInformation(
+                "AI Telemetry - Provider: {ProviderName}, Type: {ArtifactType}, Template: {PromptTemplateName} v{PromptTemplateVersion}, DurationMs: {DurationMs}, Status: {Status}, CorrelationId: {CorrelationId}",
+                "AzureOpenAI",
+                request.ArtifactType,
+                request.PromptTemplateName,
+                request.PromptTemplateVersion,
+                -1,
+                "Failed",
+                request.CorrelationId);
+
             return new ArchitectureAiResponse(
                 ArtifactType: request.ArtifactType,
                 Markdown: $"> {humanReviewNotice}\n\n# Error: AI Generation Failed\n\nThere was an error generating the artifact using Azure OpenAI.",
