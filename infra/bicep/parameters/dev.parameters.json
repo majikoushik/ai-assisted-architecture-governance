@@ -9,7 +9,7 @@
       "value": "sqladmin"
     },
     "sqlAdminPassword": {
-      "value": "ChangeThisDevPassword123!"
+      "value": "<your-sql-admin-password>"
     },
     "aiProvider": {
       "value": "Mock"
