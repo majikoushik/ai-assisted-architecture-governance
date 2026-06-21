@@ -21,7 +21,7 @@ export const routes: Routes = [
   { path: 'projects/:projectId/requirements/:reqId', component: RequirementDetailComponent },
   { path: 'requirements', component: RequirementsComponent },
   { path: 'artifact-generation', component: ArtifactGenerationComponent },
-  { path: 'artifact-viewer', component: ArtifactViewerComponent },
+  { path: 'artifacts/:id', component: ArtifactViewerComponent },
   { path: 'prompts', component: PromptCatalogListComponent },
   { path: 'prompts/:id', component: PromptCatalogDetailComponent },
   { path: 'reviews', component: ReviewsComponent },

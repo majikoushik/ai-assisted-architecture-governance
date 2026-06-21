@@ -22,7 +22,25 @@ public class RequirementsController : ControllerBase
     public async Task<IActionResult> Create(CreateRequirementCommand command)
     {
         var result = await _mediator.Send(command);
-        return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
+        return CreatedAtAction(nameof(GetById), new { id = result.Id }, new { data = result, correlationId = HttpContext.TraceIdentifier, timestamp = DateTimeOffset.UtcNow });
+    }
+
+    [HttpGet("{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetById(Guid id)
+    {
+        var result = await _mediator.Send(new GetRequirementByIdQuery(id));
+        return Ok(new { data = result, correlationId = HttpContext.TraceIdentifier, timestamp = DateTimeOffset.UtcNow });
+    }
+
+    [HttpGet("{id:guid}/artifacts")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetRequirementArtifacts(Guid id)
+    {
+        var query = new ArchitectureGovernance.Application.Artifacts.Queries.GetArtifactsByRequirementIdQuery(id);
+        var result = await _mediator.Send(query);
+        return Ok(new { data = result, correlationId = HttpContext.TraceIdentifier, timestamp = DateTimeOffset.UtcNow });
     }
 
     [HttpGet]

@@ -12,12 +12,12 @@
     - Backend domain model for ArchitectureProject.
     - API endpoints for CRUD operations.
     - SQL Server schema and EF Core integration.
-
-## Next
-
 - Epic 2: Requirement Submission
 - Epic 3: Prompt Catalog and Mock AI Provider
 - Epic 4: Requirement Analysis Artifact
+
+## Next
+
 - Epic 5: HLD Generation
 - Epic 6: LLD and ADR Generation
 - Epic 7: NFR, Security, and API Review

@@ -1,0 +1,76 @@
+<div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+  <div class="px-4 py-6 sm:px-0">
+    <div class="mb-4">
+      <a [routerLink]="artifact ? ['/projects', artifact.projectId, 'requirements', artifact.requirementSubmissionId] : ['/dashboard']" 
+         class="text-indigo-600 hover:text-indigo-900 font-medium flex items-center">
+        <svg class="mr-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+        Back to Requirement
+      </a>
+    </div>
+
+    <div *ngIf="isLoading" class="flex justify-center py-10">
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+    </div>
+
+    <div *ngIf="errorMessage" class="rounded-md bg-red-50 p-4 mb-6">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd" />
+          </svg>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-sm font-medium text-red-800">{{ errorMessage }}</h3>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!isLoading && artifact" class="bg-white shadow overflow-hidden sm:rounded-lg">
+      <div class="px-4 py-5 sm:px-6 flex justify-between items-start">
+        <div>
+          <h3 class="text-lg leading-6 font-medium text-gray-900">
+            {{ artifact.title }}
+          </h3>
+          <p class="mt-1 max-w-2xl text-sm text-gray-500">
+            {{ artifact.artifactType }}
+          </p>
+        </div>
+        <div class="flex flex-col items-end gap-2">
+          <span class="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20">Status: {{ artifact.status }}</span>
+          <span class="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10">Provider: {{ artifact.providerName }}</span>
+          <button (click)="downloadMarkdown()" class="mt-2 inline-flex items-center px-2.5 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            <svg class="mr-1 h-4 w-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
+            </svg>
+            Download Markdown
+          </button>
+        </div>
+      </div>
+      
+      <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <div class="ml-3">
+            <p class="text-sm text-yellow-700">
+              <strong>Human Review Notice:</strong> This artifact is AI-assisted draft content and must be reviewed by a qualified architect before use in production decisions.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="border-t border-gray-200">
+        <div class="bg-white px-4 py-5 sm:px-6">
+          <pre class="bg-gray-50 text-gray-800 p-4 rounded-md overflow-x-auto text-sm font-mono leading-relaxed whitespace-pre-wrap border border-gray-200">{{ artifact.markdownContent }}</pre>
+        </div>
+      </div>
+      
+      <div class="bg-gray-50 px-4 py-4 sm:px-6 text-xs text-gray-500 border-t border-gray-200">
+        Generated using prompt <strong>{{ artifact.promptTemplateName }}</strong> ({{ artifact.promptTemplateVersion }}) on {{ artifact.createdAt | date:'medium' }}.
+      </div>
+    </div>
+  </div>
+</div>

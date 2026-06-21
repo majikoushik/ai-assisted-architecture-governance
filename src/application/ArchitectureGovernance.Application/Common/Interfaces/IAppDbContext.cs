@@ -8,5 +8,7 @@ public interface IAppDbContext
 {
     DbSet<ArchitectureProject> Projects { get; }
     DbSet<RequirementSubmission> Requirements { get; }
+    DbSet<ArchitectureGovernance.Domain.Artifacts.GeneratedArtifact> Artifacts { get; }
+
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

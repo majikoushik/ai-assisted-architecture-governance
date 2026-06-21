@@ -98,6 +98,65 @@ Returns the updated project object.
 
 ---
 
+## 2. Artifacts API
+
+### 2.1 Generate Artifact
+
+`POST /api/v1/artifacts/generate`
+
+**Request:**
+
+```json
+{
+  "projectId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "requirementSubmissionId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "artifactType": "RequirementAnalysis"
+}
+```
+
+**Response (200 OK):**
+
+Returns the generated `Artifact` object.
+
+### 2.2 Get Artifact by ID
+
+`GET /api/v1/artifacts/{artifactId}`
+
+**Response (200 OK):**
+
+```json
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "projectId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "requirementSubmissionId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "artifactType": "RequirementAnalysis",
+  "title": "Project - Requirement Analysis",
+  "markdownContent": "# Draft...",
+  "version": "1.0.0",
+  "status": "Draft",
+  "providerName": "MockProvider",
+  "promptTemplateName": "requirement-analysis",
+  "promptTemplateVersion": "1.0.0",
+  "createdAt": "2026-06-21T00:00:00Z"
+}
+```
+
+### 2.3 Get Artifacts by Project
+
+`GET /api/v1/projects/{projectId}/artifacts`
+
+### 2.4 Get Artifacts by Requirement
+
+`GET /api/v1/requirements/{requirementId}/artifacts`
+
+### 2.5 Export Artifact as Markdown
+
+`GET /api/v1/artifacts/{artifactId}/export/markdown`
+
+Returns `text/markdown` file download.
+
+---
+
 The API is version-ready under `/api/v1`.
 
 Current foundation endpoint:

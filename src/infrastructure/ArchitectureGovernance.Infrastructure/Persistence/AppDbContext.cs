@@ -14,6 +14,7 @@ public class AppDbContext : DbContext, IAppDbContext
 
     public DbSet<ArchitectureProject> Projects => Set<ArchitectureProject>();
     public DbSet<RequirementSubmission> Requirements => Set<RequirementSubmission>();
+    public DbSet<ArchitectureGovernance.Domain.Artifacts.GeneratedArtifact> Artifacts => Set<ArchitectureGovernance.Domain.Artifacts.GeneratedArtifact>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
