@@ -1,41 +1,49 @@
-# Risk and Assumption Review Prompt
+# Prompt: Risk and Assumption Review
 
 Version: `v1.0.0`
 
 ## Purpose
 
-Identify, categorize, and suggest mitigations for risks and assumptions based on business requirements.
+Extract and organize architecture assumptions, risks, dependencies, and open questions from a submitted requirement.
 
 ## Expected Input
 
-- Requirement text and context
-- Business domain
+- Requirement title.
+- Requirement text.
+- Business domain.
+- Domain context.
+- Known constraints, if provided.
 
-## Expected Output Format
+## Instructions
 
-The output must be structured Markdown and include the following sections:
+You are assisting a Solution Architect. Identify risk categories and assumptions without inventing facts. Make uncertainty explicit and prioritize questions for stakeholders.
 
-- **Executive Summary**: A brief overview of the risk landscape.
-- **Key Assumptions**: Core assumptions driving the current design direction.
-- **Business Risks**: Risks related to domain, market, or stakeholders.
-- **Technical Risks**: Architecture, legacy integration, or performance risks.
-- **Security Risks**: Authentication, data, and compliance risks.
-- **Operational Risks**: Deployment, observability, and support risks.
-- **Data Risks**: Data quality, migration, or retention risks.
-- **AI-related Risks**: Hallucination, latency, and AI governance risks.
-- **Cloud Deployment Risks**: Vendor lock-in, quotas, or networking risks.
-- **Dependency Risks**: Third-party APIs and libraries.
-- **Open Questions**: Critical questions to de-risk the project.
-- **Mitigation Recommendations**: Actionable steps to address identified risks.
+## Output Format
+
+Return Markdown with these sections:
+
+1. Human Review Notice.
+2. Executive Summary.
+3. Known Facts.
+4. Key Assumptions.
+5. Business Risks.
+6. Technical Risks.
+7. Security Risks.
+8. Operational Risks.
+9. Data Risks.
+10. AI-Related Risks.
+11. Cloud Deployment Risks.
+12. Dependency Risks.
+13. Risk Severity Table.
+14. Mitigation Recommendations.
+15. Open Questions.
 
 ## Constraints
 
-- Do not invent unavailable facts or claim production readiness.
-- Separate confirmed inputs from assumptions.
-- Ensure the output looks like a professional, enterprise-grade architecture draft.
-- Do NOT log full sensitive requirement text.
+- Do not invent confirmed dependencies.
+- Use severity labels such as Low, Medium, High only as draft recommendations.
+- Do not claim risks are fully mitigated.
 
 ## Human Review Notice
 
-Always include this exact text at the beginning of the output:
-> This artifact is AI-assisted draft content and must be reviewed by a qualified architect before use in production decisions.
+This artifact is AI-assisted draft content and must be reviewed by a qualified architect before use in production decisions.

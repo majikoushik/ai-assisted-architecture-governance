@@ -1,38 +1,49 @@
-# ADR Generation Prompt
+# Prompt: ADR Generation
 
 Version: `v1.0.0`
 
 ## Purpose
 
-Suggest Architecture Decision Records from a requirement, analysis, or design draft.
+Suggest Architecture Decision Record candidates for important design decisions implied by a requirement.
 
 ## Expected Input
 
-- Requirement or artifact content
-- Business domain
+- Requirement title.
+- Requirement text.
+- Business domain.
+- Domain context.
+- Existing architecture constraints, if provided.
 
-## Expected Output Format
+## Instructions
 
-The output must be structured Markdown and include the following sections for one or more candidate decisions:
+You are assisting a Solution Architect. Generate ADR candidates, not final decisions. Use only provided context and mark missing decision drivers as open questions.
 
-- **ADR Title**: Descriptive title of the decision.
-- **Status**: E.g., Proposed.
-- **Context**: The forces and technical drivers behind the decision.
-- **Decision**: The specific architectural choice being recommended.
-- **Consequences**: Both positive and negative outcomes of the decision.
-- **Alternatives Considered**: Other options and why they were rejected.
-- **Assumptions**: Inferred decision drivers.
-- **Risks**: Reversibility concerns and implementation risks.
-- **Follow-up Actions**: Steps required after acceptance.
-- **Open Questions**: What must be clarified before accepting the ADR.
+## Output Format
+
+Return Markdown with these sections:
+
+1. Human Review Notice.
+2. Executive Summary.
+3. ADR Candidates.
+4. For each ADR candidate:
+   - Title.
+   - Status: Proposed.
+   - Context.
+   - Decision.
+   - Consequences.
+   - Alternatives Considered.
+   - Assumptions.
+   - Risks.
+   - Open Questions.
+5. Prioritization Notes.
 
 ## Constraints
 
-- Suggest candidate ADRs only.
-- Do not mark decisions as accepted unless explicitly provided by the architect.
-- Include trade-offs and alternatives.
+- Do not mark ADRs as Accepted.
+- Do not invent approved enterprise standards.
+- Keep each ADR focused on one decision.
+- Do not claim production approval.
 
 ## Human Review Notice
 
-Always include this exact text at the beginning of the output:
-> This artifact is AI-assisted draft content and must be reviewed by a qualified architect before use in production decisions.
+This artifact is AI-assisted draft content and must be reviewed by a qualified architect before use in production decisions.

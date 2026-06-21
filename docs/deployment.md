@@ -1,19 +1,40 @@
-# Deployment Strategy
+# Deployment
 
-This repository provides two deployment modalities:
+## Local
 
-## Local & Docker Development
+Use direct tooling for development:
 
-For local development and execution with Docker, please refer to the **[DevOps and Local Development Guide](devops-guide.md)**.
+```powershell
+dotnet run --project src/api/ArchitectureGovernance.Api/ArchitectureGovernance.Api.csproj
+cd src/web/architecture-governance-portal
+npm start
+```
 
-## Azure Cloud Deployment
+## Docker Compose
 
-For deploying the platform to Azure, the repository includes a complete **Bicep Infrastructure as Code (IaC)** foundation and GitHub Actions deployment templates.
+```powershell
+copy .env.example .env
+docker compose build
+docker compose up
+```
 
-Please refer to the **[Azure Deployment Guide](azure-deployment-guide.md)** for comprehensive details on:
-- Bicep Architecture
-- Azure Container Apps and Azure Static Web Apps deployment
-- Secure Configuration with Azure Key Vault
-- Azure OpenAI integration readiness
-- Application Insights telemetry
-- Cost management and Resource cleanup
+## Azure Blueprint
+
+Bicep files are under `infra/bicep/`. Validate syntax with:
+
+```powershell
+az bicep build --file infra/bicep/main.bicep
+```
+
+The blueprint models the target deployment but is not automatically deployed by this repository without environment-specific parameters and approved secrets.
+
+## Cleanup
+
+For Docker:
+
+```powershell
+docker compose down
+docker volume rm ai-assisted-architecture-governance_sqlserver-data
+```
+
+For Azure demos, delete the resource group after validation to avoid ongoing cost.

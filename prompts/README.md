@@ -1,14 +1,17 @@
 # Prompt Catalog
 
-This folder stores versioned prompt templates used to generate AI-assisted architecture artifacts.
+This folder contains source-controlled prompt templates for AI-assisted architecture artifact generation.
 
-Every prompt must:
+Each prompt is versioned and must include:
 
-- State its purpose and expected input.
-- Produce structured Markdown.
-- Separate facts, assumptions, risks, recommendations, and open questions.
-- Include the human review notice.
-- Avoid asking the model to invent unavailable facts.
-- Avoid logging or exposing sensitive data.
+- Purpose.
+- Expected input.
+- Instructions.
+- Output format.
+- Constraints.
+- Assumptions, risks, and open questions.
+- Human review notice.
+- Anti-hallucination guidance.
+- Clear separation of known facts from assumptions.
 
-Current version placeholder: `v1.0.0`.
+The local mock provider is deterministic and does not require credentials. Azure OpenAI can use these templates only when explicitly configured.

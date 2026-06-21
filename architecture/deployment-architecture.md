@@ -1,39 +1,47 @@
 # Deployment Architecture
 
-## Local Foundation
+## Local Deployment
 
-The application is containerized natively for ease of developer setup and operational parity.
+Local development can run with:
 
-- **`docker-compose.yml`** orchestrates the platform for local validation.
-- **Backend (`api`)**: Built as a multi-stage Docker image, running as a non-root user for security, and accessible at port `8080`.
-- **Frontend (`web`)**: Built as a multi-stage Docker image, with the Angular production build packaged within an Nginx Alpine container for performant static asset serving and routing.
-- **Database (`sqlserver`)**: Microsoft SQL Server image with a named volume for persistent storage across container restarts.
+- .NET API directly through `dotnet run`.
+- Angular portal through `npm start`.
+- SQL Server local instance or Docker.
+- Mock AI provider by default.
 
-## Azure Target Direction
+Docker Compose starts API, web portal, and SQL Server for an integrated local environment.
 
-The local Docker setup maps precisely to the deployed Azure environment.
+## Azure Blueprint
 
-1. **Angular Frontend**: Deployed to **Azure Static Web Apps**.
-2. **Backend API**: Deployed to **Azure Container Apps** for managed, scalable serverless container execution.
-3. **Container Registry**: **Azure Container Registry** stores the `.NET` backend image.
-4. **Database**: **Azure SQL Database**.
-5. **AI Provider**: **Azure OpenAI**, providing enterprise-grade, compliant AI access.
-6. **Secrets**: **Azure Key Vault** stores connection strings and OpenAI API Keys. Container Apps retrieve these securely via **Managed Identity**.
-7. **Monitoring**: **Azure Application Insights** and **Log Analytics** capture standard telemetry and our Safe AI Telemetry metadata.
+The target Azure deployment uses:
 
-### Environment Separation
-The architecture supports discrete environments (e.g., `dev`, `test`, `prod`) using Bicep parameters.
+- Azure Static Web Apps for Angular.
+- Azure Container Apps for ASP.NET Core API.
+- Azure Container Registry for API images.
+- Azure SQL Database for persistence.
+- Azure OpenAI for configured AI generation.
+- Azure Key Vault for secrets.
+- Application Insights and Log Analytics for telemetry.
 
-## Infrastructure as Code (IaC)
+## Configuration Strategy
 
-Bicep is used for all Azure Infrastructure. The templates reside under `infra/bicep/`:
-- `main.bicep`: Orchestrates the deployment.
-- `modules/`: Contains modular templates for SQL, ACA, ACR, SWA, Key Vault, and Log Analytics.
-- `parameters/`: Contains environment-specific configurations (e.g., `dev.parameters.json`).
+Local and CI:
 
-## CI/CD Pipeline
+```text
+AI_PROVIDER=Mock
+```
 
-The GitHub Actions workflows under `.github/workflows/` establish the deployment flow:
-1. **CI Validation (`ci.yml`)**: Unit test validation and Docker image build verification.
-2. **Container Build (`container-build-template.yml`)**: Builds the backend API image and securely pushes it to Azure Container Registry using Managed Identity.
-3. **Azure Deployment (`azure-deploy-template.yml`)**: Deploys the Bicep IaC, deploys the backend image to Azure Container Apps, and deploys the Angular app to Azure Static Web Apps.
+Azure OpenAI optional configuration:
+
+```text
+AI_PROVIDER=AzureOpenAI
+AZURE_OPENAI_ENDPOINT=<stored securely>
+AZURE_OPENAI_DEPLOYMENT_NAME=<stored securely>
+AZURE_OPENAI_KEY=<stored securely or replaced by managed identity pattern>
+```
+
+Secrets belong in Key Vault or secure CI/CD secrets, not in source control or frontend configuration.
+
+## Production Caveats
+
+The Bicep files are a deployment blueprint. Production readiness requires networking, identity, threat modeling, backup/restore, data retention, cost budgets, and compliance review.

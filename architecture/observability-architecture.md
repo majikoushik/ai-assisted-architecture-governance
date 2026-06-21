@@ -1,27 +1,37 @@
 # Observability Architecture
 
-## Foundation
+## Goals
 
-The API includes health check readiness and correlation ID middleware.
+Observability should make the platform supportable without exposing sensitive AI inputs. The design prioritizes request correlation, health checks, operational metadata, and Azure monitoring readiness.
 
-## Telemetry Strategy (Azure Target)
+## Implemented Patterns
 
-The platform is designed to natively push telemetry into **Azure Application Insights** and **Azure Log Analytics**.
+- Correlation ID middleware.
+- Request logging middleware.
+- Global exception handling.
+- Liveness and readiness health endpoints.
+- AI telemetry metadata logs from providers.
+- Application Insights registration readiness.
 
-- **Application Insights:** Integrated via `Microsoft.ApplicationInsights.AspNetCore`. Captures incoming HTTP requests, dependency calls (SQL Server, Azure OpenAI), exceptions, and trace logs.
-- **Log Analytics:** Acts as the central sink for Azure Container Apps system logs, stdout/stderr container logs, and the backing store for Application Insights workspaces.
-- **Correlation:** Every request traversing the API boundary generates or passes an `X-Correlation-ID`. This ID is injected into every structured log event.
+## Safe AI Telemetry
 
-## Required Custom Metadata (Safe AI Telemetry)
+AI provider telemetry can include:
 
-We track AI interaction health without compromising data privacy. The custom AI Provider telemetry captures:
-- Correlation ID
-- Active Provider Name (`Mock` or `AzureOpenAI`)
-- Prompt Template Version
-- Artifact Type generated
-- Generation Duration (ms)
-- Status (Success/Failed)
+- Provider name.
+- Artifact type.
+- Prompt template name and version.
+- Duration.
+- Status.
+- Correlation ID.
 
-## Safety
+Telemetry must not include API keys, secrets, full prompts, full requirement text, or full AI responses by default.
 
-Telemetry must avoid secrets and sensitive prompt content.
+## Azure Target
+
+- Application Insights for application telemetry.
+- Log Analytics Workspace for centralized logs.
+- Azure Monitor alerts for availability, failures, and cost signals.
+
+## Operational Use
+
+The operational runbook in `docs/operational-runbook.md` documents health checks, log review, AI provider failure triage, and recovery actions.

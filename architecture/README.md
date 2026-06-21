@@ -1,13 +1,40 @@
-# Architecture Overview
+# Architecture Documentation
 
-This folder documents the target architecture for the AI-Assisted Architecture Governance platform.
+This folder documents the architecture of the AI-Assisted Architecture Governance platform. The documentation is intentionally written for Solution Architect, engineering manager, and technical interviewer review.
 
-The platform converts business requirements into reviewable architecture artifacts through a governed workflow:
+## Architecture Intent
 
-1. Requirement intake.
-2. AI-assisted analysis.
-3. Draft artifact generation.
-4. Human architect review.
-5. Export and traceability.
+The platform converts synthetic or approved business requirements into AI-assisted architecture draft artifacts. It is designed around governance rather than chat: prompt-controlled generation, artifact versioning, traceability, human review, safe telemetry, and Azure deployment readiness.
 
-All generated artifacts are drafts and require qualified architect review before use in production decisions.
+## Primary Views
+
+- [High-Level Design](hld.md)
+- [Low-Level Design](lld.md)
+- [Non-Functional Requirements](nfrs.md)
+- [Responsible AI Architecture](responsible-ai-architecture.md)
+- [Prompt Engineering Strategy](prompt-engineering-strategy.md)
+- [API Governance](api-governance.md)
+- [Security Architecture](security-architecture.md)
+- [Observability Architecture](observability-architecture.md)
+- [Deployment Architecture](deployment-architecture.md)
+- [Data Model](data-model.md)
+
+## Diagrams
+
+- [System context](diagrams/system-context.md)
+- [Container diagram](diagrams/container-diagram.md)
+- [Requirement-to-artifact flow](diagrams/requirement-to-artifact-flow.md)
+- [AI provider sequence](diagrams/ai-provider-sequence.md)
+- [Prompt template flow](diagrams/prompt-template-flow.md)
+- [Human review and versioning flow](diagrams/review-versioning-flow.md)
+- [Safe AI telemetry flow](diagrams/safe-ai-telemetry-flow.md)
+- [Azure deployment](diagrams/azure-deployment.md)
+- [CI/CD pipeline](diagrams/cicd-pipeline.md)
+
+## Architecture Decision Records
+
+ADRs live under [adr](adr/) and capture the major decisions behind architecture style, provider abstraction, prompt versioning, telemetry, Azure deployment, frontend structure, Docker, and DevOps strategy.
+
+## Responsible AI Boundary
+
+Generated outputs are AI-assisted drafts. They require human architect review and must not be represented as production-approved architecture decisions.

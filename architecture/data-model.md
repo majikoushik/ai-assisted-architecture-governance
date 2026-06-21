@@ -1,52 +1,31 @@
 # Data Model
 
-This document outlines the core entities in the SQL Server database.
+## Core Entities
 
-## 1. ArchitectureProject
+| Entity | Purpose |
+| --- | --- |
+| `ArchitectureProject` | Governance workspace for one initiative or solution. |
+| `RequirementSubmission` | Business or technical requirement submitted for analysis. |
+| `GeneratedArtifact` | Versioned AI-assisted architecture artifact. |
+| `PromptTemplate` | Source-controlled prompt metadata loaded from Markdown. |
+| `ReviewRecord` | Human review status and comments for an artifact. |
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `Id` | `UNIQUEIDENTIFIER` (PK) | Unique identifier for the project workspace. |
-| `Name` | `NVARCHAR(200)` | The name of the project. |
-| `BusinessDomain` | `NVARCHAR(100)` | The domain context. |
-| `Description` | `NVARCHAR(MAX)` | Description of the project goals. |
-| `Owner` | `NVARCHAR(100)` | Primary owner or sponsor. |
-| `Status` | `NVARCHAR(50)` | `Draft`, `Active`, `UnderReview`, `Archived`. |
-| `CreatedAt` | `DATETIMEOFFSET` | When the project was created. |
-| `UpdatedAt` | `DATETIMEOFFSET` | When the project was last updated. |
+## ArchitectureProject
 
-## 2. RequirementSubmission
+Key fields include project ID, name, business domain, description, owner, status, created timestamp, and updated timestamp.
 
-Represents the raw business need or technical requirements for AI-assisted analysis.
+## RequirementSubmission
 
-## 3. GeneratedArtifact
+Key fields include requirement ID, project ID, title, requirement text, domain context, submitter, expected artifact types, status, and timestamps.
 
-Represents an AI-assisted architecture artifact with type, version, status, prompt version, and review metadata.
+## GeneratedArtifact
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `Id` | `UNIQUEIDENTIFIER` (PK) | Unique identifier for the artifact. |
-| `ProjectId` | `UNIQUEIDENTIFIER` (FK) | Links to ArchitectureProject. |
-| `RequirementSubmissionId` | `UNIQUEIDENTIFIER` (FK) | Links to RequirementSubmission. |
-| `ArtifactType` | `NVARCHAR(100)` | The type of the artifact. |
-| `Title` | `NVARCHAR(200)` | The title of the artifact. |
-| `MarkdownContent` | `NVARCHAR(MAX)` | The AI-generated markdown content. |
-| `Version` | `NVARCHAR(50)` | Version string. |
-| `Status` | `NVARCHAR(50)` | `Draft`, `Reviewed`, `Approved`. |
-| `ProviderName` | `NVARCHAR(100)` | The AI provider used. |
-| `PromptTemplateName` | `NVARCHAR(100)` | The name of the prompt template used. |
-| `PromptTemplateVersion` | `NVARCHAR(50)` | The version of the prompt template used. |
-| `CreatedAt` | `DATETIMEOFFSET` | When the artifact was generated. |
-| `UpdatedAt` | `DATETIMEOFFSET` | When the artifact was last updated. |
-
-## PromptTemplate
-
-Represents a versioned prompt template.
-
-## AIInteractionLog
-
-Stores safe metadata about provider calls. It must not store secrets or full sensitive prompts.
+Key fields include artifact ID, project ID, requirement submission ID, artifact type, title, Markdown content, version, status, provider name, prompt template name, prompt template version, correlation ID, and timestamps.
 
 ## ReviewRecord
 
-Captures human review status and comments for generated artifacts.
+Key fields include review ID, artifact ID, reviewer name, review status, comments, and created timestamp.
+
+## Traceability
+
+Generated artifacts connect requirement input, prompt template, prompt version, AI provider, generated Markdown, review status, and export workflow. This traceability is central to the architecture governance value proposition.

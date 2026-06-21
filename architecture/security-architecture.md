@@ -1,18 +1,30 @@
 # Security Architecture
 
-## Current Foundation
+## Current Controls
 
-Epic 0 includes secure configuration placeholders, no committed secrets, and a mock AI provider for local development.
+- Environment-based configuration.
+- `.env.example` with safe placeholders.
+- Azure OpenAI configuration is not required for local execution.
+- Angular frontend does not receive Azure OpenAI secrets.
+- Correlation IDs support incident triage without exposing sensitive content.
+- Prompt and AI telemetry guidance excludes full confidential content by default.
 
-## Current Foundation & Azure Target
+## Target Controls
 
-The platform relies on the following Azure-native security patterns:
+- Microsoft Entra ID authentication.
+- Role-based authorization for Architect, Reviewer, Admin, and Viewer.
+- Azure Key Vault for API secrets and connection strings.
+- Managed Identity for Azure resource access.
+- Private networking and firewall rules for Azure SQL where appropriate.
+- Secure CORS policy for production frontend origin.
 
-- **Azure Key Vault:** Centralized storage for Azure SQL Connection Strings and Azure OpenAI API Keys. Secrets are NEVER injected into Docker images at build time.
-- **Managed Identity & RBAC:** Azure Container Apps use System-Assigned Managed Identities to authenticate to Azure Key Vault using Role-Based Access Control (RBAC) (e.g., `Key Vault Secrets User`), eliminating the need for client secrets in connection strings.
-- **Secure Defaults:** The local environment securely defaults to `Mock` AI to prevent accidental credential leakage in development.
-- **Future Enhancements:** Azure Entra ID authentication and Role-Based Authorization for Architect, Reviewer, and Admin personas.
+## AI-Specific Security
 
-## Logging Safety
+- Treat submitted requirements as potentially sensitive.
+- Avoid logging full prompts and responses.
+- Add prompt injection detection and content filtering before production use.
+- Use synthetic sample data in public demos.
 
-Logs must not include API keys, tokens, connection strings, full confidential prompts, or sensitive AI responses.
+## Security Review Scope
+
+Generated security review artifacts are draft checklists for architecture discussion. They are not a formal threat model, penetration test, compliance assessment, or production approval.

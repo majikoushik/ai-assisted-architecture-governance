@@ -42,6 +42,28 @@ a {
   font-weight: 700;
   line-height: 1.2;
   margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-mark {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: #f2c14e;
+  color: #102a43;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.sidebar-note {
+  margin: -12px 0 22px;
+  color: #b9cbd8;
+  font-size: 13px;
+  line-height: 1.4;
 }
 
 .nav {
@@ -104,6 +126,84 @@ a {
   color: var(--brand);
   font-size: 12px;
   font-weight: 700;
+}
+
+.notice-panel {
+  background: #fff7e6;
+  border: 1px solid #f2c14e;
+  border-left: 4px solid #b75d69;
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+  color: #4c3940;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.btn-primary {
+  background: var(--brand);
+  color: #ffffff;
+}
+
+.btn-secondary {
+  border-color: var(--line);
+  background: #ffffff;
+  color: var(--brand);
+}
+
+.action-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.workflow-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.workflow-step {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 18px;
+}
+
+.workflow-step span {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: #e8f2f4;
+  color: var(--brand);
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.workflow-step h2 {
+  margin: 0 0 8px;
+  font-size: 18px;
+}
+
+.workflow-step p,
+.card p,
+.page-header p {
+  color: var(--muted);
+  line-height: 1.5;
 }
 
 @media (max-width: 780px) {

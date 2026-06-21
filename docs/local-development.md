@@ -1,37 +1,44 @@
 # Local Development
 
-The local default AI provider is `Mock`, so no Azure OpenAI credentials are required.
+## Local Defaults
 
-## API
+- Mock AI provider is the default.
+- SQL Server is the local database target.
+- Swagger is enabled only in development.
+- Generated artifacts are drafts and require human review.
 
-Run the ASP.NET Core API and check:
+## Backend Commands
 
-- `GET /health`
-- `GET /api/v1/platform/readiness`
-
-## Portal
-
-Run the Angular app from `src/web/architecture-governance-portal`.
-
-## Secrets
-
-Use `dotnet user-secrets` to configure the Azure OpenAI provider locally without committing credentials to source control.
-
-To switch to the Azure OpenAI provider locally:
-
-```bash
-cd src/api/ArchitectureGovernance.Api
-dotnet user-secrets init
-dotnet user-secrets set "AiProvider:Provider" "AzureOpenAI"
-dotnet user-secrets set "AzureOpenAI:Endpoint" "https://your-resource.openai.azure.com/"
-dotnet user-secrets set "AzureOpenAI:ApiKey" "YOUR_API_KEY"
-dotnet user-secrets set "AzureOpenAI:DeploymentName" "gpt-4o"
+```powershell
+dotnet restore ArchitectureGovernance.sln
+dotnet build ArchitectureGovernance.sln
+dotnet test ArchitectureGovernance.sln
+dotnet run --project src/api/ArchitectureGovernance.Api/ArchitectureGovernance.Api.csproj
 ```
 
-## 4. Azure & Production Deployment
+## Frontend Commands
 
-For instructions on deploying the application to Azure using Bicep Infrastructure as Code, setting up Key Vault, and configuring GitHub Actions, see the **[Azure Deployment Guide](azure-deployment-guide.md)**.
+```powershell
+cd src/web/architecture-governance-portal
+npm install
+npm start
+npm run build
+npm test
+```
 
-For full Docker containerization and local cluster setup, refer to the **[DevOps and Local Development Guide](devops-guide.md)**.
+## Useful URLs
 
-For more details on the provider configuration and responsible AI considerations, see the [Azure OpenAI Provider Documentation](azure-openai-provider.md).
+- Web portal: `http://localhost:4200`
+- API: `http://localhost:5080`
+- Swagger: `http://localhost:5080/swagger`
+- Liveness: `http://localhost:5080/health/live`
+- Readiness: `http://localhost:5080/health/ready`
+
+## Demo Flow
+
+1. Create a project.
+2. Add a requirement using one of the synthetic samples.
+3. Submit the requirement for analysis.
+4. Generate requirement analysis, HLD, LLD, ADR, NFR, security, API, or risk review artifacts.
+5. Open the artifact viewer.
+6. Export Markdown or record a review.

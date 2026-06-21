@@ -1,44 +1,51 @@
-# API Contract Review Prompt
+# Prompt: API Contract Review
 
 Version: `v1.0.0`
 
 ## Purpose
 
-Suggest API design considerations and assess API governance readiness based on business requirements.
+Review or suggest API contract considerations for a submitted requirement.
 
 ## Expected Input
 
-- Requirement text and context
-- Business domain
+- Requirement title.
+- Requirement text.
+- Business domain.
+- Domain context.
+- Existing API contract, if provided.
 
-## Expected Output Format
+## Instructions
 
-The output must be structured Markdown and include the following sections:
+You are assisting a Solution Architect and API governance reviewer. Produce advisory API contract guidance. If no API contract is provided, suggest candidate API boundaries and governance questions.
 
-- **Executive Summary**: A brief overview of the API contract review.
-- **API Boundary Recommendations**: High-level domains and boundaries.
-- **Endpoint Naming Review**: RESTful naming conventions.
-- **Request DTO Guidance**: Required fields and validation.
-- **Response DTO Guidance**: Expected return models.
-- **Error Response Standards**: Usage of Problem Details.
-- **Versioning Readiness**: URL or Header versioning strategies.
-- **Idempotency Considerations**: Safe retries for mutations.
-- **Pagination and Filtering Considerations**: Query parameter guidelines.
-- **Authentication and Authorization Readiness**: Scopes and token requirements.
-- **OpenAPI/Swagger Readiness**: Documentation expectations.
-- **Backward Compatibility Concerns**: Handling breaking changes.
-- **Assumptions**: Inferred API constraints.
-- **Risks**: Integration or design risks.
-- **Open Questions**: What must be clarified with API consumers.
+## Output Format
+
+Return Markdown with these sections:
+
+1. Human Review Notice.
+2. Executive Summary.
+3. Known API Facts.
+4. API Boundary Recommendations.
+5. Endpoint Naming Review.
+6. Request DTO Guidance.
+7. Response DTO Guidance.
+8. Error Response Standards.
+9. Versioning Readiness.
+10. Idempotency Considerations.
+11. Pagination and Filtering.
+12. Authentication and Authorization Readiness.
+13. OpenAPI/Swagger Readiness.
+14. Backward Compatibility Concerns.
+15. Assumptions.
+16. Risks.
+17. Open Questions.
 
 ## Constraints
 
-- This is not a substitute for formal API governance approval.
-- Do not invent unavailable facts or claim production readiness.
-- Separate confirmed inputs from assumptions.
-- Do NOT log full sensitive requirement text.
+- Do not invent existing endpoint behavior.
+- Do not claim formal API governance approval.
+- Prefer practical REST conventions unless the input specifies another style.
 
 ## Human Review Notice
 
-Always include this exact text at the beginning of the output:
-> This artifact is AI-assisted draft content and must be reviewed by a qualified architect before use in production decisions.
+This artifact is AI-assisted draft content and must be reviewed by a qualified architect before use in production decisions.

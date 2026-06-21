@@ -1,13 +1,51 @@
 # Testing Strategy
 
-## Backend
+## Current Test Areas
 
-Use xUnit for unit and integration tests. Prioritize domain rules, application workflows, AI provider abstraction, prompt loading, validation, and API behavior.
+- Domain review status rules.
+- Project creation command handling.
+- Artifact generation command handling.
+- Mock AI provider output and metadata.
+- Azure OpenAI provider configuration readiness without real credentials.
+- Global exception handling behavior.
+- Angular component smoke tests for core screens.
 
-## Frontend
+## Commands
 
-Use Angular tests for components, services, routing smoke tests, form validation, and Markdown viewer behavior.
+Backend:
 
-## Test Data
+```powershell
+dotnet test ArchitectureGovernance.sln --configuration Release
+```
 
-Use synthetic data only. Do not use real confidential requirements or regulated information.
+Frontend:
+
+```powershell
+cd src/web/architecture-governance-portal
+npm test
+```
+
+Docker:
+
+```powershell
+docker compose build
+docker compose config
+```
+
+Bicep:
+
+```powershell
+az bicep build --file infra/bicep/main.bicep
+```
+
+## Test Data Policy
+
+Use synthetic data only. Tests and samples must not contain real customer requirements, production API keys, real tenant IDs, confidential URLs, or proprietary architecture content.
+
+## Future Coverage
+
+- API integration tests for all core endpoints.
+- Prompt template schema/section validation.
+- Golden-output tests for deterministic mock artifacts.
+- Frontend service tests for error handling and correlation ID interceptor behavior.
+- Bicep validation in CI.

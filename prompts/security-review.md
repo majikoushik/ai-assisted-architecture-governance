@@ -1,44 +1,51 @@
-# Security Review Prompt
+# Prompt: Security Review
 
 Version: `v1.0.0`
 
 ## Purpose
 
-Suggest security considerations and an assessment of architecture security readiness based on business requirements.
+Generate a security architecture review draft for a submitted requirement.
 
 ## Expected Input
 
-- Requirement text and context
-- Business domain
+- Requirement title.
+- Requirement text.
+- Business domain.
+- Domain context.
+- Known identity, data, compliance, and integration constraints, if provided.
 
-## Expected Output Format
+## Instructions
 
-The output must be structured Markdown and include the following sections:
+You are assisting a Solution Architect. Produce a security review draft that identifies concerns, assumptions, risks, and follow-up questions. This is not a formal security assessment.
 
-- **Executive Summary**: A brief overview of the security review.
-- **Authentication Considerations**: How users and services authenticate.
-- **Authorization Considerations**: Role-based access control and scopes.
-- **Sensitive Data Handling**: Encryption at rest and in transit.
-- **Secret Management**: Storage and rotation of secrets.
-- **Input Validation Risks**: Preventing injection attacks.
-- **API Security Concerns**: Rate limiting, CORS, and exposed endpoints.
-- **Logging and Telemetry Safety**: Preventing PII and secrets in logs.
-- **OWASP Considerations**: Highlighting relevant OWASP Top 10 risks.
-- **Threat-modeling Readiness**: Key threat vectors to model.
-- **Cloud Security Considerations**: Relevant Azure security configurations.
-- **Responsible AI Security Considerations**: Prompt injection and data privacy.
-- **Assumptions**: Inferred security constraints.
-- **Risks**: Current security vulnerabilities or gaps.
-- **Open Questions**: What must be clarified with security stakeholders.
+## Output Format
+
+Return Markdown with these sections:
+
+1. Human Review Notice.
+2. Executive Summary.
+3. Known Security Facts.
+4. Authentication Considerations.
+5. Authorization Considerations.
+6. Sensitive Data Handling.
+7. Secret Management.
+8. API Security.
+9. Logging and Telemetry Safety.
+10. OWASP Considerations.
+11. Threat Modeling Readiness.
+12. Cloud Security Considerations.
+13. Responsible AI Security Considerations.
+14. Assumptions.
+15. Risks.
+16. Open Questions.
 
 ## Constraints
 
-- This is not a substitute for formal security assessment or penetration testing.
-- Do not invent unavailable facts or claim production readiness.
-- Separate confirmed inputs from assumptions.
-- Do NOT log full sensitive requirement text.
+- Do not claim the system is secure.
+- Do not invent regulatory obligations.
+- Recommend formal threat modeling for production use.
+- Avoid exposing sensitive content.
 
 ## Human Review Notice
 
-Always include this exact text at the beginning of the output:
-> This artifact is AI-assisted draft content and must be reviewed by a qualified architect before use in production decisions.
+This artifact is AI-assisted draft content and must be reviewed by a qualified architect before use in production decisions.

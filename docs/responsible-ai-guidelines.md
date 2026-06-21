@@ -1,32 +1,30 @@
 # Responsible AI Guidelines
 
-This platform generates architecture governance artifacts using AI. Due to the high stakes of architectural decision-making, the following Responsible AI (RAI) guidelines are strictly enforced across the codebase.
+## Mandatory Notice
 
-## 1. Human-in-the-Loop is Mandatory
-AI-generated content is **draft content only**. 
-The system does not possess final authority over system design, security compliance, or deployment readines. Every generated artifact—whether from the mock provider or Azure OpenAI—contains a prominent notice:
-> *This artifact is AI-assisted draft content and must be reviewed by a qualified architect before use in production decisions.*
+Generated artifacts are AI-assisted draft content and must be reviewed by a qualified architect before use in production decisions.
 
-## 2. Deterministic Local Development
-To prevent accidental data leakage during local testing and to allow offline development, the default AI provider is the **Mock AI Provider**.
-- It does not require real API keys or an internet connection.
-- It generates deterministic, safe mock outputs.
-- No sensitive requirement text is ever transmitted outside of the local process while using the mock provider.
+## Demo Data
 
-## 3. Data Privacy and Confidentiality
-- **No Secrets**: Never commit real API keys or secrets to the repository.
-- **No Sensitive Logging**: Full requirement text submitted by users must **not** be logged in application logs (e.g., Serilog or Application Insights) to prevent PII/confidential data spills.
+Use only synthetic requirements in public demos. Do not enter real confidential business requirements unless the environment has been approved for that data classification.
 
-## 4. Mitigating Hallucinations
-- Prompt templates are specifically engineered to instruct the model to separate **Facts** from **Assumptions**.
-- If context is missing, the model is instructed to list items under **Open Questions** rather than inventing a system design.
-- The UI surfaces these sections prominently so human reviewers can easily spot and validate the AI's assumptions.
+## Logging Rules
 
-## 5. Enterprise Data Governance for Production
-Before deploying the Azure OpenAI provider to a production environment:
-- Verify that your Azure OpenAI resource configuration aligns with your organization's compliance boundaries (e.g., opting out of abuse monitoring data logging if handling highly confidential IP).
-- Public demos should use synthetic requirements, not real proprietary architectures.
+Do not log:
 
-## 6. Generated Assessments are not Formal Audits
-- **Security Reviews:** Generated security review output is a heuristic baseline and is *not* a substitute for a formal security assessment or penetration test.
-- **API Reviews:** Generated API contract review output is *not* a substitute for formal API governance board approval.
+- API keys or tokens.
+- Connection strings.
+- Full prompts.
+- Full requirement text.
+- Full AI responses.
+- Confidential customer or business data.
+
+Allowed operational metadata includes provider, artifact type, prompt version, duration, status, and correlation ID.
+
+## Azure OpenAI
+
+Azure OpenAI is optional and configuration-driven. Local and CI workflows should remain on the mock provider unless explicitly testing Azure provider integration in a secure environment.
+
+## Review Boundaries
+
+AI-generated security and API review outputs support architecture discussion. They do not replace threat modeling, penetration testing, privacy review, legal review, compliance review, or enterprise architecture board approval.

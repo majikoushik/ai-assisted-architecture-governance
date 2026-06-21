@@ -1,30 +1,60 @@
-# Setup
+# Setup Guide
 
 ## Prerequisites
 
-- .NET 8 SDK
-- Node.js 20 LTS or 22 LTS
-- npm
-- Docker Desktop for container-based local development
-- SQL Server container support for later data epics
+- .NET 8 SDK.
+- Node.js 20, 21, or 22.
+- Docker Desktop for Docker Compose and SQL Server local container.
+- Azure CLI for optional Bicep validation.
 
-## Backend
+## Clone and Restore
 
 ```powershell
 dotnet restore ArchitectureGovernance.sln
-dotnet run --project src/api/ArchitectureGovernance.Api/ArchitectureGovernance.Api.csproj
+dotnet build ArchitectureGovernance.sln
 ```
 
-Swagger is available in Development once the API is running.
-
-## Frontend
+## Frontend Dependencies
 
 ```powershell
 cd src/web/architecture-governance-portal
 npm install
+```
+
+## Environment
+
+Copy the safe local template:
+
+```powershell
+copy .env.example .env
+```
+
+Keep the local AI provider as:
+
+```text
+AI_PROVIDER=Mock
+```
+
+Azure OpenAI is optional. Do not place real secrets in source control.
+
+## Run Locally
+
+API:
+
+```powershell
+dotnet run --project src/api/ArchitectureGovernance.Api/ArchitectureGovernance.Api.csproj
+```
+
+Web:
+
+```powershell
+cd src/web/architecture-governance-portal
 npm start
 ```
 
-## Configuration
+Docker:
 
-Use environment variables or local development settings. Do not commit real secrets.
+```powershell
+docker compose build
+docker compose up
+```

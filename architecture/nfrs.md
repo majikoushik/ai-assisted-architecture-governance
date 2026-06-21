@@ -1,29 +1,49 @@
 # Non-Functional Requirements
 
-## Scalability
-
-Design for horizontal API scaling. The Azure Blueprint leverages **Azure Container Apps** for event-driven, serverless container scaling. Durable state is stored securely in **Azure SQL Database**.
-
-## Availability
-
-The Azure deployment relies on highly available managed services. Azure Container Apps handles container health-probe restarts, and Azure SQL provides automated backups. Future deployments should utilize revision-based rollout for zero-downtime updates.
-
-## Performance
-
-Prompt execution latency is tracked independently from internal API request latency via Application Insights. A configurable timeout (`TimeoutSeconds`) ensures the backend does not hang on slow AI model completions.
-
 ## Security
 
-No secrets are committed. Future identity direction is Azure Entra ID with role-based access.
+- Secrets must not be committed.
+- Azure OpenAI keys, deployment names, and endpoints are configuration values.
+- Azure OpenAI credentials must never be exposed to the Angular frontend.
+- Future authentication should use Microsoft Entra ID with role-based authorization.
+- Logs must exclude secrets, tokens, connection strings, full prompts, full requirements, and full AI responses by default.
+
+## Availability and Reliability
+
+- API exposes `/health/live` and `/health/ready`.
+- Docker Compose provides local dependency startup ordering for SQL Server.
+- Azure target uses Container Apps and Azure SQL, with future zone redundancy and backup strategy decisions documented as production scope.
+- AI provider failures should produce safe failure responses and not crash the workflow.
+
+## Performance and Scalability
+
+- MVP load is modest and demo-oriented.
+- Azure Container Apps provides scale-out direction.
+- Artifact generation latency depends on provider selection and prompt size.
+- Prompt templates should remain focused to control token usage and cost.
 
 ## Observability
 
-Use correlation IDs, structured logs, health checks, Application Insights readiness, and safe AI interaction metadata.
+- Every request should have a correlation ID.
+- AI telemetry should capture provider, artifact type, prompt version, duration, status, and correlation ID.
+- Application Insights and Log Analytics are the target Azure monitoring stack.
+- Operational runbooks document health, logs, and incident triage.
 
 ## Maintainability
 
-Keep boundaries clear, prompts versioned, and tests aligned to governance workflows.
+- Layered backend structure separates API, application, domain, infrastructure, AI providers, and building blocks.
+- Prompt templates are source controlled.
+- Tests cover domain status rules, application commands, API behavior, prompt loading, mock provider, Azure provider configuration readiness, and exception handling.
 
 ## Cost Awareness
 
-Track model usage metadata where available and use deterministic mock providers for local development and tests.
+- Mock provider is default for local and CI.
+- Azure OpenAI use should be explicitly enabled and monitored.
+- Azure SQL, Container Apps, Log Analytics, Application Insights, and OpenAI resources require environment-specific cost review.
+
+## Responsible AI
+
+- All generated artifacts are drafts.
+- Prompts require assumptions, risks, open questions, and review notice.
+- Public demos use synthetic requirements only.
+- Production usage requires privacy, legal, security, compliance, and data governance review.

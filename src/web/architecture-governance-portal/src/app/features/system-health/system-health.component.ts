@@ -119,7 +119,7 @@ export class SystemHealthComponent implements OnInit {
 
   checkLiveness() {
     this.livenessStatus = 'Checking...';
-    this.http.get(`${environment.apiUrl}/health/live`, { responseType: 'text' }).subscribe({
+    this.http.get(`${environment.apiBaseUrl}/health/live`, { responseType: 'text' }).subscribe({
       next: (res) => { this.livenessStatus = res; },
       error: (err) => { this.livenessStatus = 'Unhealthy'; }
     });
@@ -128,14 +128,14 @@ export class SystemHealthComponent implements OnInit {
   checkReadiness() {
     this.readinessStatus = 'Checking...';
     this.dbDuration = '';
-    this.http.get(`${environment.apiUrl}/health/ready`, { responseType: 'text' }).subscribe({
+    this.http.get(`${environment.apiBaseUrl}/health/ready`, { responseType: 'text' }).subscribe({
       next: (res) => { this.readinessStatus = res; },
       error: (err) => { this.readinessStatus = 'Unhealthy'; }
     });
   }
 
   checkPlatformInfo() {
-    this.http.get<ReadinessResponse>(`${environment.apiUrl}/api/v1/platform/readiness`).subscribe({
+    this.http.get<ReadinessResponse>(`${environment.apiBaseUrl}/api/v1/platform/readiness`).subscribe({
       next: (res) => { this.platformInfo = res; },
       error: (err) => { console.error('Platform check failed'); }
     });

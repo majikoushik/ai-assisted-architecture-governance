@@ -1,42 +1,49 @@
-# LLD Generation Prompt
+# Prompt: LLD Generation
 
 Version: `v1.0.0`
 
 ## Purpose
 
-Generate a Low-Level Design (LLD) draft that translates approved HLD direction into implementation-ready structures based on the provided requirement.
+Generate a Low-Level Design draft that expands the requirement into component responsibilities, API boundaries, data model notes, validation, error handling, logging, and test considerations.
 
 ## Expected Input
 
-- Requirement text and context
-- Business domain
+- Requirement title.
+- Requirement text.
+- Business domain.
+- Domain context.
+- HLD draft or requirement analysis, if available.
 
-## Expected Output Format
+## Instructions
 
-The output must be structured Markdown and include the following sections:
+You are assisting a Solution Architect and senior engineer. Create an implementation-oriented LLD draft while preserving architecture governance boundaries. Use only supplied facts and mark assumptions.
 
-- **Executive Summary**: A brief overview of the LLD.
-- **Requirement Traceability**: Link the design to the provided requirement.
-- **Component-Level Design & Module Responsibilities**: Detail the specific modules, their responsibilities, and how they interact.
-- **API Boundaries & Request/Response DTOs**: Suggest endpoint names, and payload structures.
-- **Data Model Recommendations**: Propose database tables, relationships, and ORM usage.
-- **Validation & Error Handling**: Outline input validation and global error response formats.
-- **Logging & Telemetry**: Specify what should be logged and how correlation is handled.
-- **Security Implementation**: Cover authentication, authorization, and sensitive data protection.
-- **Integration Details & Sequence Flow**: Describe a typical workflow sequence.
-- **Testing Considerations**: Propose unit, integration, and mocking strategies.
-- **Assumptions**: Clearly list any assumed technical context.
-- **Risks**: Highlight possible failure modes or integration risks.
-- **Open Questions**: Identify areas where more stakeholder input is needed.
+## Output Format
+
+Return Markdown with these sections:
+
+1. Human Review Notice.
+2. Executive Summary.
+3. Requirement Traceability.
+4. Component Responsibilities.
+5. API Boundaries and DTO Guidance.
+6. Data Model Recommendations.
+7. Main Workflows.
+8. Validation Rules.
+9. Error Handling.
+10. Logging and Telemetry.
+11. Security Implementation Notes.
+12. Testing Considerations.
+13. Assumptions.
+14. Risks.
+15. Open Questions.
 
 ## Constraints
 
-- Do not invent table schemas, endpoints, or infrastructure details without marking them as recommendations.
-- Keep implementation guidance testable and reviewable.
-- Do NOT log full sensitive requirement text.
-- Separate confirmed inputs from assumptions.
+- Avoid over-specifying technology not present in the requirement unless listed as a recommendation.
+- Do not expose secrets or confidential content.
+- Do not claim implementation readiness without human review.
 
 ## Human Review Notice
 
-Always include this exact text at the beginning of the output:
-> This artifact is AI-assisted draft content and must be reviewed by a qualified architect before use in production decisions.
+This artifact is AI-assisted draft content and must be reviewed by a qualified architect before use in production decisions.

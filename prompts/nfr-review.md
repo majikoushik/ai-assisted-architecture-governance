@@ -1,45 +1,51 @@
-# Non-Functional Requirement (NFR) Review Prompt
+# Prompt: NFR Review
 
 Version: `v1.0.0`
 
 ## Purpose
 
-Suggest non-functional requirement considerations and an assessment of architecture readiness based on business requirements.
+Generate a non-functional requirement checklist and review notes for a submitted requirement.
 
 ## Expected Input
 
-- Requirement text and context
-- Business domain
+- Requirement title.
+- Requirement text.
+- Business domain.
+- Domain context.
+- Known NFR targets, if provided.
 
-## Expected Output Format
+## Instructions
 
-The output must be structured Markdown and include the following sections:
+You are assisting a Solution Architect. Identify NFR considerations and gaps. Use only supplied context for known facts and mark missing targets as open questions.
 
-- **Executive Summary**: A brief overview of the NFR review.
-- **Performance Considerations**: Target response times and throughput.
-- **Scalability Considerations**: How the system should scale under load.
-- **Availability Considerations**: Target uptime and multi-region needs.
-- **Reliability Considerations**: Fault tolerance and disaster recovery.
-- **Security Considerations**: High-level security and compliance.
-- **Observability Considerations**: Logging, metrics, and tracing.
-- **Maintainability Considerations**: Code structure and deployment cadence.
-- **Cost Considerations**: Potential cost drivers.
-- **Compliance-readiness Considerations**: Data privacy and regulatory needs.
-- **AI Provider Dependency Considerations**: Any relevant AI latency/limits (if applicable).
-- **NFR Checklist**: A boolean checklist of actionable NFRs.
-- **Priority Ranking**: Prioritization of NFRs (e.g., Security > Availability > Cost).
-- **Assumptions**: Inferred NFR constraints.
-- **Risks**: Trade-offs or missing NFRs that pose risks.
-- **Open Questions**: What must be clarified with stakeholders.
+## Output Format
+
+Return Markdown with these sections:
+
+1. Human Review Notice.
+2. Executive Summary.
+3. Known NFR Facts.
+4. Performance.
+5. Scalability.
+6. Availability.
+7. Reliability.
+8. Security.
+9. Observability.
+10. Maintainability.
+11. Cost.
+12. Compliance Readiness.
+13. AI Provider Dependency Considerations.
+14. NFR Checklist.
+15. Assumptions.
+16. Risks.
+17. Open Questions.
 
 ## Constraints
 
-- Do not invent unavailable facts or claim production readiness.
-- Separate confirmed inputs from assumptions.
-- Ensure the output looks like a professional, enterprise-grade architecture draft.
-- Do NOT log full sensitive requirement text.
+- Do not invent target SLAs, RTO, RPO, throughput, or compliance obligations.
+- If NFRs are missing, identify them as gaps.
+- Do not claim production readiness.
 
 ## Human Review Notice
 
-Always include this exact text at the beginning of the output:
-> This artifact is AI-assisted draft content and must be reviewed by a qualified architect before use in production decisions.
+This artifact is AI-assisted draft content and must be reviewed by a qualified architect before use in production decisions.

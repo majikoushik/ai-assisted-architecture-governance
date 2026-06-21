@@ -1,94 +1,29 @@
-# Operational Runbook: AI-Assisted Architecture Governance
+# Operational Runbook
 
-This runbook outlines operational procedures, health check mechanics, telemetry setup, and troubleshooting guides for the AI-Assisted Architecture Governance platform.
+## Health Checks
 
-## 1. System Architecture & Observability
-The system is built on an enterprise-grade ASP.NET Core API and an Angular frontend, primarily targeting Azure hosting (Container Apps, SQL Database, App Insights, Key Vault).
+- `/health/live`: process liveness.
+- `/health/ready`: dependency readiness, including database readiness.
+- `/api/v1/platform/readiness`: demo readiness and provider indicator.
 
-### Observability Features
-- **Correlation IDs:** Every request is assigned a `X-Correlation-ID`. This ID is logged by the API in all structural logs and returned to the client in success and error responses.
-- **Problem Details:** All HTTP errors use RFC 7807 Problem Details.
-- **AI Telemetry:** AI Provider calls (Mock and Azure OpenAI) are tracked with exact execution duration and prompt versioning metadata. Sensitive data is scrubbed.
-- **Application Insights:** Integrated natively using `Microsoft.ApplicationInsights.AspNetCore`.
+## Common Issues
 
-## 2. Health Checks
+| Symptom | Likely cause | Action |
+| --- | --- | --- |
+| API cannot start | SQL Server unavailable or connection string invalid | Check Docker SQL health and connection string. |
+| Artifact generation returns Azure configuration error | Azure OpenAI provider selected without endpoint, key, or deployment name | Switch to mock provider or configure secure values. |
+| Frontend cannot call API | API URL or CORS mismatch | Confirm API is running and frontend environment points to the correct base URL. |
+| Docker SQL unhealthy | Password policy or startup delay | Use `.env.example` password pattern and wait for health retries. |
 
-The backend provides built-in ASP.NET Core Health Checks under `/health/*` routes.
+## Logs
 
-### Liveness Probe
-- **URL:** `GET /health/live`
-- **Purpose:** Confirms the application process is running and responding to HTTP requests.
-- **Expected Status:** `200 OK` (Healthy)
+Use correlation ID to connect frontend errors, API logs, and AI provider telemetry metadata. Do not search for or expose full prompts, full requirements, secrets, or full AI responses.
 
-### Readiness Probe
-- **URL:** `GET /health/ready`
-- **Purpose:** Verifies that the application can accept traffic, ensuring critical dependencies like the Azure SQL database are reachable.
-- **Expected Status:** `200 OK` (Healthy)
+## Incident Triage
 
-### Platform Metadata
-- **URL:** `GET /api/v1/platform/readiness`
-- **Purpose:** Exposes environment context (e.g., Development/Production) and the active AI Provider (`MockDeterministicProvider` vs `AzureOpenAI`).
-
-## 3. Telemetry & Logs
-Logs are emitted via `Microsoft.Extensions.Logging` and are forwarded to Application Insights when hosted in Azure.
-
-### Safe AI Telemetry
-When an artifact is generated, a specific log event is emitted containing:
-- `ProviderName`
-- `ArtifactType`
-- `PromptTemplateName` & `PromptTemplateVersion`
-- `DurationMs`
-- `CorrelationId`
-- `Status` (Success/Failed)
-
-*Rule: Raw user inputs and generated contents are deliberately excluded from these logs to prevent PII/Confidentiality leakage.*
-
-## 4. Troubleshooting Guide
-
-### Issue: Backend returns 500 Internal Server Error
-1. Extract the `X-Correlation-ID` from the response headers or the Problem Details payload.
-2. Query Application Insights or local console logs filtering by `CorrelationId`.
-3. Locate the stack trace mapped by the `GlobalExceptionHandler`.
-
-### Issue: AI Artifact Generation fails constantly
-1. Check `/api/v1/platform/readiness` to determine the active provider.
-2. If `AzureOpenAI`:
-   - Verify `AzureOpenAi:Endpoint` and `AzureOpenAi:ApiKey` are correct in the environment or Key Vault.
-   - Verify network access from the Container App to the Azure OpenAI VNet.
-   - Check if Azure OpenAI rate limits have been exceeded in Application Insights metrics.
-3. If `Mock`:
-   - Verify the local application isn't suffering from resource exhaustion.
-
-### Issue: Readiness check fails (Unhealthy)
-1. The primary cause is typically a database connection failure.
-2. Ensure the connection string `DefaultConnection` is valid.
-3. Verify firewall rules allow access to the database from the API host.
-
-## 5. Cost Monitoring and Awareness
-When hosted in Azure, regularly monitor the following resources:
-- **Azure OpenAI**: Token consumption metrics. Ensure demo environments use smaller models like `gpt-4o-mini`. 
-- **Application Insights**: Data ingestion volumes. Lowering the data retention from 90 days to 30 days reduces cost.
-- **Azure SQL Database**: DTU or vCore usage. A Basic SKU is sufficient for development.
-- **Azure Container Apps**: Configure minimum replicas to `0` or `1` depending on the environment to prevent idle billing.
-
-## 6. Useful KQL Queries (Log Analytics)
-
-**Find failed AI Generations:**
-```kql
-AppTraces
-| where Message contains "AI Provider generated artifact"
-| where Properties.Status == "Failed"
-| project TimeGenerated, Properties.CorrelationId, Properties.ProviderName, Properties.ArtifactType
-| order by TimeGenerated desc
-```
-
-**Find slow API requests:**
-```kql
-AppRequests
-| where DurationMs > 2000
-| project TimeGenerated, Name, DurationMs, ResultCode, Operation_Id
-| order by DurationMs desc
-```
-
-## 7. Deployment Procedures
-*See [azure-deployment-guide.md](azure-deployment-guide.md) for specific infrastructure deployment commands using Bicep or Azure CLI.*
+1. Check `/health/live`.
+2. Check `/health/ready`.
+3. Review API logs for correlation ID and error summary.
+4. Confirm provider selection.
+5. Confirm database connectivity.
+6. Escalate to security review if sensitive data exposure is suspected.
