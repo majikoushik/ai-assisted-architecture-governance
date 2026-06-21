@@ -1,5 +1,7 @@
 using ArchitectureGovernance.Application;
 using ArchitectureGovernance.Infrastructure;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
 using Observability;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +15,12 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddCorrelationId();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ArchitectureGovernance.Infrastructure.Persistence.AppDbContext>();
+    dbContext.Database.Migrate();
+}
 
 app.UseExceptionHandler();
 app.UseCorrelationId();

@@ -1,0 +1,73 @@
+using ArchitectureGovernance.Application.Projects.Commands;
+using ArchitectureGovernance.Application.Projects.DTOs;
+using ArchitectureGovernance.Application.Projects.Queries;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
+
+namespace ArchitectureGovernance.Api.Controllers;
+
+[ApiController]
+[Route("api/v1/[controller]")]
+public class ProjectsController : ControllerBase
+{
+    private readonly IMediator _mediator;
+
+    public ProjectsController(IMediator mediator)
+    {
+        _mediator = mediator;
+    }
+
+    [HttpPost]
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ProjectDto))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> CreateProject([FromBody] CreateProjectCommand command)
+    {
+        var result = await _mediator.Send(command);
+        return CreatedAtAction(nameof(GetProject), new { id = result.Id }, result);
+    }
+
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<ProjectDto>))]
+    public async Task<IActionResult> GetProjects()
+    {
+        var result = await _mediator.Send(new GetProjectsQuery());
+        return Ok(result);
+    }
+
+    [HttpGet("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProjectDto))]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetProject(Guid id)
+    {
+        var result = await _mediator.Send(new GetProjectByIdQuery(id));
+        if (result == null)
+            return NotFound();
+
+        return Ok(result);
+    }
+
+    [HttpPut("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProjectDto))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateProject(Guid id, [FromBody] UpdateProjectRequest request)
+    {
+        var command = new UpdateProjectCommand(id, request.Name, request.BusinessDomain, request.Description, request.Owner);
+        var result = await _mediator.Send(command);
+        return Ok(result);
+    }
+
+    [HttpPatch("{id}/status")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProjectDto))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateProjectStatus(Guid id, [FromBody] UpdateProjectStatusRequest request)
+    {
+        var command = new UpdateProjectStatusCommand(id, request.Status);
+        var result = await _mediator.Send(command);
+        return Ok(result);
+    }
+}
+
+public record UpdateProjectRequest(string Name, string BusinessDomain, string Description, string Owner);
+public record UpdateProjectStatusRequest(ArchitectureGovernance.Domain.Projects.ProjectStatus Status);

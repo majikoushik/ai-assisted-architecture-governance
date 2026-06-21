@@ -7,4 +7,9 @@
     <ProjectReference Include="..\..\ai\ArchitectureGovernance.AI.Abstractions\ArchitectureGovernance.AI.Abstractions.csproj" />
     <ProjectReference Include="..\..\building-blocks\SharedKernel\SharedKernel.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
+    <PackageReference Include="MediatR" Version="14.1.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.4" />
+  </ItemGroup>
 </Project>

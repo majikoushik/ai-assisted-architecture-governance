@@ -6,10 +6,14 @@ import { ArtifactGenerationComponent } from './features/artifact-generation/arti
 import { ArtifactViewerComponent } from './features/artifact-viewer/artifact-viewer.component';
 import { PromptCatalogComponent } from './features/prompt-catalog/prompt-catalog.component';
 import { ReviewsComponent } from './features/reviews/reviews.component';
+import { ProjectCreateComponent } from './features/projects/project-create.component';
+import { ProjectDetailComponent } from './features/projects/project-detail.component';
 
 export const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent },
   { path: 'projects', component: ProjectsComponent },
+  { path: 'projects/new', component: ProjectCreateComponent },
+  { path: 'projects/:id', component: ProjectDetailComponent },
   { path: 'requirements', component: RequirementsComponent },
   { path: 'artifact-generation', component: ArtifactGenerationComponent },
   { path: 'artifact-viewer', component: ArtifactViewerComponent },

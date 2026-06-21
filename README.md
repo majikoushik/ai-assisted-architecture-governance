@@ -6,15 +6,9 @@ This is not a chatbot demo. The repository is organized around requirement intak
 
 ## Current Scope
 
-Epic 0 establishes the foundation:
-
-- ASP.NET Core API skeleton with health checks, Swagger readiness, Problem Details readiness, and correlation ID middleware.
-- Layered backend projects for API, application, domain, infrastructure, AI abstractions, mock AI, Azure OpenAI placeholder, and building blocks.
-- Angular portal skeleton with dashboard, projects, requirements, artifact generation, artifact viewer, prompt catalog, and reviews routes.
-- Versioned prompt catalog skeleton.
-- Synthetic sample requirements.
-- Architecture documentation, Mermaid diagrams, and ADRs.
-- Docker Compose and GitHub Actions foundations.
+- [x] Epic 0: Repository Foundation
+- [x] Epic 1: Architecture Project Workspace
+- [ ] Epic 2: Requirement Submission and Parsing.
 
 ## Responsible AI Notice
 

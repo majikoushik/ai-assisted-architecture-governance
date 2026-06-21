@@ -1,12 +1,21 @@
 # Data Model
 
-## ArchitectureProject
+This document outlines the core entities in the SQL Server database.
 
-Represents a governance workspace for a solution or initiative.
+## 1. ArchitectureProject
 
-## RequirementSubmission
+| Field | Type | Description |
+|-------|------|-------------|
+| `Id` | `UNIQUEIDENTIFIER` (PK) | Unique identifier for the project workspace. |
+| `Name` | `NVARCHAR(200)` | The name of the project. |
+| `BusinessDomain` | `NVARCHAR(100)` | The domain context. |
+| `Description` | `NVARCHAR(MAX)` | Description of the project goals. |
+| `Owner` | `NVARCHAR(100)` | Primary owner or sponsor. |
+| `Status` | `NVARCHAR(50)` | `Draft`, `Active`, `UnderReview`, `Archived`. |
+| `CreatedAt` | `DATETIMEOFFSET` | When the project was created. |
+| `UpdatedAt` | `DATETIMEOFFSET` | When the project was last updated. |
 
-Represents submitted business or technical requirements for AI-assisted analysis.
+## 2. RequirementSubmission (Future)r technical requirements for AI-assisted analysis.
 
 ## GeneratedArtifact
 
