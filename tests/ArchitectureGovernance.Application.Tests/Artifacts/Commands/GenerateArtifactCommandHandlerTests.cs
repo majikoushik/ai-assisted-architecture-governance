@@ -114,6 +114,90 @@ public class GenerateArtifactCommandHandlerTests
     }
 
     [Fact]
+    public async Task Handle_GivenValidRequest_ShouldGenerateAndSaveLLDArtifact()
+    {
+        // Arrange
+        var projectId = Guid.NewGuid();
+        var requirementId = Guid.NewGuid();
+        var project = new ArchitectureProject("Test Project", "Banking", "Desc", "Owner");
+        typeof(ArchitectureProject).GetProperty("Id")!.SetValue(project, projectId);
+        
+        var req = new RequirementSubmission(projectId, "Req Title", "Req Text", "Domain", "Owner", new[] { ArchitectureGovernance.Domain.Requirements.ArtifactType.LowLevelDesign }, "Domain Context");
+        typeof(RequirementSubmission).GetProperty("Id")!.SetValue(req, requirementId);
+
+        _context.Projects.Add(project);
+        _context.Requirements.Add(req);
+        await _context.SaveChangesAsync();
+
+        var promptTemplate = new PromptTemplate("lld-generation", "LLD Generation", "1.0.0", "Purpose", "Content", "ArtifactType", "Provider");
+        _promptRepoMock.Setup(r => r.GetByIdAsync("lld-generation", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(promptTemplate);
+
+        _aiProviderMock.Setup(a => a.GenerateArtifactDraftAsync(It.IsAny<ArchitectureAiRequest>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new ArchitectureAiResponse("LowLevelDesign", "LLD Markdown Output", "MockProvider", "Name", "1.0", DateTimeOffset.UtcNow, "Success", Array.Empty<string>(), "Review Notice"));
+
+        var handler = new GenerateArtifactCommandHandler(
+            _context, _aiProviderMock.Object, _promptRepoMock.Object, NullLogger<GenerateArtifactCommandHandler>.Instance);
+
+        var command = new GenerateArtifactCommand(projectId, requirementId, "LowLevelDesign");
+
+        // Act
+        var result = await handler.Handle(command, CancellationToken.None);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal("LowLevelDesign", result.ArtifactType);
+        Assert.Equal("LLD Markdown Output", result.MarkdownContent);
+        Assert.Equal("MockProvider", result.ProviderName);
+        Assert.Equal("Test Project - Low-Level Design", result.Title);
+        
+        var artifacts = await _context.Artifacts.ToListAsync();
+        Assert.Single(artifacts);
+    }
+
+    [Fact]
+    public async Task Handle_GivenValidRequest_ShouldGenerateAndSaveADRArtifact()
+    {
+        // Arrange
+        var projectId = Guid.NewGuid();
+        var requirementId = Guid.NewGuid();
+        var project = new ArchitectureProject("Test Project", "Banking", "Desc", "Owner");
+        typeof(ArchitectureProject).GetProperty("Id")!.SetValue(project, projectId);
+        
+        var req = new RequirementSubmission(projectId, "Req Title", "Req Text", "Domain", "Owner", new[] { ArchitectureGovernance.Domain.Requirements.ArtifactType.ArchitectureDecisionRecord }, "Domain Context");
+        typeof(RequirementSubmission).GetProperty("Id")!.SetValue(req, requirementId);
+
+        _context.Projects.Add(project);
+        _context.Requirements.Add(req);
+        await _context.SaveChangesAsync();
+
+        var promptTemplate = new PromptTemplate("adr-generation", "ADR Generation", "1.0.0", "Purpose", "Content", "ArtifactType", "Provider");
+        _promptRepoMock.Setup(r => r.GetByIdAsync("adr-generation", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(promptTemplate);
+
+        _aiProviderMock.Setup(a => a.GenerateArtifactDraftAsync(It.IsAny<ArchitectureAiRequest>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new ArchitectureAiResponse("ArchitectureDecisionRecord", "ADR Markdown Output", "MockProvider", "Name", "1.0", DateTimeOffset.UtcNow, "Success", Array.Empty<string>(), "Review Notice"));
+
+        var handler = new GenerateArtifactCommandHandler(
+            _context, _aiProviderMock.Object, _promptRepoMock.Object, NullLogger<GenerateArtifactCommandHandler>.Instance);
+
+        var command = new GenerateArtifactCommand(projectId, requirementId, "ArchitectureDecisionRecord");
+
+        // Act
+        var result = await handler.Handle(command, CancellationToken.None);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal("ArchitectureDecisionRecord", result.ArtifactType);
+        Assert.Equal("ADR Markdown Output", result.MarkdownContent);
+        Assert.Equal("MockProvider", result.ProviderName);
+        Assert.Equal("Test Project - Architecture Decision Record", result.Title);
+        
+        var artifacts = await _context.Artifacts.ToListAsync();
+        Assert.Single(artifacts);
+    }
+
+    [Fact]
     public async Task Handle_GivenInvalidProject_ShouldThrowNotFound()
     {
         // Arrange

@@ -51,6 +51,8 @@ public class GenerateArtifactCommandHandler : IRequestHandler<GenerateArtifactCo
         {
             "RequirementAnalysis" => "requirement-analysis",
             "HighLevelDesign" => "hld-generation",
+            "LowLevelDesign" => "lld-generation",
+            "ArchitectureDecisionRecord" => "adr-generation",
             _ => throw new ValidationException(new[] { new FluentValidation.Results.ValidationFailure("ArtifactType", "Unsupported artifact type.") })
         };
 
@@ -86,9 +88,13 @@ public class GenerateArtifactCommandHandler : IRequestHandler<GenerateArtifactCo
             projectId: project.Id,
             requirementSubmissionId: requirement.Id,
             artifactType: domainArtifactType,
-            title: request.ArtifactType == "HighLevelDesign" 
-                ? $"{project.Name} - High-Level Design"
-                : $"{project.Name} - Requirement Analysis",
+            title: request.ArtifactType switch
+            {
+                "HighLevelDesign" => $"{project.Name} - High-Level Design",
+                "LowLevelDesign" => $"{project.Name} - Low-Level Design",
+                "ArchitectureDecisionRecord" => $"{project.Name} - Architecture Decision Record",
+                _ => $"{project.Name} - Requirement Analysis"
+            },
             markdownContent: aiResponse.Markdown,
             version: "1.0.0",
             providerName: aiResponse.ProviderName,

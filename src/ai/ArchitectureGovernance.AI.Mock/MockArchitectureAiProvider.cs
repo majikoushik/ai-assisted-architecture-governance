@@ -10,8 +10,9 @@ public sealed class MockArchitectureAiProvider : IArchitectureAiProvider
     {
         var humanReviewNotice = "This artifact is AI-assisted draft content and must be reviewed by a qualified architect before use in production decisions.";
         
-        var markdown = request.ArtifactType == "HighLevelDesign"
-            ? $"""
+        var markdown = request.ArtifactType switch
+        {
+            "HighLevelDesign" => $"""
             > {humanReviewNotice}
 
             # High-Level Design Draft: {request.RequirementTitle}
@@ -58,8 +59,103 @@ public sealed class MockArchitectureAiProvider : IArchitectureAiProvider
 
             ## Open Questions
             - What are the target availability and recovery objectives?
-            """
-            : $"""
+            """,
+            "LowLevelDesign" => $"""
+            > {humanReviewNotice}
+
+            # Low-Level Design Draft: {request.RequirementTitle}
+
+            ## Executive Summary
+            Deterministic mock Low-Level Design for local development.
+
+            ## Requirement Traceability
+            Traces back to requirement "{request.RequirementTitle}" in the {request.BusinessDomain} domain.
+
+            ## Component-Level Design & Module Responsibilities
+            - **OrderProcessor**: Validates business rules and orchestration.
+            - **InventoryAdapter**: Interfaces with external inventory systems.
+            - **NotificationHandler**: Emits domain events to the message broker.
+
+            ## API Boundaries & Request/Response DTOs
+            - `POST /api/v1/orders`
+            - `OrderRequestDto`: Contains OrderId, CustomerId, Items.
+            - `OrderResponseDto`: Contains OrderId, Status, TrackingUrl.
+
+            ## Data Model Recommendations
+            - Use a relational schema with tables for `Orders`, `OrderItems`, and `Customers`.
+            - Apply Entity Framework Core for data access.
+
+            ## Validation & Error Handling
+            - Implement `FluentValidation` on all incoming requests.
+            - Return standard RFC 7807 `ProblemDetails` for errors.
+
+            ## Logging & Telemetry
+            - Log structured events including `CorrelationId`.
+            - Do not log sensitive PII or full requirement texts.
+
+            ## Security Implementation
+            - Use bearer token authentication.
+            - Validate issuer and audience claims.
+
+            ## Integration Details & Sequence Flow
+            - 1. Client sends request.
+            - 2. API validates request.
+            - 3. Database is updated within a transaction.
+            - 4. Domain event is published.
+
+            ## Testing Considerations
+            - Achieve 80%+ unit test coverage.
+            - Mock external inventory dependencies.
+
+            ## Assumptions & Risks
+            - Assuming inventory API uses REST.
+            - Risk of latency when interacting with downstream legacy services.
+
+            ## Open Questions
+            - What is the expected peak load for the `POST /api/v1/orders` endpoint?
+            """,
+            "ArchitectureDecisionRecord" => $"""
+            > {humanReviewNotice}
+
+            # Architecture Decision Record Draft: {request.RequirementTitle}
+
+            ## Executive Summary
+            Deterministic mock Architecture Decision Record generated for local development.
+
+            ---
+
+            ## ADR 001: Selection of Primary Data Store
+
+            ### Status
+            Proposed
+
+            ### Context
+            The system for "{request.RequirementTitle}" requires persistent storage of transactional data in the {request.BusinessDomain} domain. The data is highly relational with strong consistency requirements.
+
+            ### Decision
+            We will use Azure SQL Database as the primary transactional data store.
+
+            ### Consequences
+            - Provides ACID compliance.
+            - Integrates seamlessly with Entity Framework Core.
+            - Increases operational cost compared to NoSQL alternatives for high-throughput simple writes.
+
+            ### Alternatives Considered
+            - Azure Cosmos DB: Rejected because the domain model has highly relational constraints and joins are required.
+
+            ### Risks
+            - Schema evolution may require downtime if not managed carefully with migrations.
+
+            ### Follow-up Actions
+            - Provision a dev instance of Azure SQL.
+            - Create initial EF Core migrations.
+
+            ---
+            
+            ## Open Questions
+            - Should we also provision a read-replica for reporting purposes?
+            """,
+            _ => $"""
             > {humanReviewNotice}
 
             # {request.ArtifactType} Draft: {request.RequirementTitle}
@@ -79,7 +175,8 @@ public sealed class MockArchitectureAiProvider : IArchitectureAiProvider
 
             ## Open Questions
             - Which systems, teams, and compliance obligations are in scope?
-            """;
+            """
+        };
 
         var response = new ArchitectureAiResponse(
             ArtifactType: request.ArtifactType,

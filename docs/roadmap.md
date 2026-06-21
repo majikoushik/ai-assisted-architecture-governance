@@ -15,11 +15,11 @@
 - Epic 2: Requirement Submission
 - Epic 3: Prompt Catalog and Mock AI Provider
 - Epic 4: Requirement Analysis Artifact
+- Epic 5: HLD Generation
+- Epic 6: LLD and ADR Generation
 
 ## Next
 
-- Epic 5: HLD Generation
-- Epic 6: LLD and ADR Generation
 - Epic 7: NFR, Security, and API Review
 
 ## Guiding Rule

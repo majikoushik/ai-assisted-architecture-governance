@@ -21,6 +21,8 @@ export class RequirementDetailComponent implements OnInit {
   isSubmitting = false;
   isGenerating = false;
   isGeneratingHLD = false;
+  isGeneratingLLD = false;
+  isGeneratingADR = false;
   error: string | null = null;
 
   RequirementStatus = RequirementStatus;
@@ -135,6 +137,52 @@ export class RequirementDetailComponent implements OnInit {
       error: (err) => {
         this.error = 'Failed to generate HLD draft. ' + (err.error?.detail || err.message || '');
         this.isGeneratingHLD = false;
+      }
+    });
+  }
+
+  generateLowLevelDesign(): void {
+    if (!this.requirement || !this.projectId) return;
+
+    this.isGeneratingLLD = true;
+    this.error = null;
+
+    this.artifactsService.generateArtifact({
+      projectId: this.projectId,
+      requirementSubmissionId: this.requirement.id,
+      artifactType: 'LowLevelDesign'
+    }).subscribe({
+      next: (artifact) => {
+        this.isGeneratingLLD = false;
+        this.artifacts.push(artifact);
+        if (this.requirement) this.loadRequirement(this.requirement.id);
+      },
+      error: (err) => {
+        this.error = 'Failed to generate LLD draft. ' + (err.error?.detail || err.message || '');
+        this.isGeneratingLLD = false;
+      }
+    });
+  }
+
+  generateArchitectureDecisionRecord(): void {
+    if (!this.requirement || !this.projectId) return;
+
+    this.isGeneratingADR = true;
+    this.error = null;
+
+    this.artifactsService.generateArtifact({
+      projectId: this.projectId,
+      requirementSubmissionId: this.requirement.id,
+      artifactType: 'ArchitectureDecisionRecord'
+    }).subscribe({
+      next: (artifact) => {
+        this.isGeneratingADR = false;
+        this.artifacts.push(artifact);
+        if (this.requirement) this.loadRequirement(this.requirement.id);
+      },
+      error: (err) => {
+        this.error = 'Failed to generate ADR draft. ' + (err.error?.detail || err.message || '');
+        this.isGeneratingADR = false;
       }
     });
   }

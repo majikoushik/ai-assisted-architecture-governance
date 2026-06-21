@@ -72,7 +72,7 @@
     </div>
 
     <!-- Actions Footer -->
-    <div class="bg-gray-50 px-4 py-4 sm:px-6 flex justify-end gap-4 border-t border-gray-200">
+    <div class="bg-gray-50 px-4 py-4 sm:px-6 flex flex-wrap justify-end gap-4 border-t border-gray-200">
       <button 
         *ngIf="requirement.status === RequirementStatus.Draft"
         (click)="submitForAnalysis()" 
@@ -85,7 +85,7 @@
       <button 
         *ngIf="requirement.status !== RequirementStatus.Draft"
         (click)="generateRequirementAnalysis()" 
-        [disabled]="isGenerating || isGeneratingHLD"
+        [disabled]="isGenerating || isGeneratingHLD || isGeneratingLLD || isGeneratingADR"
         class="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-100 px-4 py-2 text-sm font-medium text-indigo-700 shadow-sm hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50">
         <span *ngIf="isGenerating" class="flex items-center">
           <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-indigo-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -103,7 +103,7 @@
       <button 
         *ngIf="requirement.status !== RequirementStatus.Draft"
         (click)="generateHighLevelDesign()" 
-        [disabled]="isGenerating || isGeneratingHLD"
+        [disabled]="isGenerating || isGeneratingHLD || isGeneratingLLD || isGeneratingADR"
         class="inline-flex items-center justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50">
         <span *ngIf="isGeneratingHLD" class="flex items-center">
           <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -115,6 +115,42 @@
         <span *ngIf="!isGeneratingHLD" class="flex items-center">
           <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
           Generate High-Level Design
+        </span>
+      </button>
+
+      <button 
+        *ngIf="requirement.status !== RequirementStatus.Draft"
+        (click)="generateLowLevelDesign()" 
+        [disabled]="isGenerating || isGeneratingHLD || isGeneratingLLD || isGeneratingADR"
+        class="inline-flex items-center justify-center rounded-md border border-transparent bg-teal-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 disabled:opacity-50">
+        <span *ngIf="isGeneratingLLD" class="flex items-center">
+          <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          Generating LLD Draft...
+        </span>
+        <span *ngIf="!isGeneratingLLD" class="flex items-center">
+          <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+          Generate Low-Level Design
+        </span>
+      </button>
+
+      <button 
+        *ngIf="requirement.status !== RequirementStatus.Draft"
+        (click)="generateArchitectureDecisionRecord()" 
+        [disabled]="isGenerating || isGeneratingHLD || isGeneratingLLD || isGeneratingADR"
+        class="inline-flex items-center justify-center rounded-md border border-transparent bg-purple-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 disabled:opacity-50">
+        <span *ngIf="isGeneratingADR" class="flex items-center">
+          <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          Generating ADR Draft...
+        </span>
+        <span *ngIf="!isGeneratingADR" class="flex items-center">
+          <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+          Generate ADR
         </span>
       </button>
     </div>
