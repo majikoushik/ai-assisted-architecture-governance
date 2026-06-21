@@ -51,15 +51,6 @@ public class RequirementsController : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet("{id}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetById(Guid id)
-    {
-        var result = await _mediator.Send(new GetRequirementByIdQuery(id));
-        if (result == null) return NotFound();
-        return Ok(result);
-    }
 
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]

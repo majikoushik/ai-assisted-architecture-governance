@@ -22,6 +22,10 @@ public class GetArtifactsByRequirementIdQueryHandler : IRequestHandler<GetArtifa
             .OrderByDescending(a => a.CreatedAt)
             .ToListAsync(cancellationToken);
 
-        return artifacts.Select(ArtifactDto.FromEntity).ToList();
+        return artifacts
+            .GroupBy(a => a.ArtifactType)
+            .Select(g => g.First())
+            .Select(a => ArtifactDto.FromEntity(a))
+            .ToList();
     }
 }

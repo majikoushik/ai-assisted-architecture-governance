@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
-import { Artifact, GenerateArtifactCommand } from '../models/artifact.model';
+import { Artifact, GenerateArtifactCommand, Review, CreateReviewRequest, UpdateArtifactStatusRequest } from '../models/artifact.model';
 import { ApiResponse } from '../models/api-response.model';
 
 @Injectable({
@@ -38,5 +38,25 @@ export class ArtifactsService {
 
   getMarkdownExportUrl(id: string): string {
     return `${this.apiUrl}/${id}/export/markdown`;
+  }
+
+  getReviews(id: string): Observable<Review[]> {
+    return this.http.get<ApiResponse<Review[]>>(`${this.apiUrl}/${id}/reviews`)
+      .pipe(map(response => response.data));
+  }
+
+  createReview(id: string, request: CreateReviewRequest): Observable<Review> {
+    return this.http.post<ApiResponse<Review>>(`${this.apiUrl}/${id}/reviews`, request)
+      .pipe(map(response => response.data));
+  }
+
+  updateStatus(id: string, request: UpdateArtifactStatusRequest): Observable<boolean> {
+    return this.http.patch<ApiResponse<boolean>>(`${this.apiUrl}/${id}/status`, request)
+      .pipe(map(response => response.data));
+  }
+
+  getVersions(id: string): Observable<Artifact[]> {
+    return this.http.get<ApiResponse<Artifact[]>>(`${this.apiUrl}/${id}/versions`)
+      .pipe(map(response => response.data));
   }
 }

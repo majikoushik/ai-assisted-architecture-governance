@@ -13,8 +13,9 @@ public class AppDbContext : DbContext, IAppDbContext
     }
 
     public DbSet<ArchitectureProject> Projects => Set<ArchitectureProject>();
-    public DbSet<RequirementSubmission> Requirements => Set<RequirementSubmission>();
+    public DbSet<ArchitectureGovernance.Domain.Requirements.RequirementSubmission> Requirements => Set<RequirementSubmission>();
     public DbSet<ArchitectureGovernance.Domain.Artifacts.GeneratedArtifact> Artifacts => Set<ArchitectureGovernance.Domain.Artifacts.GeneratedArtifact>();
+    public DbSet<ArchitectureGovernance.Domain.Reviews.ReviewRecord> Reviews => Set<ArchitectureGovernance.Domain.Reviews.ReviewRecord>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

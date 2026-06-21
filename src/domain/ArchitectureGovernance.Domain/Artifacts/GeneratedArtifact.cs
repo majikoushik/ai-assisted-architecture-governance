@@ -50,9 +50,30 @@ public class GeneratedArtifact
         CreatedAt = DateTimeOffset.UtcNow;
     }
 
-    public void UpdateStatus(ReviewStatus status)
+    public void UpdateStatus(ReviewStatus newStatus)
     {
-        Status = status;
+        // Valid transitions:
+        // Draft -> NeedsReview, Rejected
+        // NeedsReview -> Reviewed, Rejected
+        // Reviewed -> Approved, Rejected
+        // Rejected -> NeedsReview
+
+        bool isValid = Status switch
+        {
+            ReviewStatus.Draft => newStatus is ReviewStatus.NeedsReview or ReviewStatus.Rejected,
+            ReviewStatus.NeedsReview => newStatus is ReviewStatus.Reviewed or ReviewStatus.Rejected,
+            ReviewStatus.Reviewed => newStatus is ReviewStatus.Approved or ReviewStatus.Rejected,
+            ReviewStatus.Rejected => newStatus is ReviewStatus.NeedsReview,
+            ReviewStatus.Approved => false, // No transitions from Approved without a new version
+            _ => false
+        };
+
+        if (!isValid && Status != newStatus)
+        {
+            throw new InvalidOperationException($"Cannot transition status from {Status} to {newStatus}");
+        }
+
+        Status = newStatus;
         UpdatedAt = DateTimeOffset.UtcNow;
     }
 

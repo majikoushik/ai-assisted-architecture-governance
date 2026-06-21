@@ -88,6 +88,11 @@ public class GenerateArtifactCommandHandler : IRequestHandler<GenerateArtifactCo
 
         var aiResponse = await _aiProvider.GenerateArtifactDraftAsync(aiRequest, cancellationToken);
 
+        // Determine the version number by checking existing artifacts
+        var existingArtifactsCount = await _context.Artifacts
+            .CountAsync(a => a.RequirementSubmissionId == requirement.Id && a.ArtifactType == domainArtifactType, cancellationToken);
+        var newVersion = (existingArtifactsCount + 1).ToString();
+
         var generatedArtifact = new GeneratedArtifact(
             projectId: project.Id,
             requirementSubmissionId: requirement.Id,
@@ -104,7 +109,7 @@ public class GenerateArtifactCommandHandler : IRequestHandler<GenerateArtifactCo
                 _ => $"{project.Name} - Requirement Analysis"
             },
             markdownContent: aiResponse.Markdown,
-            version: "1.0.0",
+            version: newVersion,
             providerName: aiResponse.ProviderName,
             promptTemplateName: promptTemplate.Name,
             promptTemplateVersion: promptTemplate.Version,

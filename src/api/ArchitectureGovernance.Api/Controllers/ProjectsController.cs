@@ -61,17 +61,7 @@ public class ProjectsController : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet("{id}")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProjectDto))]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetProject(Guid id)
-    {
-        var result = await _mediator.Send(new GetProjectByIdQuery(id));
-        if (result == null)
-            return NotFound();
 
-        return Ok(result);
-    }
 
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProjectDto))]

@@ -31,8 +31,15 @@
           <h3 class="text-lg leading-6 font-medium text-gray-900">
             {{ artifact.title }}
           </h3>
-          <p class="mt-1 max-w-2xl text-sm text-gray-500">
-            {{ artifact.artifactType }}
+          <p class="mt-1 max-w-2xl text-sm text-gray-500 flex items-center">
+            <span>{{ artifact.artifactType }}</span>
+            <span class="mx-2 text-gray-300">|</span>
+            <label for="versionSelect" class="mr-2">Version:</label>
+            <select id="versionSelect" (change)="switchVersion($event)" class="text-xs border-gray-300 rounded-md py-1 pl-2 pr-6">
+              <option *ngFor="let v of versions" [value]="v.id" [selected]="v.id === artifact.id">
+                {{ v.version }} ({{ v.status }})
+              </option>
+            </select>
           </p>
         </div>
         <div class="flex flex-col items-end gap-2">
@@ -70,6 +77,79 @@
       
       <div class="bg-gray-50 px-4 py-4 sm:px-6 text-xs text-gray-500 border-t border-gray-200">
         Generated using prompt <strong>{{ artifact.promptTemplateName }}</strong> ({{ artifact.promptTemplateVersion }}) on {{ artifact.createdAt | date:'medium' }}.
+      </div>
+      
+      <!-- Reviews Section -->
+      <div class="border-t border-gray-200 bg-white px-4 py-5 sm:px-6">
+        <h4 class="text-md font-medium text-gray-900 mb-4">Reviews</h4>
+        
+        <div *ngIf="reviews.length === 0" class="text-sm text-gray-500 italic mb-6">
+          No reviews yet. Be the first to review this artifact.
+        </div>
+
+        <ul *ngIf="reviews.length > 0" class="divide-y divide-gray-200 mb-8">
+          <li *ngFor="let review of reviews" class="py-4">
+            <div class="flex space-x-3">
+              <div class="flex-1 space-y-1">
+                <div class="flex items-center justify-between">
+                  <h3 class="text-sm font-medium">{{ review.reviewerName }}</h3>
+                  <p class="text-sm text-gray-500">{{ review.createdAt | date:'medium' }}</p>
+                </div>
+                <p class="text-sm text-gray-500">
+                  Status: <span class="font-medium">{{ review.status }}</span>
+                </p>
+                <p class="text-sm text-gray-700 mt-2" *ngIf="review.comments">
+                  {{ review.comments }}
+                </p>
+              </div>
+            </div>
+          </li>
+        </ul>
+
+        <!-- Review Form -->
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+          <h4 class="text-sm font-medium text-gray-900 mb-4">Add a Review</h4>
+          
+          <div *ngIf="reviewErrorMessage" class="rounded-md bg-red-50 p-4 mb-4">
+            <div class="flex">
+              <div class="ml-3">
+                <h3 class="text-sm font-medium text-red-800">{{ reviewErrorMessage }}</h3>
+              </div>
+            </div>
+          </div>
+
+          <form [formGroup]="reviewForm" (ngSubmit)="submitReview()" class="space-y-4">
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div>
+                <label for="reviewerName" class="block text-sm font-medium text-gray-700">Reviewer Name</label>
+                <input type="text" id="reviewerName" formControlName="reviewerName" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+              </div>
+              <div>
+                <label for="reviewStatus" class="block text-sm font-medium text-gray-700">Status</label>
+                <select id="reviewStatus" formControlName="reviewStatus" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                  <option value="">Select a status...</option>
+                  <option value="NeedsReview">Needs Review</option>
+                  <option value="Reviewed">Reviewed</option>
+                  <option value="Approved">Approved</option>
+                  <option value="Rejected">Rejected</option>
+                </select>
+              </div>
+            </div>
+            
+            <div>
+              <label for="comments" class="block text-sm font-medium text-gray-700">Comments</label>
+              <textarea id="comments" rows="3" formControlName="comments" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
+            </div>
+            
+            <div class="flex justify-end">
+              <button type="submit" [disabled]="reviewForm.invalid || isSubmittingReview" 
+                      class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-gray-400">
+                <span *ngIf="isSubmittingReview">Submitting...</span>
+                <span *ngIf="!isSubmittingReview">Submit Review</span>
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </div>

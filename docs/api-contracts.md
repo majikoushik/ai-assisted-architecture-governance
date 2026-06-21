@@ -155,6 +155,70 @@ Returns the generated `Artifact` object.
 
 Returns `text/markdown` file download.
 
+### 2.6 Get Artifact Versions
+
+`GET /api/v1/artifacts/{artifactId}/versions`
+
+**Response (200 OK):**
+Returns a list of all historical versions of the given artifact, sorted descending by version number.
+
+### 2.7 Update Artifact Status
+
+`PATCH /api/v1/artifacts/{artifactId}/status`
+
+**Request:**
+
+```json
+{
+  "status": "Reviewed",
+  "reason": "Initial manual review",
+  "updatedBy": "John Doe"
+}
+```
+
+**Response (200 OK):**
+Returns a boolean indicating success.
+
+---
+
+## 3. Reviews API
+
+### 3.1 Get Reviews for Artifact
+
+`GET /api/v1/artifacts/{artifactId}/reviews`
+
+**Response (200 OK):**
+
+```json
+[
+  {
+    "id": "1fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "artifactId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "reviewerName": "Jane Doe",
+    "status": "NeedsReview",
+    "comments": "The HLD looks good but is missing the security section.",
+    "createdAt": "2026-06-21T10:00:00Z"
+  }
+]
+```
+
+### 3.2 Create Review
+
+`POST /api/v1/artifacts/{artifactId}/reviews`
+
+**Request:**
+
+```json
+{
+  "reviewerName": "Jane Doe",
+  "reviewStatus": "NeedsReview",
+  "comments": "The HLD looks good but is missing the security section."
+}
+```
+
+**Response (201 Created):**
+Returns the created review object.
+
 ---
 
 The API is version-ready under `/api/v1`.
