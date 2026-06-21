@@ -46,11 +46,20 @@ public class GenerateArtifactCommandHandler : IRequestHandler<GenerateArtifactCo
         if (requirement.ProjectId != request.ProjectId)
             throw new ValidationException(new[] { new FluentValidation.Results.ValidationFailure("RequirementSubmissionId", "Requirement does not belong to the specified project.") });
 
-        // Retrieve the appropriate prompt template
-        var promptTemplateId = "requirement-analysis";
+        // Retrieve the appropriate prompt template based on ArtifactType
+        var promptTemplateId = request.ArtifactType switch
+        {
+            "RequirementAnalysis" => "requirement-analysis",
+            "HighLevelDesign" => "hld-generation",
+            _ => throw new ValidationException(new[] { new FluentValidation.Results.ValidationFailure("ArtifactType", "Unsupported artifact type.") })
+        };
+
         var promptTemplate = await _promptRepository.GetByIdAsync(promptTemplateId, cancellationToken);
         if (promptTemplate == null)
             throw new KeyNotFoundException($"PromptTemplate with id {promptTemplateId} not found.");
+
+        if (!Enum.TryParse<ArchitectureGovernance.Domain.ArtifactType>(request.ArtifactType, out var domainArtifactType))
+            throw new ValidationException(new[] { new FluentValidation.Results.ValidationFailure("ArtifactType", "Invalid artifact type.") });
 
         var correlationId = Guid.NewGuid().ToString();
 
@@ -61,7 +70,7 @@ public class GenerateArtifactCommandHandler : IRequestHandler<GenerateArtifactCo
         var aiRequest = new ArchitectureAiRequest(
             ProjectId: project.Id,
             RequirementId: requirement.Id,
-            ArtifactType: ArchitectureGovernance.Domain.ArtifactType.RequirementAnalysis.ToString(),
+            ArtifactType: request.ArtifactType,
             RequirementTitle: requirement.Title,
             RequirementText: requirement.RequirementText,
             BusinessDomain: project.BusinessDomain,
@@ -76,8 +85,10 @@ public class GenerateArtifactCommandHandler : IRequestHandler<GenerateArtifactCo
         var generatedArtifact = new GeneratedArtifact(
             projectId: project.Id,
             requirementSubmissionId: requirement.Id,
-            artifactType: ArchitectureGovernance.Domain.ArtifactType.RequirementAnalysis,
-            title: $"{project.Name} - Requirement Analysis",
+            artifactType: domainArtifactType,
+            title: request.ArtifactType == "HighLevelDesign" 
+                ? $"{project.Name} - High-Level Design"
+                : $"{project.Name} - Requirement Analysis",
             markdownContent: aiResponse.Markdown,
             version: "1.0.0",
             providerName: aiResponse.ProviderName,

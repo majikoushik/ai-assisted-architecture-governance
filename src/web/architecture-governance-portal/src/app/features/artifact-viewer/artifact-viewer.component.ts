@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { Artifact } from '../../../core/models/artifact.model';
-import { ArtifactsService } from '../../../core/services/artifacts.service';
+import { Artifact } from '../../core/models/artifact.model';
+import { ArtifactsService } from '../../core/services/artifacts.service';
 
 @Component({
   selector: 'app-artifact-viewer',
@@ -24,11 +24,11 @@ export class ArtifactViewerComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.artifactsService.getArtifact(id).subscribe({
-        next: (data) => {
+        next: (data: any) => {
           this.artifact = data;
           this.isLoading = false;
         },
-        error: (err) => {
+        error: (err: any) => {
           this.errorMessage = 'Failed to load artifact.';
           this.isLoading = false;
         }

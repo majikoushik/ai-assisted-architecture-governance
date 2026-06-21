@@ -20,6 +20,7 @@ export class RequirementDetailComponent implements OnInit {
   isLoading = false;
   isSubmitting = false;
   isGenerating = false;
+  isGeneratingHLD = false;
   error: string | null = null;
 
   RequirementStatus = RequirementStatus;
@@ -106,11 +107,34 @@ export class RequirementDetailComponent implements OnInit {
         this.isGenerating = false;
         this.artifacts.push(artifact);
         // Refresh requirement to potentially update status if it changed
-        this.loadRequirement(this.requirement.id);
+        if (this.requirement) this.loadRequirement(this.requirement.id);
       },
       error: (err) => {
         this.error = 'Failed to generate artifact. ' + (err.error?.detail || err.message || '');
         this.isGenerating = false;
+      }
+    });
+  }
+
+  generateHighLevelDesign(): void {
+    if (!this.requirement || !this.projectId) return;
+
+    this.isGeneratingHLD = true;
+    this.error = null;
+
+    this.artifactsService.generateArtifact({
+      projectId: this.projectId,
+      requirementSubmissionId: this.requirement.id,
+      artifactType: 'HighLevelDesign'
+    }).subscribe({
+      next: (artifact) => {
+        this.isGeneratingHLD = false;
+        this.artifacts.push(artifact);
+        if (this.requirement) this.loadRequirement(this.requirement.id);
+      },
+      error: (err) => {
+        this.error = 'Failed to generate HLD draft. ' + (err.error?.detail || err.message || '');
+        this.isGeneratingHLD = false;
       }
     });
   }

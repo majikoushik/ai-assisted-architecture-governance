@@ -10,34 +10,76 @@ public sealed class MockArchitectureAiProvider : IArchitectureAiProvider
     {
         var humanReviewNotice = "This artifact is AI-assisted draft content and must be reviewed by a qualified architect before use in production decisions.";
         
-        var markdown = $"""
-        > {humanReviewNotice}
+        var markdown = request.ArtifactType == "HighLevelDesign"
+            ? $"""
+            > {humanReviewNotice}
 
-        # {request.ArtifactType} Draft: {request.RequirementTitle}
+            # High-Level Design Draft: {request.RequirementTitle}
 
-        ## Summary
+            ## Executive Summary
+            Deterministic mock High-Level Design for local development.
 
-        Deterministic mock output for local development and automated tests. This is a generated {request.ArtifactType} based on the requirement "{request.RequirementTitle}".
+            ## Business Context
+            {request.BusinessDomain} - {request.DomainContext}
 
-        ## Domain Context
-        {request.BusinessDomain} - {request.DomainContext}
+            ## Architecture Goals
+            Deliver a robust, scalable, and Azure-ready architecture supporting {request.RequirementTitle}.
 
-        ## Assumptions
+            ## Scope and Assumptions
+            - Requirement details are synthetic or approved for demo use.
+            - Target deployment is Azure.
+            
+            ## System Context
+            This system integrates with existing identity providers and downstream reporting.
 
-        - Requirement details are synthetic or approved for demo use.
-        - Human architecture review is required before decisions are accepted.
-        - The target deployment environment is Azure (mock assumption).
+            ## Major Components & Suggested Service Boundaries
+            - **API Gateway**: Routes traffic and enforces rate limits.
+            - **Core Service**: Handles the primary business logic.
+            - **Data Store**: Manages persistent state.
 
-        ## Risks
+            ## Integration Points & Data Flow Overview
+            - External API -> Gateway -> Core Service -> Database.
 
-        - Missing stakeholder context may affect recommendations.
-        - Integration, security, and compliance details require validation.
+            ## Security Considerations
+            - Enforce OAuth2/OIDC at the gateway.
+            - Encrypt data at rest and in transit.
 
-        ## Open Questions
+            ## Observability Considerations
+            - Centralized structured logging.
+            - Distributed tracing with correlation IDs.
 
-        - Which systems, teams, and compliance obligations are in scope?
-        - What are the target availability and recovery objectives?
-        """;
+            ## Deployment, Scalability, Availability & Resilience
+            - Deploy via container apps.
+            - Auto-scale based on HTTP metrics.
+            - Multi-zone availability setup.
+
+            ## Key Risks
+            - Integration, security, and compliance details require validation.
+
+            ## Open Questions
+            - What are the target availability and recovery objectives?
+            """
+            : $"""
+            > {humanReviewNotice}
+
+            # {request.ArtifactType} Draft: {request.RequirementTitle}
+
+            ## Summary
+            Deterministic mock output for local development and automated tests. This is a generated {request.ArtifactType} based on the requirement "{request.RequirementTitle}".
+
+            ## Domain Context
+            {request.BusinessDomain} - {request.DomainContext}
+
+            ## Assumptions
+            - Requirement details are synthetic or approved for demo use.
+            - Human architecture review is required before decisions are accepted.
+
+            ## Risks
+            - Missing stakeholder context may affect recommendations.
+
+            ## Open Questions
+            - Which systems, teams, and compliance obligations are in scope?
+            """;
 
         var response = new ArchitectureAiResponse(
             ArtifactType: request.ArtifactType,

@@ -15,18 +15,18 @@ Generate a high-level design draft for review by a solution architect.
 
 ## Expected Output Format
 
-- Human review notice
-- Business context
-- System context
-- Key components
-- Integration points
-- Data flow
-- Security considerations
-- Observability considerations
-- Deployment considerations
-- Assumptions
-- Risks
-- Open questions
+- Executive Summary
+- Business Context
+- Architecture Goals
+- Scope and Assumptions
+- System Context
+- Major Components & Suggested Service Boundaries
+- Integration Points & Data Flow Overview
+- Security Considerations
+- Observability Considerations
+- Deployment, Scalability, Availability & Resilience
+- Key Risks
+- Open Questions
 
 ## Constraints
 

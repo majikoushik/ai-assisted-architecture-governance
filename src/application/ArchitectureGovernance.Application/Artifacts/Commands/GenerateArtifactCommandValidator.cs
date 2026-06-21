@@ -10,7 +10,7 @@ public class GenerateArtifactCommandValidator : AbstractValidator<GenerateArtifa
         RuleFor(x => x.RequirementSubmissionId).NotEmpty();
         RuleFor(x => x.ArtifactType)
             .NotEmpty()
-            .Must(type => type == "RequirementAnalysis")
-            .WithMessage("Only 'RequirementAnalysis' is supported in this epic.");
+            .Must(type => type == "RequirementAnalysis" || type == "HighLevelDesign")
+            .WithMessage("Only 'RequirementAnalysis' and 'HighLevelDesign' are supported.");
     }
 }
