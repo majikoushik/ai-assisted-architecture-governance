@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
+using ArchitectureGovernance.Application.Common.Interfaces;
 
 namespace Observability;
 
@@ -29,12 +30,28 @@ public sealed class CorrelationIdMiddleware(RequestDelegate next, ILogger<Correl
     }
 }
 
+public class HttpContextCorrelationIdProvider : ICorrelationIdProvider
+{
+    private readonly IHttpContextAccessor _accessor;
+    public HttpContextCorrelationIdProvider(IHttpContextAccessor accessor)
+        => _accessor = accessor;
+
+    public string CorrelationId =>
+        _accessor.HttpContext?.Items[CorrelationIdMiddleware.HeaderName]?.ToString()
+        ?? Guid.NewGuid().ToString("N");
+}
+
 public static class CorrelationIdExtensions
 {
-    public static IServiceCollection AddCorrelationId(this IServiceCollection services) => services;
-
     public static IApplicationBuilder UseCorrelationId(this IApplicationBuilder app)
     {
         return app.UseMiddleware<CorrelationIdMiddleware>();
+    }
+
+    public static IServiceCollection AddCorrelationId(this IServiceCollection services)
+    {
+        services.AddHttpContextAccessor();
+        services.AddScoped<ICorrelationIdProvider, HttpContextCorrelationIdProvider>();
+        return services;
     }
 }

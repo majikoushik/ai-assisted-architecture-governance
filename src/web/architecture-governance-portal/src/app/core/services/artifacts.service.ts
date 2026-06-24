@@ -10,9 +10,9 @@ import { ApiResponse } from '../models/api-response.model';
   providedIn: 'root'
 })
 export class ArtifactsService {
-  private apiUrl = `${environment.apiBaseUrl}/v1/artifacts`;
-  private projectsUrl = `${environment.apiBaseUrl}/v1/projects`;
-  private requirementsUrl = `${environment.apiBaseUrl}/v1/requirements`;
+  private apiUrl = `${environment.apiBaseUrl}/api/v1/artifacts`;
+  private projectsUrl = `${environment.apiBaseUrl}/api/v1/projects`;
+  private requirementsUrl = `${environment.apiBaseUrl}/api/v1/requirements`;
 
   constructor(private http: HttpClient) { }
 

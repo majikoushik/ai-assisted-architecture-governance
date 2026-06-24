@@ -1,8 +1,11 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { catchError, throwError } from 'rxjs';
 import { inject } from '@angular/core';
+import { NotificationService } from '../services/notification.service';
 
 export const errorInterceptor: HttpInterceptorFn = (request, next) => {
+  const notificationService = inject(NotificationService);
+
   return next(request).pipe(
     catchError((error: HttpErrorResponse) => {
       let errorMessage = 'An unexpected error occurred.';
@@ -30,9 +33,8 @@ export const errorInterceptor: HttpInterceptorFn = (request, next) => {
       }
 
       console.error(`[Correlation ID: ${correlationId}] HTTP Error:`, error);
+      notificationService.showError(errorMessage, correlationId);
       
-      // In a real application, inject a Snackbar/Toast service here and display `errorMessage`
-      // For this MVP, we log cleanly and throw.
       return throwError(() => new Error(errorMessage));
     })
   );

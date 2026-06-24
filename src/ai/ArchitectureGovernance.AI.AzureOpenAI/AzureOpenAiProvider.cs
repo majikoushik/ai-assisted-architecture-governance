@@ -1,6 +1,7 @@
-using SystemClientModel = System.ClientModel;
+using Azure;
 using ArchitectureGovernance.AI.Abstractions;
 using Azure.AI.OpenAI;
+using Azure.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OpenAI.Chat;
@@ -11,11 +12,24 @@ public sealed class AzureOpenAiProvider : IArchitectureAiProvider
 {
     private readonly AzureOpenAiOptions _options;
     private readonly ILogger<AzureOpenAiProvider> _logger;
+    private readonly AzureOpenAIClient _client;
 
     public AzureOpenAiProvider(IOptions<AzureOpenAiOptions> options, ILogger<AzureOpenAiProvider> logger)
     {
         _options = options.Value;
         _logger = logger;
+
+        if (!string.IsNullOrWhiteSpace(_options.Endpoint))
+        {
+            if (_options.UseDefaultAzureCredential)
+            {
+                _client = new AzureOpenAIClient(new Uri(_options.Endpoint), new DefaultAzureCredential());
+            }
+            else
+            {
+                _client = new AzureOpenAIClient(new Uri(_options.Endpoint), new AzureKeyCredential(_options.ApiKey ?? string.Empty));
+            }
+        }
     }
 
     public async Task<ArchitectureAiResponse> GenerateArtifactDraftAsync(
@@ -26,7 +40,7 @@ public sealed class AzureOpenAiProvider : IArchitectureAiProvider
 
         try
         {
-            if (string.IsNullOrWhiteSpace(_options.Endpoint) || string.IsNullOrWhiteSpace(_options.ApiKey) || string.IsNullOrWhiteSpace(_options.DeploymentName))
+            if (string.IsNullOrWhiteSpace(_options.Endpoint) || string.IsNullOrWhiteSpace(_options.DeploymentName))
             {
                 _logger.LogWarning("Azure OpenAI configuration is missing. Falling back to an error response.");
                 return new ArchitectureAiResponse(
@@ -41,8 +55,7 @@ public sealed class AzureOpenAiProvider : IArchitectureAiProvider
                     HumanReviewNotice: humanReviewNotice);
             }
 
-            var client = new AzureOpenAIClient(new Uri(_options.Endpoint), new SystemClientModel.ApiKeyCredential(_options.ApiKey));
-            var chatClient = client.GetChatClient(_options.DeploymentName);
+            var chatClient = _client.GetChatClient(_options.DeploymentName);
 
             var systemPrompt = request.PromptTemplateContent;
             
@@ -107,28 +120,8 @@ Requirement Text:
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to call Azure OpenAI provider. CorrelationId: {CorrelationId}", request.CorrelationId);
-            
-            _logger.LogInformation(
-                "AI Telemetry - Provider: {ProviderName}, Type: {ArtifactType}, Template: {PromptTemplateName} v{PromptTemplateVersion}, DurationMs: {DurationMs}, Status: {Status}, CorrelationId: {CorrelationId}",
-                "AzureOpenAI",
-                request.ArtifactType,
-                request.PromptTemplateName,
-                request.PromptTemplateVersion,
-                -1,
-                "Failed",
-                request.CorrelationId);
-
-            return new ArchitectureAiResponse(
-                ArtifactType: request.ArtifactType,
-                Markdown: $"> {humanReviewNotice}\n\n# Error: AI Generation Failed\n\nThere was an error generating the artifact using Azure OpenAI.",
-                ProviderName: "AzureOpenAI",
-                PromptTemplateName: request.PromptTemplateName,
-                PromptTemplateVersion: request.PromptTemplateVersion,
-                GenerationTimestamp: DateTimeOffset.UtcNow,
-                Status: "Failed",
-                Warnings: new[] { ex.Message },
-                HumanReviewNotice: humanReviewNotice);
+            _logger.LogError(ex, "Azure OpenAI provider failed. CorrelationId: {CorrelationId}", request.CorrelationId);
+            throw new InvalidOperationException("Failed to generate artifact using Azure OpenAI.", ex);
         }
     }
 }

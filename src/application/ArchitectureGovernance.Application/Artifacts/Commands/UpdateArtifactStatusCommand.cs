@@ -8,13 +8,12 @@ using Microsoft.Extensions.Logging;
 
 namespace ArchitectureGovernance.Application.Artifacts.Commands;
 
-public class UpdateArtifactStatusCommand : IRequest<bool>
-{
-    public Guid ArtifactId { get; set; }
-    public string Status { get; set; } = string.Empty;
-    public string Reason { get; set; } = string.Empty;
-    public string UpdatedBy { get; set; } = string.Empty;
-}
+public record UpdateArtifactStatusCommand(
+    Guid ArtifactId,
+    string Status,
+    string Reason,
+    string UpdatedBy
+) : IRequest<bool>;
 
 public class UpdateArtifactStatusCommandHandler : IRequestHandler<UpdateArtifactStatusCommand, bool>
 {

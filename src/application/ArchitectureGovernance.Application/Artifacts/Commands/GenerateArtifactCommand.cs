@@ -1,3 +1,4 @@
+using ArchitectureGovernance.Domain;
 using MediatR;
 
 namespace ArchitectureGovernance.Application.Artifacts.Commands;
@@ -5,5 +6,5 @@ namespace ArchitectureGovernance.Application.Artifacts.Commands;
 public record GenerateArtifactCommand(
     Guid ProjectId,
     Guid RequirementSubmissionId,
-    string ArtifactType
+    ArtifactType ArtifactType
 ) : IRequest<ArtifactDto>;

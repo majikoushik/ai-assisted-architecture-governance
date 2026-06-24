@@ -13,7 +13,7 @@ interface ApiResponse<T> {
   providedIn: 'root'
 })
 export class PromptsService {
-  private apiUrl = `${environment.apiBaseUrl}/v1/Prompts`;
+  private apiUrl = `${environment.apiBaseUrl}/api/v1/prompts`;
 
   constructor(private http: HttpClient) {}
 

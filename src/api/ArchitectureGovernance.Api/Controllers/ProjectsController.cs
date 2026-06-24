@@ -18,12 +18,12 @@ public class ProjectsController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpGet("{id}/requirements")]
+    [HttpGet("{id:guid}/requirements")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetRequirements(Guid id)
+    public async Task<IActionResult> GetRequirements(Guid id, CancellationToken cancellationToken)
     {
-        var result = await _mediator.Send(new GetRequirementsByProjectIdQuery(id));
-        return Ok(result);
+        var result = await _mediator.Send(new GetRequirementsByProjectIdQuery(id), cancellationToken);
+        return Ok(new { data = result, correlationId = HttpContext.TraceIdentifier, timestamp = DateTimeOffset.UtcNow });
     }
 
     [HttpPost]
@@ -63,7 +63,7 @@ public class ProjectsController : ControllerBase
 
 
 
-    [HttpPut("{id}")]
+    [HttpPut("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProjectDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -74,7 +74,7 @@ public class ProjectsController : ControllerBase
         return Ok(result);
     }
 
-    [HttpPatch("{id}/status")]
+    [HttpPatch("{id:guid}/status")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProjectDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

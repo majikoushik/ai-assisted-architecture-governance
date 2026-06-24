@@ -1,11 +1,11 @@
 using ArchitectureGovernance.Domain.Projects;
 using ArchitectureGovernance.Domain.Requirements;
+using SharedKernel;
 
 namespace ArchitectureGovernance.Domain.Artifacts;
 
-public class GeneratedArtifact
+public class GeneratedArtifact : Entity
 {
-    public Guid Id { get; private set; }
     public Guid ProjectId { get; private set; }
     public Guid RequirementSubmissionId { get; private set; }
     public ArtifactType ArtifactType { get; private set; }
@@ -16,8 +16,6 @@ public class GeneratedArtifact
     public string ProviderName { get; private set; } = string.Empty;
     public string PromptTemplateName { get; private set; } = string.Empty;
     public string PromptTemplateVersion { get; private set; } = string.Empty;
-    public DateTimeOffset CreatedAt { get; private set; }
-    public DateTimeOffset? UpdatedAt { get; private set; }
     public string CorrelationId { get; private set; } = string.Empty;
 
     // EF Core constructor
@@ -35,7 +33,6 @@ public class GeneratedArtifact
         string promptTemplateVersion,
         string correlationId)
     {
-        Id = Guid.NewGuid();
         ProjectId = projectId;
         RequirementSubmissionId = requirementSubmissionId;
         ArtifactType = artifactType;
@@ -47,7 +44,6 @@ public class GeneratedArtifact
         PromptTemplateVersion = promptTemplateVersion;
         CorrelationId = correlationId;
         Status = ReviewStatus.Draft;
-        CreatedAt = DateTimeOffset.UtcNow;
     }
 
     public void UpdateStatus(ReviewStatus newStatus)

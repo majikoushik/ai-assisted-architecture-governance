@@ -81,13 +81,7 @@ public class ArtifactsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateStatus(Guid id, [FromBody] UpdateArtifactStatusRequest request)
     {
-        var command = new UpdateArtifactStatusCommand
-        {
-            ArtifactId = id,
-            Status = request.Status,
-            Reason = request.Reason,
-            UpdatedBy = request.UpdatedBy
-        };
+        var command = new UpdateArtifactStatusCommand(id, request.Status, request.Reason, request.UpdatedBy);
         await _mediator.Send(command);
         return Ok(new { data = true, correlationId = HttpContext.TraceIdentifier, timestamp = DateTimeOffset.UtcNow });
     }

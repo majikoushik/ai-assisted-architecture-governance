@@ -11,6 +11,10 @@ public sealed class MockArchitectureAiProvider(ILogger<MockArchitectureAiProvide
         CancellationToken cancellationToken = default)
     {
         var sw = Stopwatch.StartNew();
+        
+        // Simulate realistic AI latency
+        await Task.Delay(TimeSpan.FromMilliseconds(200), cancellationToken);
+
         var humanReviewNotice = "This artifact is AI-assisted draft content and must be reviewed by a qualified architect before use in production decisions.";
         
         var markdown = request.ArtifactType switch

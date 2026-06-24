@@ -2,6 +2,7 @@ using ArchitectureGovernance.AI.Abstractions;
 using ArchitectureGovernance.Application.Common.Interfaces;
 using ArchitectureGovernance.Application.Prompts.Services;
 using ArchitectureGovernance.Domain;
+using ArchitectureGovernance.Domain.AIInteractions;
 using ArchitectureGovernance.Domain.Artifacts;
 using FluentValidation;
 using MediatR;
@@ -16,17 +17,20 @@ public class GenerateArtifactCommandHandler : IRequestHandler<GenerateArtifactCo
     private readonly IArchitectureAiProvider _aiProvider;
     private readonly IPromptRepository _promptRepository;
     private readonly ILogger<GenerateArtifactCommandHandler> _logger;
+    private readonly ICorrelationIdProvider _correlationIdProvider;
 
     public GenerateArtifactCommandHandler(
         IAppDbContext context,
         IArchitectureAiProvider aiProvider,
         IPromptRepository promptRepository,
-        ILogger<GenerateArtifactCommandHandler> logger)
+        ILogger<GenerateArtifactCommandHandler> logger,
+        ICorrelationIdProvider correlationIdProvider)
     {
         _context = context;
         _aiProvider = aiProvider;
         _promptRepository = promptRepository;
         _logger = logger;
+        _correlationIdProvider = correlationIdProvider;
     }
 
     public async Task<ArtifactDto> Handle(GenerateArtifactCommand request, CancellationToken cancellationToken)
@@ -47,82 +51,89 @@ public class GenerateArtifactCommandHandler : IRequestHandler<GenerateArtifactCo
             throw new ValidationException(new[] { new FluentValidation.Results.ValidationFailure("RequirementSubmissionId", "Requirement does not belong to the specified project.") });
 
         // Retrieve the appropriate prompt template based on ArtifactType
-        var promptTemplateId = request.ArtifactType switch
-        {
-            "RequirementAnalysis" => "requirement-analysis",
-            "HighLevelDesign" => "hld-generation",
-            "LowLevelDesign" => "lld-generation",
-            "ArchitectureDecisionRecord" => "adr-generation",
-            "NonFunctionalRequirementReview" => "nfr-review",
-            "ApiContractReview" => "api-contract-review",
-            "SecurityReview" => "security-review",
-            "RiskAndAssumptionReview" => "risk-assumption-review",
-            _ => throw new ValidationException(new[] { new FluentValidation.Results.ValidationFailure("ArtifactType", "Unsupported artifact type.") })
-        };
+        var domainArtifactType = request.ArtifactType;
+        var promptTemplateId = GetPromptTemplateIdForType(domainArtifactType);
 
         var promptTemplate = await _promptRepository.GetByIdAsync(promptTemplateId, cancellationToken);
         if (promptTemplate == null)
             throw new KeyNotFoundException($"PromptTemplate with id {promptTemplateId} not found.");
 
-        if (!Enum.TryParse<ArchitectureGovernance.Domain.ArtifactType>(request.ArtifactType, out var domainArtifactType))
-            throw new ValidationException(new[] { new FluentValidation.Results.ValidationFailure("ArtifactType", "Invalid artifact type.") });
-
-        var correlationId = Guid.NewGuid().ToString();
-
-        // Ensure sensitive info is not fully logged
-        _logger.LogInformation("Generating artifact type {ArtifactType} for Project {ProjectId}, Requirement {RequirementId}. CorrelationId: {CorrelationId}", 
-            request.ArtifactType, request.ProjectId, request.RequirementSubmissionId, correlationId);
-
-        var aiRequest = new ArchitectureAiRequest(
-            ProjectId: project.Id,
-            RequirementId: requirement.Id,
-            ArtifactType: request.ArtifactType,
-            RequirementTitle: requirement.Title,
-            RequirementText: requirement.RequirementText,
-            BusinessDomain: project.BusinessDomain,
-            DomainContext: requirement.DomainContext,
-            PromptTemplateName: promptTemplate.Name,
-            PromptTemplateVersion: promptTemplate.Version,
-            PromptTemplateContent: promptTemplate.Content,
-            CorrelationId: correlationId
+        var correlationId = _correlationIdProvider.CorrelationId;
+        
+        var aiInteractionLog = new AIInteractionLog(
+            request.ProjectId,
+            request.RequirementSubmissionId,
+            "Provider", 
+            "Model",
+            promptTemplate.Version,
+            DateTimeOffset.UtcNow,
+            correlationId
         );
+        _context.AIInteractionLogs.Add(aiInteractionLog);
 
-        var aiResponse = await _aiProvider.GenerateArtifactDraftAsync(aiRequest, cancellationToken);
+        ArchitectureAiResponse generatedResponse;
+        try
+        {
+            generatedResponse = await _aiProvider.GenerateArtifactDraftAsync(
+                new ArchitectureAiRequest(
+                    request.ProjectId,
+                    request.RequirementSubmissionId,
+                    domainArtifactType.ToString(),
+                    promptTemplate.Name,
+                    promptTemplate.Version,
+                    promptTemplate.Content,
+                    requirement.RequirementText,
+                    requirement.Title,
+                    project.BusinessDomain,
+                    requirement.DomainContext,
+                    correlationId),
+                cancellationToken);
 
-        // Determine the version number by checking existing artifacts
+            aiInteractionLog.Complete(DateTimeOffset.UtcNow, "Success");
+        }
+        catch (Exception ex)
+        {
+            aiInteractionLog.Fail(DateTimeOffset.UtcNow, ex.Message);
+            await _context.SaveChangesAsync(cancellationToken);
+            throw; 
+        }
+
         var existingArtifactsCount = await _context.Artifacts
             .CountAsync(a => a.RequirementSubmissionId == requirement.Id && a.ArtifactType == domainArtifactType, cancellationToken);
-        var newVersion = (existingArtifactsCount + 1).ToString();
+        
+        var newVersion = $"v1.0.{existingArtifactsCount + 1}";
 
-        var generatedArtifact = new GeneratedArtifact(
-            projectId: project.Id,
-            requirementSubmissionId: requirement.Id,
-            artifactType: domainArtifactType,
-            title: request.ArtifactType switch
-            {
-                "HighLevelDesign" => $"{project.Name} - High-Level Design",
-                "LowLevelDesign" => $"{project.Name} - Low-Level Design",
-                "ArchitectureDecisionRecord" => $"{project.Name} - Architecture Decision Record",
-                "NonFunctionalRequirementReview" => $"{project.Name} - Non-Functional Requirement Review",
-                "ApiContractReview" => $"{project.Name} - API Contract Review",
-                "SecurityReview" => $"{project.Name} - Security Review",
-                "RiskAndAssumptionReview" => $"{project.Name} - Risk and Assumption Review",
-                _ => $"{project.Name} - Requirement Analysis"
-            },
-            markdownContent: aiResponse.Markdown,
-            version: newVersion,
-            providerName: aiResponse.ProviderName,
-            promptTemplateName: promptTemplate.Name,
-            promptTemplateVersion: promptTemplate.Version,
-            correlationId: correlationId
-        );
+        var artifact = new GeneratedArtifact(
+            request.ProjectId,
+            request.RequirementSubmissionId,
+            domainArtifactType,
+            $"{project.Name} - {promptTemplate.Name}",
+            generatedResponse.Markdown,
+            newVersion,
+            generatedResponse.ProviderName,
+            promptTemplate.Name,
+            promptTemplate.Version,
+            correlationId);
 
-        _context.Artifacts.Add(generatedArtifact);
+        _context.Artifacts.Add(artifact);
         await _context.SaveChangesAsync(cancellationToken);
 
-        _logger.LogInformation("Artifact generated and saved. Id: {ArtifactId}, Provider: {Provider}, CorrelationId: {CorrelationId}", 
-            generatedArtifact.Id, aiResponse.ProviderName, correlationId);
+        return ArtifactDto.FromEntity(artifact);
+    }
 
-        return ArtifactDto.FromEntity(generatedArtifact);
+    private static string GetPromptTemplateIdForType(ArtifactType type)
+    {
+        return type switch
+        {
+            ArtifactType.RequirementAnalysis => "requirement-analysis",
+            ArtifactType.HighLevelDesign => "hld-generation",
+            ArtifactType.LowLevelDesign => "lld-generation",
+            ArtifactType.ArchitectureDecisionRecord => "adr-generation",
+            ArtifactType.NonFunctionalRequirementReview => "nfr-review",
+            ArtifactType.ApiContractReview => "api-contract-review",
+            ArtifactType.SecurityReview => "security-review",
+            ArtifactType.RiskAndAssumptionReview => "risk-assumption-review",
+            _ => throw new InvalidOperationException($"No prompt template configured for {type}")
+        };
     }
 }

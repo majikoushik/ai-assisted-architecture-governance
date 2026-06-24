@@ -2,25 +2,29 @@ using System.Text.RegularExpressions;
 using ArchitectureGovernance.Application.Prompts.Services;
 using ArchitectureGovernance.Domain.Prompts;
 using ArchitectureGovernance.Domain.Requirements;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 
 namespace ArchitectureGovernance.Infrastructure.Filesystem;
+
+public class PromptRepositoryOptions
+{
+    public const string SectionName = "PromptRepository";
+    public string PromptsDirectory { get; set; } = "prompts";
+}
 
 public sealed class FilePromptRepository : IPromptRepository
 {
     private readonly string _promptsDirectory;
 
-    public FilePromptRepository()
+    public FilePromptRepository(IOptions<PromptRepositoryOptions> options, IHostEnvironment env)
     {
-        // In a real application, this path should be configurable.
-        // Assuming the repository root contains the "prompts" folder and the API runs from its bin/Debug/net8.0 or similar.
-        var baseDir = AppContext.BaseDirectory;
-        var srcIndex = baseDir.IndexOf("src", StringComparison.OrdinalIgnoreCase);
-        
-        if (srcIndex >= 0)
-        {
-            _promptsDirectory = Path.Combine(baseDir.Substring(0, srcIndex), "prompts");
-        }
-        else
+        var configured = options.Value.PromptsDirectory;
+        _promptsDirectory = Path.IsPathRooted(configured)
+            ? configured
+            : Path.GetFullPath(Path.Combine(env.ContentRootPath, "..", "..", "..", configured));
+            
+        if (!Directory.Exists(_promptsDirectory))
         {
             // Fallback for execution from the root (e.g. dotnet run from src/api/...)
             _promptsDirectory = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..", "prompts");

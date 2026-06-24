@@ -263,6 +263,18 @@ dotnet restore ArchitectureGovernance.sln
 dotnet build ArchitectureGovernance.sln
 ```
 
+Start both the backend API and Angular portal on Windows:
+
+```powershell
+.\start-local.bat
+```
+
+Local data fallback:
+
+- SQL Server is still the preferred local database when the `ArchitectureGovernance` connection string is available.
+- If SQL Server is unavailable and `Database:EnableSyntheticFallback` is `true`, the API starts with an in-memory synthetic dataset for portfolio/demo screens.
+- The active mode is visible at `http://localhost:5080/api/v1/platform/readiness`.
+
 Run the API:
 
 ```powershell

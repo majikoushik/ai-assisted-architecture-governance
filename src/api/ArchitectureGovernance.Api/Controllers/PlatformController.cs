@@ -1,5 +1,5 @@
+using ArchitectureGovernance.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 
 namespace ArchitectureGovernance.Api.Controllers;
 
@@ -8,10 +8,12 @@ namespace ArchitectureGovernance.Api.Controllers;
 public class PlatformController : ControllerBase
 {
     private readonly IConfiguration _configuration;
+    private readonly DatabaseRuntimeOptions _databaseRuntimeOptions;
 
-    public PlatformController(IConfiguration configuration)
+    public PlatformController(IConfiguration configuration, DatabaseRuntimeOptions databaseRuntimeOptions)
     {
         _configuration = configuration;
+        _databaseRuntimeOptions = databaseRuntimeOptions;
     }
 
     [HttpGet("readiness")]
@@ -21,8 +23,13 @@ public class PlatformController : ControllerBase
 
         var response = new
         {
-            Status = "Healthy",
-            AiProvider = provider
+            service = "Architecture Governance API",
+            status = "Ready",
+            aiProvider = provider,
+            databaseProvider = _databaseRuntimeOptions.ProviderName,
+            syntheticDataMode = _databaseRuntimeOptions.IsSyntheticFallbackEnabled,
+            syntheticDataReason = _databaseRuntimeOptions.FallbackReason,
+            notice = "AI-assisted draft outputs require qualified architect review."
         };
 
         return Ok(response);
